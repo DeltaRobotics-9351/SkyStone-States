@@ -1,0 +1,54 @@
+buildscript {
+    repositories {
+        jcenter()
+        google()
+    }
+    dependencies{
+        classpath 'com.android.tools.build:gradle:3.5.3'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
+    }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+
+group = 'com.github.DeltaRobotics-9351'
+
+android {
+    compileSdkVersion 28
+
+
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+repositories {
+    flatDir {
+        dirs '../libs'
+    }
+    google()
+    jcenter()
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.aar'])
+    implementation (name: 'RobotCore-release', ext: 'aar')
+    implementation (name: 'Hardware-release', ext: 'aar')
+    implementation (name: 'FtcCommon-release', ext: 'aar')
+}
+
+
