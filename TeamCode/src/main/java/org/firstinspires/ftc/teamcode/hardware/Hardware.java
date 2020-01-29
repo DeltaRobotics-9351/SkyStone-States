@@ -77,7 +77,7 @@ public class Hardware {
         //se define la posicion por default de estos servos
         servoStoneAutonomous.setPosition(0);
         servoCapstone.setPosition(1);
-        servoStoneAutonomous2.setPosition(0);
+        servoStoneAutonomous2.setPosition(1);
 
         //definimos los motores que correran con y sin encoders 
         wheelFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
