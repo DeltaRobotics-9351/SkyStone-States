@@ -28,10 +28,10 @@ public class JoystickDriveMecanum {
         double y1 = -gamepad.left_stick_y;
         double x1 = gamepad.left_stick_x;
         double x2 = gamepad.right_stick_x;
-        wheelFrontRightPower = -(y1 - x2 - x1);
-        wheelBackRightPower = -(y1 - x2 + x1);
-        wheelFrontLeftPower = -(y1 + x2 + x1);
-        wheelBackLeftPower = -(y1 + x2 - x1);
+        wheelFrontRightPower = (y1 - x2 - x1);
+        wheelBackRightPower = (y1 - x2 + x1);
+        wheelFrontLeftPower = (y1 + x2 + x1);
+        wheelBackLeftPower = (y1 + x2 - x1);
 
         double max = Math.max(Math.abs(wheelFrontRightPower), Math.max(Math.abs(wheelBackRightPower),
                 Math.max(Math.abs(wheelFrontLeftPower), Math.abs(wheelBackLeftPower))));

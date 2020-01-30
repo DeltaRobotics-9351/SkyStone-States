@@ -153,21 +153,21 @@ public class IMUTimeDriveMecanum {
             // On right turn we have to get off zero first.
             while (currentOpMode.opModeIsActive() && getAngle() == 0)
             {
-                defineAllWheelPower(power, -power, power, -power);
+                defineAllWheelPower(power, power, power, power);
                 sleep(100);
             }
 
             do
             {
                 power = pidRotate.performPID(getAngle()); // power will be - on right turn.
-                defineAllWheelPower(power, -power, power, -power);
+                defineAllWheelPower(power, power, power, power);
             } while (currentOpMode.opModeIsActive() && !pidRotate.onTarget());
         }
         else    // left turn.
             do
             {
                 power = pidRotate.performPID(getAngle()); // power will be + on left turn.
-                defineAllWheelPower(power, -power, power, -power);
+                defineAllWheelPower(power, power, power, power);
             } while (currentOpMode.opModeIsActive() && !pidRotate.onTarget());
 
         // turn the motors off.

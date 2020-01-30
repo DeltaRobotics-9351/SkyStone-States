@@ -56,10 +56,10 @@ public class EncoderDriveMecanum {
         int newBackRightTarget;
 
         // Determine new target position, and pass to motor controller
-        newFrontLeftTarget = hdw.wheelFrontLeft.getCurrentPosition() + (int) (-frontleft * COUNTS_PER_INCH);
-        newFrontRightTarget = hdw.wheelFrontRight.getCurrentPosition() + (int) (-frontright * COUNTS_PER_INCH);
-        newBackLeftTarget = hdw.wheelBackLeft.getCurrentPosition() + (int) (-backleft * COUNTS_PER_INCH);
-        newBackRightTarget = hdw.wheelBackRight.getCurrentPosition() + (int) (-backright * COUNTS_PER_INCH);
+        newFrontLeftTarget = hdw.wheelFrontLeft.getCurrentPosition() + (int) (frontleft * COUNTS_PER_INCH);
+        newFrontRightTarget = hdw.wheelFrontRight.getCurrentPosition() + (int) (frontright * COUNTS_PER_INCH);
+        newBackLeftTarget = hdw.wheelBackLeft.getCurrentPosition() + (int) (backleft * COUNTS_PER_INCH);
+        newBackRightTarget = hdw.wheelBackRight.getCurrentPosition() + (int) (backright * COUNTS_PER_INCH);
 
         hdw.wheelFrontLeft.setTargetPosition(newFrontLeftTarget);
         hdw.wheelFrontRight.setTargetPosition(newFrontRightTarget);
