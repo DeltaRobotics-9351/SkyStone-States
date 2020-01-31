@@ -75,7 +75,7 @@ public class Hardware {
 
 
         //se define la posicion por default de estos servos
-        servoStoneAutonomous.setPosition(0);
+        servoStoneAutonomous.setPosition(0.1);
         servoCapstone.setPosition(1);
         servoStoneAutonomous2.setPosition(1);
 
@@ -89,4 +89,28 @@ public class Hardware {
         motorSliders.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
+    //servos set position
+    public void SSAUp(){
+        servoStoneAutonomous.setPosition(0.07);
+    }
+
+    public void SSADown(){
+        servoStoneAutonomous.setPosition(0.45);
+    }
+
+    public void SSA2Grab(){
+        servoStoneAutonomous2.setPosition(0.6);
+    }
+
+    public void SSA2Release(){
+        servoStoneAutonomous2.setPosition(1);
+    }
+
+    public void putCapstone(){
+        servoCapstone.setPosition(0.25);
+    }
+
+    public void saveCapstone(){
+        servoCapstone.setPosition(1);
+    }
 }

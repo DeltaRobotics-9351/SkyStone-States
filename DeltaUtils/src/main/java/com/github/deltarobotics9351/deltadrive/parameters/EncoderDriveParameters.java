@@ -16,6 +16,7 @@ public class EncoderDriveParameters {
     public void secureParameters(){
         RIGHT_WHEELS_TURBO = Range.clip(Math.abs(RIGHT_WHEELS_TURBO), 0, 1);
         LEFT_WHEELS_TURBO = Range.clip(Math.abs(LEFT_WHEELS_TURBO), 0, 1);
+        WHEEL_DIAMETER_INCHES = Math.abs(WHEEL_DIAMETER_INCHES);
     }
 
 }

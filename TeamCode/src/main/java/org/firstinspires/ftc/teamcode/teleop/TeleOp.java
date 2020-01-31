@@ -86,9 +86,9 @@ public class TeleOp extends LinearOpMode { //la clase extendera a otra llamada '
 
         //servos para agarrar las stones
         if(gamepad.dpad_up){
-            hdw.servoStoneAutonomous.setPosition(0);
+            hdw.servoStoneAutonomous.setPosition(0.1);
         }else if(gamepad.dpad_down){
-            hdw.servoStoneAutonomous.setPosition(0.5);
+            hdw.servoStoneAutonomous.setPosition(0.45);
         }
 //ayuda dijo que mataria a mi fxmilia si no le syudo, ya viene ayuda me tenngo que ir aaaaaa
         if(gamepad.dpad_left){
