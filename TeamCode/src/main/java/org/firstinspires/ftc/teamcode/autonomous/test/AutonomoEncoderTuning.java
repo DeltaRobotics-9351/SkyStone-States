@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.team9351.autonomous.test;
+package org.firstinspires.ftc.teamcode.autonomous.test;
 
 
 import com.github.deltarobotics9351.deltadrive.drive.mecanum.EncoderDriveMecanum;
@@ -32,6 +32,9 @@ public class AutonomoEncoderTuning extends LinearOpMode {
         EncoderDriveParameters parameters = new EncoderDriveParameters();
         parameters.LEFT_WHEELS_TURBO = 0.6;
         parameters.RIGHT_WHEELS_TURBO = 0.9;
+        parameters.COUNTS_PER_REV = 537.6;
+        parameters.DRIVE_GEAR_REDUCTION = 1;
+        parameters.WHEEL_DIAMETER_INCHES = 4;
 
         encoderDrive = new EncoderDriveMecanum(deltaHardware, telemetry, this, parameters);
 

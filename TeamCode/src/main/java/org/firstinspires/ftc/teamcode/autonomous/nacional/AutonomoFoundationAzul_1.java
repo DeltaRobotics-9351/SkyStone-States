@@ -41,6 +41,7 @@ public class AutonomoFoundationAzul_1 extends LinearOpMode {
         imuDrive = new IMUDriveMecanum(deltaHardware, this);
 
         IMUDriveParameters parameters = new IMUDriveParameters();
+        parameters.STRAFING_COUNTERACT_CONSTANT = 0.03;
         parameters.ROTATE_CORRECTION_POWER = 0.15;
         parameters.ROTATE_MAX_CORRECTION_TIMES = 3;
 
