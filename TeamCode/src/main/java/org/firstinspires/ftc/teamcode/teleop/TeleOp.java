@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 import com.github.deltarobotics9351.deltadrive.drive.mecanum.JoystickDriveMecanum;
-import com.github.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
-import com.github.deltarobotics9351.deltadrive.utils.Invert;
+import com.github.deltarobotics9351.deltadrive.hardware.DeltaHardware;
+import com.github.deltarobotics9351.deltadrive.utils.ChassisType;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
@@ -20,22 +20,21 @@ public class TeleOp extends LinearOpMode { //la clase extendera a otra llamada '
     long disappearmillis;
 
     JoystickDriveMecanum mecanumWheels; //en este objeto se contiene el codigo para las llantas mecanum
-    DeltaHardwareMecanum deltaHardware;
+    DeltaHardware deltaHardware;
 
     @Override
     public void runOpMode(){
         hdw = new Hardware(hardwareMap); //init hardware
         hdw.initHardware(false);
 
-        deltaHardware = new DeltaHardwareMecanum(hardwareMap, Invert.RIGHT_SIDE);
-
-        deltaHardware.initHardware(hdw.wheelFrontLeft, hdw.wheelFrontRight, hdw.wheelBackLeft, hdw.wheelBackRight, true);
+        deltaHardware = new DeltaHardware(hardwareMap, hdw.wheelFrontLeft, hdw.wheelFrontRight, hdw.wheelBackLeft, hdw.wheelBackRight, ChassisType.mecanum);
 
         mecanumWheels = new JoystickDriveMecanum(deltaHardware);
 
-        String[] s = MotivateTelemetry.doMotivateGlobal();
+        MotivateTelemetry.doMotivateGlobal(telemetry);
 
-        telemetry.addData(s[0], s[1]);
+        telemetry.speak("Don Cangrejo is ready");
+
         telemetry.update();
 
         waitForStart(); //espera hasta que se presione <play> en la driver station

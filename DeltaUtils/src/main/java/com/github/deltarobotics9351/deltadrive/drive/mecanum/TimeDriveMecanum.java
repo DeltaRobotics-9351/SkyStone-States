@@ -1,15 +1,15 @@
 package com.github.deltarobotics9351.deltadrive.drive.mecanum;
 
-import com.github.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
+import com.github.deltarobotics9351.deltadrive.hardware.DeltaHardware;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class TimeDriveMecanum {
 
-    DeltaHardwareMecanum hdw;
+    DeltaHardware hdw;
     Telemetry telemetry;
 
-    public TimeDriveMecanum(DeltaHardwareMecanum hdw, Telemetry telemetry){
+    public TimeDriveMecanum(DeltaHardware hdw, Telemetry telemetry){
         this.hdw = hdw;
         this.telemetry = telemetry;
     }
@@ -19,33 +19,10 @@ public class TimeDriveMecanum {
     //(el tiempo es en segundos)
 
     public void setAllWheelPower(double frontleft, double frontright, double backleft, double backright, double time, String movementDescription){
-
-        switch(hdw.invert) {
-            case RIGHT_SIDE:
-                hdw.wheelFrontLeft.setPower(frontleft);
-                hdw.wheelFrontRight.setPower(-frontright);
-                hdw.wheelBackLeft.setPower(backleft);
-                hdw.wheelBackRight.setPower(-backright);
-                break;
-            case LEFT_SIDE:
-                hdw.wheelFrontLeft.setPower(-frontleft);
-                hdw.wheelFrontRight.setPower(frontright);
-                hdw.wheelBackLeft.setPower(-backleft);
-                hdw.wheelBackRight.setPower(backright);
-                break;
-            case BOTH_SIDES:
-                hdw.wheelFrontLeft.setPower(-frontleft);
-                hdw.wheelFrontRight.setPower(-frontright);
-                hdw.wheelBackLeft.setPower(-backleft);
-                hdw.wheelBackRight.setPower(-backright);
-                break;
-            case NO_INVERT:
-                hdw.wheelFrontLeft.setPower(frontleft);
-                hdw.wheelFrontRight.setPower(frontright);
-                hdw.wheelBackLeft.setPower(backleft);
-                hdw.wheelBackRight.setPower(backright);
-                break;
-        }
+        hdw.wheelFrontLeft.setPower(frontleft);
+        hdw.wheelFrontRight.setPower(-frontright);
+        hdw.wheelBackLeft.setPower(backleft);
+        hdw.wheelBackRight.setPower(-backright);
 
         //mandamos mensajes telemetry para informar sobre lo que esta pasando
         telemetry.addData("movement", movementDescription);

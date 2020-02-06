@@ -2,11 +2,12 @@ package org.firstinspires.ftc.teamcode.autonomous.test;
 
 
 import com.github.deltarobotics9351.deltadrive.drive.mecanum.EncoderDriveMecanum;
-import com.github.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
+import com.github.deltarobotics9351.deltadrive.hardware.DeltaHardware;
 import com.github.deltarobotics9351.deltadrive.parameters.EncoderDriveParameters;
+import com.github.deltarobotics9351.deltadrive.utils.ChassisType;
 
-import com.github.deltarobotics9351.deltadrive.utils.Invert;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
@@ -17,7 +18,7 @@ public class AutonomoEncoderTuning extends LinearOpMode {
 
     private Hardware hdw;
 
-    private DeltaHardwareMecanum deltaHardware;
+    private DeltaHardware deltaHardware;
 
     private EncoderDriveMecanum encoderDrive;
 
@@ -26,8 +27,7 @@ public class AutonomoEncoderTuning extends LinearOpMode {
         hdw = new Hardware(hardwareMap); //creamos el hardware
         hdw.initHardware(false); //lo inicializamos
 
-        deltaHardware = new DeltaHardwareMecanum(hardwareMap, Invert.RIGHT_SIDE);
-        deltaHardware.initHardware(hdw.wheelFrontLeft, hdw.wheelFrontRight, hdw.wheelBackLeft, hdw.wheelBackRight, true);
+        deltaHardware = new DeltaHardware(hardwareMap, hdw.wheelFrontLeft, hdw.wheelFrontRight, hdw.wheelBackLeft, hdw.wheelBackRight, ChassisType.mecanum);
 
         EncoderDriveParameters parameters = new EncoderDriveParameters();
         parameters.LEFT_WHEELS_TURBO = 0.6;

@@ -1,6 +1,6 @@
 package com.github.deltarobotics9351.deltadrive.drive.mecanum.pid;
 
-import com.github.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
+import com.github.deltarobotics9351.deltadrive.hardware.DeltaHardware;
 import com.github.deltarobotics9351.pid.PIDController;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -15,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 public class IMUTimeDriveMecanum {
 
     public BNO055IMU imu;
-    DeltaHardwareMecanum hdw;
+    DeltaHardware hdw;
     Orientation lastAngles = new Orientation();
 
     DcMotor frontleft;
@@ -31,7 +31,7 @@ public class IMUTimeDriveMecanum {
 
     PIDController pidRotate, pidStrafe, pidDrive;
 
-    public IMUTimeDriveMecanum(DeltaHardwareMecanum hdw, LinearOpMode currentOpMode){
+    public IMUTimeDriveMecanum(DeltaHardware hdw, LinearOpMode currentOpMode){
         this.hdw = hdw;
         this.telemetry = currentOpMode.telemetry;
         this.currentOpMode = currentOpMode;

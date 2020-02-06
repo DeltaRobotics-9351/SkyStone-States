@@ -1,10 +1,9 @@
 package com.github.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum;
 
 import com.github.deltarobotics9351.deltadrive.drive.mecanum.IMUDriveMecanum;
-import com.github.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
+import com.github.deltarobotics9351.deltadrive.hardware.DeltaHardware;
 import com.github.deltarobotics9351.deltadrive.parameters.IMUDriveParameters;
-import com.github.deltarobotics9351.deltadrive.utils.Invert;
-import com.github.deltarobotics9351.deltamath.geometry.Rotation2d;
+import com.github.deltarobotics9351.deltadrive.utils.ChassisType;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -12,7 +11,7 @@ public class IMUMecanumLinearOpMode extends LinearOpMode {
 
     private IMUDriveMecanum imuDrive;
 
-    private DeltaHardwareMecanum deltaHardware;
+    private DeltaHardware deltaHardware;
 
     public IMUDriveParameters imuParameters = new IMUDriveParameters();
 
@@ -20,10 +19,6 @@ public class IMUMecanumLinearOpMode extends LinearOpMode {
     public DcMotor frontRight = null;
     public DcMotor backLeft = null;
     public DcMotor backRight = null;
-
-    public Invert WHEELS_INVERT = Invert.RIGHT_SIDE;
-
-    public boolean WHEELS_BRAKE = true;
 
     @Override
     public final void runOpMode() {
@@ -40,10 +35,7 @@ public class IMUMecanumLinearOpMode extends LinearOpMode {
             telemetry.update();
             while(opModeIsActive());
         }
-
-        deltaHardware = new DeltaHardwareMecanum(hardwareMap, WHEELS_INVERT);
-
-        deltaHardware.initHardware(frontLeft, frontRight, backLeft, backRight, WHEELS_BRAKE);
+        deltaHardware = new DeltaHardware(hardwareMap, frontLeft, frontRight, backLeft, backRight, ChassisType.mecanum);
 
         imuDrive = new IMUDriveMecanum(deltaHardware, this);
         imuDrive.initIMU(imuParameters);
@@ -70,8 +62,8 @@ public class IMUMecanumLinearOpMode extends LinearOpMode {
 
     }
 
-    public final void rotate(Rotation2d rot, double power, double timeoutS){
-        imuDrive.rotate(rot, power, timeoutS);
+    public final void rotate(double degrees, double power){
+        imuDrive.rotate(degrees, power);
     }
 
     class ParametersCheck implements Runnable{
