@@ -1,9 +1,9 @@
 package com.github.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum;
 
 import com.github.deltarobotics9351.deltadrive.drive.mecanum.EncoderDriveMecanum;
-import com.github.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
+import com.github.deltarobotics9351.deltadrive.hardware.DeltaHardware;
 import com.github.deltarobotics9351.deltadrive.parameters.EncoderDriveParameters;
-import com.github.deltarobotics9351.deltadrive.utils.Invert;
+import com.github.deltarobotics9351.deltadrive.utils.ChassisType;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -11,7 +11,7 @@ public class EncoderMecanumLinearOpMode extends LinearOpMode {
 
     private EncoderDriveMecanum encoderDrive;
 
-    private DeltaHardwareMecanum deltaHardware;
+    private DeltaHardware deltaHardware;
 
     public EncoderDriveParameters encoderParameters = new EncoderDriveParameters();
 
@@ -19,10 +19,6 @@ public class EncoderMecanumLinearOpMode extends LinearOpMode {
     public DcMotor frontRight = null;
     public DcMotor backLeft = null;
     public DcMotor backRight = null;
-
-    public Invert WHEELS_INVERT = Invert.RIGHT_SIDE;
-
-    public boolean WHEELS_BRAKE = true;
 
     @Override
     public final void runOpMode() {
@@ -40,9 +36,7 @@ public class EncoderMecanumLinearOpMode extends LinearOpMode {
             while(opModeIsActive());
         }
 
-        deltaHardware = new DeltaHardwareMecanum(hardwareMap, WHEELS_INVERT);
-
-        deltaHardware.initHardware(frontLeft, frontRight, backLeft, backRight, WHEELS_BRAKE);
+        deltaHardware = new DeltaHardware(hardwareMap, frontLeft, frontRight, backLeft, backRight, ChassisType.mecanum);
 
         encoderDrive = new EncoderDriveMecanum(deltaHardware, telemetry, this, encoderParameters);
 

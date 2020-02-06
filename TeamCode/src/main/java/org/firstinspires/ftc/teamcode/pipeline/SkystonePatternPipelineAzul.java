@@ -46,10 +46,11 @@ public class SkystonePatternPipelineAzul extends OpenCvPipeline {
     private final int rows = 640;
     private final int cols = 480;
 
-    public enum Pattern { ND, A, B, C }
-
-    //Como se ve en el manual del juego
-    public Pattern pattern = Pattern.ND;
+    //Como se ve en el manual del juego:
+    // Pattern A = 1
+    // Pattern B = 2
+    // Pattern C = 3
+    public int pattern = 0;
 
     Mat yCbCrChan2Mat = new Mat();
     Mat thresholdMat = new Mat();
@@ -69,13 +70,13 @@ public class SkystonePatternPipelineAzul extends OpenCvPipeline {
     //definimos el pattern a una variable basandonos en que hay tres posibilidades, como ya se explico arriba
     public void definePattern(){
         if(valLeft == 255 && valRight == 0){
-            pattern = Pattern.A;
+            pattern = 1;
         }else if(valLeft == 0 && valRight == 255){
-            pattern = Pattern.B;
+            pattern = 2;
         }else if(valLeft == 255 && valRight == 255){
-            pattern = Pattern.C;
+            pattern = 3;
         }else{
-            pattern = Pattern.ND; // desconocido, se posiciono de forma erronea el robot.
+            pattern = 0; // desconocido, se posiciono de forma erronea el robot.
         }
     }
 

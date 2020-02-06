@@ -20,33 +20,27 @@ public class MotivateTelemetry {
 
     static int DIA_NACIONAL = 0;
 
-    public static String[] doMotivateGlobal(){
+    public static void doMotivateGlobal(Telemetry telemetry){
         if(dayOfMonth == DIA_NACIONAL) {
-            String[] s = { "[Sebas]", getRandom(messagesGlobal) };
-            return s;
+            telemetry.addData("[Sebas]", getRandom(messagesGlobal));
         }else{
-            String[] s = { "[>]", "Ready" };
-            return s;
+            telemetry.addData("[>]", "Ready");
         }
     }
 
-    public static String[] doMotivateRed(Telemetry telemetry){
+    public static void doMotivateRed(Telemetry telemetry){
         if(dayOfMonth == DIA_NACIONAL) {
-            String[] s = { "[Sebas]", getRandom(messagesGlobal) };
-            return s;
+            telemetry.addData("[Sebas]", getRandom(messagesRed));
         }else{
-            String[] s = { "[>]", "Ready" };
-            return s;
+            telemetry.addData("[>]", "Ready");
         }
     }
 
-    public static String[] doMotivateBlue(Telemetry telemetry){
+    public static void doMotivateBlue(Telemetry telemetry){
         if(dayOfMonth == DIA_NACIONAL) {
-            String[] s = { "[Sebas]", getRandom(messagesBlue) };
-            return s;
+            telemetry.addData("[Sebas]", getRandom(messagesBlue));
         }else{
-            String[] s = { "[>]", "Ready" };
-            return s;
+            telemetry.addData("[>]", "Ready");
         }
     }
 

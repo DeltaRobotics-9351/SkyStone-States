@@ -1,18 +1,18 @@
 package com.github.deltarobotics9351.deltamath.geometry;
 
-public class Rotation2d {
+public class Rotation2D {
 
     private double radians;
     private double cos;
     private double sin;
 
-    public Rotation2d(){
+    public Rotation2D(){
         radians = 0;
         cos = 1;
         sin = 0;
     }
 
-    public Rotation2d(double x, double y){
+    public Rotation2D(double x, double y){
         double hy = Math.hypot(x, y);
         if(hy > 0.00001){
             sin = y / hy;
@@ -23,7 +23,7 @@ public class Rotation2d {
         }
     }
 
-    public Rotation2d(double radians){
+    public Rotation2D(double radians){
         this.radians = radians;
         this.cos = Math.cos(radians);
         this.sin = Math.sin(radians);
@@ -33,14 +33,6 @@ public class Rotation2d {
         this.radians = Math.toRadians(degrees);
         this.cos = Math.cos(radians);
         this.sin = Math.sin(radians);
-    }
-
-    public static final Rotation2d fromDegrees(double degrees){
-        return new Rotation2d(Math.toRadians(degrees));
-    }
-
-    public static final Rotation2d fromRadians(double radians){
-        return new Rotation2d(radians);
     }
 
     public void setRadians(double radians){
@@ -53,7 +45,7 @@ public class Rotation2d {
         return Math.toDegrees(radians);
     }
 
-    public double deltaRadians(Rotation2d other){
+    public double deltaRadians(Rotation2D other){
         double deltaAngle = toDegrees() - other.toDegrees();
 
         if (deltaAngle < -180)
@@ -64,7 +56,7 @@ public class Rotation2d {
         return Math.toRadians(deltaAngle);
     }
 
-    public double deltaDegrees(Rotation2d other){
+    public double deltaDegrees(Rotation2D other){
         double deltaAngle = toDegrees() - other.toDegrees();
 
         if (deltaAngle < -180)
@@ -91,7 +83,7 @@ public class Rotation2d {
         return radians;
     }
 
-    public void rotate(Rotation2d o){
+    public void rotate(Rotation2D o){
         double x = cos * o.cos - sin * o.sin;
         double y = cos * o.sin + sin * o.cos;
 
@@ -110,7 +102,7 @@ public class Rotation2d {
 
     @Override
     public String toString(){
-        return "Rot2d(rad " + radians + ", deg " + Math.toDegrees(radians) + ")";
+        return "Rot2d(rad " + radians + ", deg" + Math.toDegrees(radians);
     }
 
 }
