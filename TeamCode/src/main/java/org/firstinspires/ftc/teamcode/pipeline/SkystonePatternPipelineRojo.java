@@ -24,8 +24,8 @@ public class SkystonePatternPipelineRojo extends OpenCvPipeline {
     //para mover los rectangulos (las zonas en las que se detecta el color) usa las siguientes variables y
     //no tendras que mover nada mas. La posicion es en relacion al tamano de la vista de la camara
 
-    private static final float rectanguloIzquierdoX = 10f;
-    private static final float rectanguloDerechoX = 9.5f;
+    private static final float rectanguloIzquierdoX = 12.5f;
+    private static final float rectanguloDerechoX = 11f;
 
     private static final float rectanguloIzquierdoY = 5.3f;
     private static final float rectanguloDerechoY = 5.3f;
@@ -46,11 +46,10 @@ public class SkystonePatternPipelineRojo extends OpenCvPipeline {
     private final int rows = 640;
     private final int cols = 480;
 
-    //Como se ve en el manual del juego:
-    // Pattern A = 1
-    // Pattern B = 2
-    // Pattern C = 3
-    public int pattern = 0;
+    public enum Pattern { ND, A, B, C }
+
+    //Como se ve en el manual del juego
+    public Pattern pattern = Pattern.ND;
 
     Mat yCbCrChan2Mat = new Mat();
     Mat thresholdMat = new Mat();
@@ -69,14 +68,14 @@ public class SkystonePatternPipelineRojo extends OpenCvPipeline {
 
     //definimos el pattern a una variable basandonos en que hay tres posibilidades, como ya se explico arriba
     public void definePattern(){
-        if(valLeft == 255 && valRight == 255){
-            pattern = 1;
-        }else if(valLeft == 0 && valRight == 255){
-            pattern = 2;
+        if(valLeft == 0 && valRight == 255){
+            pattern = Pattern.A;
         }else if(valLeft == 255 && valRight == 0){
-            pattern = 3;
+            pattern = Pattern.B;
+        }else if(valLeft == 255 && valRight == 255){
+            pattern = Pattern.C;
         }else{
-            pattern = 0; // desconocido, se posiciono de forma erronea el robot.
+            pattern = Pattern.ND; // desconocido, se posiciono de forma erronea el robot.
         }
     }
 

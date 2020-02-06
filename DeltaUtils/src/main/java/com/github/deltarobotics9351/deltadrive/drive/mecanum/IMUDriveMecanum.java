@@ -6,18 +6,20 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-import com.github.deltarobotics9351.deltadrive.hardware.DeltaHardware;
+import com.github.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
 import com.github.deltarobotics9351.deltadrive.parameters.IMUDriveParameters;
 
+import com.github.deltarobotics9351.deltamath.geometry.Rotation2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 public class IMUDriveMecanum {
 
     public BNO055IMU imu;
-    DeltaHardware hdw;
+    DeltaHardwareMecanum hdw;
     Orientation lastAngles = new Orientation();
 
     DcMotor frontleft;
@@ -33,10 +35,16 @@ public class IMUDriveMecanum {
 
     IMUDriveParameters parameters;
 
-    public IMUDriveMecanum(DeltaHardware hdw, LinearOpMode currentOpMode){
+    private ElapsedTime runtime = new ElapsedTime();
+
+    public IMUDriveMecanum(DeltaHardwareMecanum hdw, LinearOpMode currentOpMode){
         this.hdw = hdw;
         this.telemetry = currentOpMode.telemetry;
         this.currentOpMode = currentOpMode;
+    }
+
+    public void invertRightSide(boolean invert){
+
     }
 
     public void initIMU(IMUDriveParameters parameters){
@@ -92,8 +100,18 @@ public class IMUDriveMecanum {
 
     int correctedTimes = 0;
 
-    public void rotate(double degrees, double power)
+    public void rotate(Rotation2d rotation, double power, double timeoutS)
     {
+
+        double degrees = rotation.toDegrees();
+
+        if(correctedTimes == 0) {
+            runtime.reset();
+            if(runtime.seconds() >= timeoutS){
+                correctedTimes = 0;
+                return;
+            }
+        }
 
         power = Math.abs(power);
 
@@ -128,26 +146,26 @@ public class IMUDriveMecanum {
         // rotaremos hasta que se complete la vuelta
         if (degrees < 0)
         {
-            while (getAngle() == 0 && currentOpMode.opModeIsActive()) { //al girar a la derecha necesitamos salirnos de 0 grados primero
+            while (getAngle() == 0 && currentOpMode.opModeIsActive() && (runtime.seconds() < timeoutS)) { //al girar a la derecha necesitamos salirnos de 0 grados primero
                 telemetry.addData("imuAngle", getAngle());
-                telemetry.addData("degreesDestino", degrees);
+                telemetry.addData("degreesDestino", rotation.toDegrees());
                 telemetry.update();
             }
 
-            while (getAngle() > degrees && currentOpMode.opModeIsActive()) { //entramos en un bucle hasta que los degrees sean los esperados
+            while (getAngle() > degrees && currentOpMode.opModeIsActive() && (runtime.seconds() < timeoutS)) { //entramos en un bucle hasta que los degrees sean los esperados
                 telemetry.addData("imuAngle", getAngle());
-                telemetry.addData("degreesDestino", degrees);
+                telemetry.addData("degreesDestino", rotation.toDegrees());
                 telemetry.update();
             }
         }
         else
-            while (getAngle() < degrees && currentOpMode.opModeIsActive()) { //entramos en un bucle hasta que los degrees sean los esperados
+            while (getAngle() < degrees && currentOpMode.opModeIsActive() && (runtime.seconds() < timeoutS)) { //entramos en un bucle hasta que los degrees sean los esperados
                 telemetry.addData("imuAngle", getAngle());
-                telemetry.addData("degreesDestino", degrees);
+                telemetry.addData("degreesDestino", rotation.toDegrees());
                 telemetry.update();
             }
 
-        // paramos los motores
+        // stop the movement
         defineAllWheelPower(0,0,0,0);
 
         correctRotation(degrees);
@@ -168,7 +186,7 @@ public class IMUDriveMecanum {
         double deltaAngle = calculateDeltaAngles(expectedAngle, getAngle());
         telemetry.addData("error", deltaAngle);
         telemetry.update();
-        rotate(deltaAngle, parameters.ROTATE_CORRECTION_POWER); //0.15
+        rotate(Rotation2d.fromDegrees(deltaAngle), parameters.ROTATE_CORRECTION_POWER, 0); //0.15
 
     }
 
@@ -350,10 +368,32 @@ public class IMUDriveMecanum {
     }
 
     private void defineAllWheelPower(double frontleft, double frontright, double backleft, double backright){
-        hdw.wheelFrontLeft.setPower(frontleft);
-        hdw.wheelFrontRight.setPower(-frontright);
-        hdw.wheelBackLeft.setPower(backleft);
-        hdw.wheelBackRight.setPower(-backright);
+        switch(hdw.invert) {
+            case RIGHT_SIDE:
+                hdw.wheelFrontLeft.setPower(frontleft);
+                hdw.wheelFrontRight.setPower(-frontright);
+                hdw.wheelBackLeft.setPower(backleft);
+                hdw.wheelBackRight.setPower(-backright);
+                break;
+            case LEFT_SIDE:
+                hdw.wheelFrontLeft.setPower(-frontleft);
+                hdw.wheelFrontRight.setPower(frontright);
+                hdw.wheelBackLeft.setPower(-backleft);
+                hdw.wheelBackRight.setPower(backright);
+                break;
+            case BOTH_SIDES:
+                hdw.wheelFrontLeft.setPower(-frontleft);
+                hdw.wheelFrontRight.setPower(-frontright);
+                hdw.wheelBackLeft.setPower(-backleft);
+                hdw.wheelBackRight.setPower(-backright);
+                break;
+            case NO_INVERT:
+                hdw.wheelFrontLeft.setPower(frontleft);
+                hdw.wheelFrontRight.setPower(frontright);
+                hdw.wheelBackLeft.setPower(backleft);
+                hdw.wheelBackRight.setPower(backright);
+                break;
+        }
     }
 
     public void sleep(long millis){

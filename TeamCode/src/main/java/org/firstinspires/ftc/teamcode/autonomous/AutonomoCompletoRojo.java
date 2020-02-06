@@ -1,8 +1,8 @@
-package org.firstinspires.ftc.teamcode.autonomous.albuquerque;
+package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.github.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum.IMUEncoderMecanumLinearOpMode;
-import com.github.deltarobotics9351.deltadrive.hardware.DeltaHardware;
-import com.github.deltarobotics9351.deltadrive.utils.ChassisType;
+import com.github.deltarobotics9351.deltamath.geometry.Rotation2d;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.MotivateTelemetry;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
@@ -12,7 +12,8 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
-public class CompletoRojo extends IMUEncoderMecanumLinearOpMode {
+@Autonomous(name="Autonomo Completo Rojo", group="Final")
+public class AutonomoCompletoRojo extends IMUEncoderMecanumLinearOpMode { //extendemos una clase que ya contiene todos los metodos de encoders y IMU para optimizar el codigo y el tiempo
 
     Hardware hdw;
 
@@ -35,23 +36,33 @@ public class CompletoRojo extends IMUEncoderMecanumLinearOpMode {
 
         cvCamera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
 
-        imuParameters.ROTATE_CORRECTION_POWER = 0.15;
+        imuParameters.ROTATE_CORRECTION_POWER = 0.15; //definimos los parametros del imu
         imuParameters.ROTATE_MAX_CORRECTION_TIMES = 3;
 
-        encoderParameters.LEFT_WHEELS_TURBO = 0.7;
-        encoderParameters.RIGHT_WHEELS_TURBO = 0.7;
+        encoderParameters.LEFT_WHEELS_TURBO = 1; //definimos los parametros de los encoders
+        encoderParameters.RIGHT_WHEELS_TURBO = 1;
         encoderParameters.COUNTS_PER_REV = 537.6;
         encoderParameters.DRIVE_GEAR_REDUCTION = 1;
         encoderParameters.WHEEL_DIAMETER_INCHES = 4;
 
+        String[] s = MotivateTelemetry.doMotivateGlobal();
+
         while(!isStarted()){ //mientras no se ha presionado play, se mostrara un mensaje telemetry con el pattern detectado
-            MotivateTelemetry.doMotivateRed(telemetry);
-            telemetry.addData("Pattern", pipelineRojo.pattern);
+            telemetry.addData(s[0], s[1]);
+            telemetry.addData("Pattern", pipelineRojo.pattern.toString());
+            //telemetry.addData("si", Rotation2d.fromDegrees(-90));
+
             telemetry.update();
         }
 
-        switch(pipelineRojo.pattern) {
-            case 0: //no se ha detectado ningun pattern
+        cvCamera.closeCameraDevice();
+
+        SkystonePatternPipelineRojo.Pattern pattern = pipelineRojo.pattern;
+
+
+
+        switch(pattern) {
+            case ND: //no se ha detectado ningun pattern
 
                 telemetry.addData("[/!\\]", "No se ha podido detectar un patron.");
                 telemetry.update();
@@ -59,13 +70,36 @@ public class CompletoRojo extends IMUEncoderMecanumLinearOpMode {
                 while(opModeIsActive());
 
                 break;
-            case 1: //Pattern A
+            case A: //Pattern A
 
                 break;
-            case 2: //Pattern B
+            case B: //Pattern B
+
+                strafeLeft(9, 0.4, 10); //nos deslizamos hacia la skystone 2
+
+                forward(2, 0.5, 5);
+
+                backwards(30, 0.7, 10); //avanzamos hacia ella
+
+                hdw.SSADown(); //bajamos el brazo
+                hdw.SSA2Grab(); //cerramos la articulacion
+                hdw.SSAUp(); // subimos el brazo
+
+                forward(25, 0.7, 10); //avanzamos hacia la pared
+
+                rotate(Rotation2d.fromDegrees(-90), 0.3, 10); //giramos hacia el skybridge
+                backwards(75, 0.7, 10); //nos movemos hacia la building zone
+
+                rotate(Rotation2d.fromDegrees(90), 0.3, 10);
+                backwards(30, 0.7, 10);
+
+                hdw.SSADown(); //bajamos el brazo
+                hdw.SSA2Release(); //abrimos la articulacion
+                hdw.SSAUp(); // subimos el brazo
+                hdw.SSA2Grab(); // cerramos la articulacion
 
                 break;
-            case 3: //Pattern C
+            case C: //Pattern C
 
                 break;
         }
