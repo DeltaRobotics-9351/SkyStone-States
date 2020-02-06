@@ -8,14 +8,13 @@ import org.firstinspires.ftc.teamcode.autonomous.extend.Autonomo;
 import org.firstinspires.ftc.teamcode.autonomous.rojo.AutonomoCompletoLadoPared;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 
-@Autonomous(name="Selector de Autonomos ROJO", group="Final")
-public class SelectorRojo extends IMUEncoderMecanumLinearOpMode { //extendemos una clase que ya contiene todos los metodos de encoders y IMU para optimizar el codigo y el tiempo
+@Autonomous(name="Selector de Autonomos AZUL", group="Final")
+public class SelectorAzul extends IMUEncoderMecanumLinearOpMode { //extendemos una clase que ya contiene todos los metodos de encoders y IMU para optimizar el codigo y el tiempo
 
 
     Hardware hdw;
 
-    public Autonomo[] autonomos = { new AutonomoCompletoLadoPared(this, hdw),
-    new AutonomoAvanzar(this, hdw)};
+    public Autonomo[] autonomos = { };
 
     Autonomo seleccionado = null;
 
