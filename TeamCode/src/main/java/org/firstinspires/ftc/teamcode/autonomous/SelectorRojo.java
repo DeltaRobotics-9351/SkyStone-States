@@ -1,29 +1,40 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.github.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum.IMUEncoderMecanumLinearOpMode;
+import com.github.deltarobotics9351.deltamath.geometry.Rotation2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.autonomous.ambos.AutonomoAvanzar;
-import org.firstinspires.ftc.teamcode.autonomous.extend.Autonomo;
-import org.firstinspires.ftc.teamcode.autonomous.rojo.AutonomoCompletoLadoPared;
+import org.firstinspires.ftc.teamcode.MotivateTelemetry;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
+import org.firstinspires.ftc.teamcode.pipeline.SkystonePatternPipelineRojo;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvInternalCamera;
 
-@Autonomous(name="Selector de Autonomos ROJO", group="Final")
-public class SelectorRojo extends IMUEncoderMecanumLinearOpMode { //extendemos una clase que ya contiene todos los metodos de encoders y IMU para optimizar el codigo y el tiempo
-
+@Autonomous(name="Autonomo Completo Rojo", group="Final")
+public class AutonomoCompletoRojo extends IMUEncoderMecanumLinearOpMode { //extendemos una clase que ya contiene todos los metodos de encoders y IMU para optimizar el codigo y el tiempo
 
     Hardware hdw;
 
-    public Autonomo[] autonomos = { new AutonomoCompletoLadoPared(this, hdw),
-    new AutonomoAvanzar(this, hdw)};
+    public SkystonePatternPipelineRojo pipelineRojo = new SkystonePatternPipelineRojo();
 
-    Autonomo seleccionado = null;
-
-    //empieza seccion de funciones
+    public OpenCvCamera cvCamera;
 
     @Override
     public void _runOpMode(){
 
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+
+        //creamos la camara de OpenCV
+        cvCamera = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
+
+        //la inicializamos
+        cvCamera.openCameraDevice();
+
+        cvCamera.setPipeline(pipelineRojo);
+
+        cvCamera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
 
         imuParameters.ROTATE_CORRECTION_POWER = 0.15; //definimos los parametros del imu
         imuParameters.ROTATE_MAX_CORRECTION_TIMES = 3;
@@ -34,42 +45,63 @@ public class SelectorRojo extends IMUEncoderMecanumLinearOpMode { //extendemos u
         encoderParameters.DRIVE_GEAR_REDUCTION = 1;
         encoderParameters.WHEEL_DIAMETER_INCHES = 4;
 
-        selectorMenu(); //entramos en modo selector, en el que mostramos mensajes telemetry y usamos
-                        //los gamepads para seleccionar un autonomo.
+        String[] s = MotivateTelemetry.doMotivateGlobal();
 
-        seleccionado.run();
+        while(!isStarted()){ //mientras no se ha presionado play, se mostrara un mensaje telemetry con el pattern detectado
+            telemetry.addData(s[0], s[1]);
+            telemetry.addData("Pattern", pipelineRojo.pattern.toString());
+            //telemetry.addData("si", Rotation2d.fromDegrees(-90));
 
-    }
-
-    public void selectorMenu(){
-        int selecIndex = -1;
-
-        while(!gamepad1.a || !gamepad2.a){
-            if(seleccionado == null){
-                telemetry.addData("[/!\\]", "d-pad izquierda y derecha para cambiar la seleccion\n(A) para aceptar (En cualquier control)");
-                telemetry.update();
-            }
-
-            if(gamepad1.dpad_right || gamepad2.dpad_right){
-                selecIndex += 1;
-                if(selecIndex > autonomos.length){
-                    selecIndex = 0;
-                }
-                seleccionado = autonomos[selecIndex];
-            }
-
-            if(gamepad1.dpad_left || gamepad2.dpad_left){
-                selecIndex += 1;
-                if(selecIndex < 0){
-                    selecIndex = autonomos.length;
-                }
-                seleccionado = autonomos[selecIndex];
-            }
-
-            telemetry.addData("[/!\\]", seleccionado.getClass().getName() + "\n\nD-pad izquierda y derecha para cambiar la seleccion\n(A) para aceptar (En cualquier control)");
             telemetry.update();
+        }
 
-            sleep(100);
+        cvCamera.closeCameraDevice();
+
+        SkystonePatternPipelineRojo.Pattern pattern = pipelineRojo.pattern;
+
+
+
+        switch(pattern) {
+            case ND: //no se ha detectado ningun pattern
+
+                telemetry.addData("[/!\\]", "No se ha podido detectar un patron.");
+                telemetry.update();
+
+                while(opModeIsActive());
+
+                break;
+            case A: //Pattern A
+
+                break;
+            case B: //Pattern B
+
+                strafeLeft(9, 0.4, 10); //nos deslizamos hacia la skystone 2
+
+                forward(2, 0.5, 5);
+
+                backwards(30, 0.7, 10); //avanzamos hacia ella
+
+                hdw.SSADown(); //bajamos el brazo
+                hdw.SSA2Grab(); //cerramos la articulacion
+                hdw.SSAUp(); // subimos el brazo
+
+                forward(25, 0.7, 10); //avanzamos hacia la pared
+
+                rotate(Rotation2d.fromDegrees(-90), 0.3, 10); //giramos hacia el skybridge
+                backwards(75, 0.7, 10); //nos movemos hacia la building zone
+
+                rotate(Rotation2d.fromDegrees(90), 0.3, 10);
+                backwards(30, 0.7, 10);
+
+                hdw.SSADown(); //bajamos el brazo
+                hdw.SSA2Release(); //abrimos la articulacion
+                hdw.SSAUp(); // subimos el brazo
+                hdw.SSA2Grab(); // cerramos la articulacion
+
+                break;
+            case C: //Pattern C
+
+                break;
         }
     }
 
@@ -83,7 +115,5 @@ public class SelectorRojo extends IMUEncoderMecanumLinearOpMode { //extendemos u
         backLeft = hdw.wheelBackLeft;
         backRight = hdw.wheelBackRight;
     }
-
-    //termina seccion de init & selector
 
 }

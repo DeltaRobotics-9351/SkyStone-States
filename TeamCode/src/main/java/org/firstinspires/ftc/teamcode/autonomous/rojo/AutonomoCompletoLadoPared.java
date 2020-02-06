@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/autonomous/rojo/AutonomoCompletoLadoPared.java
 package org.firstinspires.ftc.teamcode.autonomous.rojo;
 
@@ -21,9 +22,15 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
+=======
+package org.firstinspires.ftc.teamcode.autonomous;
+
+import org.firstinspires.ftc.teamcode.autonomous.extender.Autonomo;
+>>>>>>> parent of 9a6316b... auton selector
 
 <<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/autonomous/rojo/AutonomoCompletoLadoPared.java
 public class AutonomoCompletoLadoPared extends Autonomo {
+<<<<<<< HEAD
 =======
 public class CompletoRojo extends IMUEncoderMecanumLinearOpMode {
 >>>>>>> parent of f3637b7... autonomos & rotaciones (timeout):TeamCode/src/main/java/org/firstinspires/ftc/teamcode/autonomous/albuquerque/CompletoRojo.java
@@ -138,4 +145,6 @@ public class CompletoRojo extends IMUEncoderMecanumLinearOpMode {
                 break;
         }
     }
+=======
+>>>>>>> parent of 9a6316b... auton selector
 }
