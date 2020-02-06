@@ -2,10 +2,11 @@ package com.github.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanu
 
 import com.github.deltarobotics9351.deltadrive.drive.mecanum.EncoderDriveMecanum;
 import com.github.deltarobotics9351.deltadrive.drive.mecanum.IMUDriveMecanum;
-import com.github.deltarobotics9351.deltadrive.hardware.DeltaHardware;
+import com.github.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
 import com.github.deltarobotics9351.deltadrive.parameters.EncoderDriveParameters;
 import com.github.deltarobotics9351.deltadrive.parameters.IMUDriveParameters;
-import com.github.deltarobotics9351.deltadrive.utils.ChassisType;
+import com.github.deltarobotics9351.deltadrive.utils.Invert;
+import com.github.deltarobotics9351.deltamath.geometry.Rotation2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -14,19 +15,25 @@ public class IMUEncoderMecanumLinearOpMode extends LinearOpMode {
     private IMUDriveMecanum imuDrive;
     private EncoderDriveMecanum encoderDrive;
 
-    private DeltaHardware deltaHardware;
+    private DeltaHardwareMecanum deltaHardware;
 
     public IMUDriveParameters imuParameters = new IMUDriveParameters();
 
     public EncoderDriveParameters encoderParameters = new EncoderDriveParameters();
+
+    public Invert invert = Invert.RIGHT_SIDE;
 
     public DcMotor frontLeft = null;
     public DcMotor frontRight = null;
     public DcMotor backLeft = null;
     public DcMotor backRight = null;
 
+    public Invert WHEELS_INVERT = Invert.RIGHT_SIDE;
+
+    public boolean WHEELS_BRAKE = true;
+
     @Override
-    public final void runOpMode(){
+    public final void runOpMode() {
         defineHardware();
 
         if(frontLeft == null || frontRight == null || backLeft == null || backRight == null){
@@ -41,7 +48,10 @@ public class IMUEncoderMecanumLinearOpMode extends LinearOpMode {
             while(opModeIsActive());
         }
 
-        deltaHardware = new DeltaHardware(hardwareMap, frontLeft, frontRight, backLeft, backRight, ChassisType.mecanum);
+        deltaHardware = new DeltaHardwareMecanum(hardwareMap, WHEELS_INVERT);
+
+        deltaHardware.initHardware(frontLeft, frontRight, backLeft, backRight, WHEELS_BRAKE);
+
 
         imuDrive = new IMUDriveMecanum(deltaHardware, this);
         imuDrive.initIMU(imuParameters);
@@ -70,8 +80,8 @@ public class IMUEncoderMecanumLinearOpMode extends LinearOpMode {
 
     }
 
-    public final void rotate(double degrees, double power){
-        imuDrive.rotate(degrees, power);
+    public final void rotate(Rotation2d rot, double power, double timeoutSecs){
+        imuDrive.rotate(rot, power, timeoutSecs);
     }
 
     public final void forward(double inches, double speed, double timeOutSecs){

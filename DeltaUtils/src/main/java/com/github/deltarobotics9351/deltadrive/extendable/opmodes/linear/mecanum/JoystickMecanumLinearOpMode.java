@@ -1,8 +1,8 @@
 package com.github.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum;
 
 import com.github.deltarobotics9351.deltadrive.drive.mecanum.JoystickDriveMecanum;
-import com.github.deltarobotics9351.deltadrive.hardware.DeltaHardware;
-import com.github.deltarobotics9351.deltadrive.utils.ChassisType;
+import com.github.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
+import com.github.deltarobotics9351.deltadrive.utils.Invert;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -11,15 +11,19 @@ import com.qualcomm.robotcore.util.Range;
 public class JoystickMecanumLinearOpMode extends LinearOpMode {
 
     private JoystickDriveMecanum joystick;
-    private DeltaHardware deltaHardware;
+    private DeltaHardwareMecanum deltaHardware;
 
     public DcMotor frontLeft = null;
     public DcMotor frontRight = null;
     public DcMotor backLeft = null;
     public DcMotor backRight = null;
 
+    public Invert WHEELS_INVERT = Invert.RIGHT_SIDE;
+
+    public boolean WHEELS_BRAKE = true;
+
     @Override
-    public final void runOpMode(){
+    public final void runOpMode() {
         defineHardware();
 
         if(frontLeft == null || frontRight == null || backLeft == null || backRight == null){
@@ -34,7 +38,10 @@ public class JoystickMecanumLinearOpMode extends LinearOpMode {
             while(opModeIsActive());
         }
 
-        deltaHardware = new DeltaHardware(hardwareMap, frontLeft, frontRight, backLeft, backRight, ChassisType.mecanum);
+        deltaHardware = new DeltaHardwareMecanum(hardwareMap, WHEELS_INVERT);
+
+        deltaHardware.initHardware(frontLeft, frontRight, backLeft, backRight, WHEELS_BRAKE);
+
         joystick = new JoystickDriveMecanum(deltaHardware);
 
         _runOpMode();

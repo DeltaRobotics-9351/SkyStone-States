@@ -52,7 +52,7 @@ public class Vector2d {
         setY(y() / by);
     }
 
-    public void rotate(Rotation2D by){
+    public void rotate(Rotation2d by){
         setX(x() * Math.cos(by.getRadians()) - y() * Math.sin(by.getRadians()));
         setY(x() * Math.sin(by.getRadians()) + y() * Math.cos(by.getRadians()));
     }

@@ -1,6 +1,6 @@
 package com.github.deltarobotics9351.deltadrive.drive.mecanum;
 
-import com.github.deltarobotics9351.deltadrive.hardware.DeltaHardware;
+import com.github.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
 
@@ -15,9 +15,9 @@ public class JoystickDriveMecanum {
 
     public double turbo = 0;
 
-    private DeltaHardware hdw;
+    private DeltaHardwareMecanum hdw;
 
-    public JoystickDriveMecanum(DeltaHardware hdw){ this.hdw = hdw; }
+    public JoystickDriveMecanum(DeltaHardwareMecanum hdw){ this.hdw = hdw; }
 
     public void joystick(Gamepad gamepad, double turbo){
 
@@ -30,10 +30,41 @@ public class JoystickDriveMecanum {
         double y1 = -gamepad.left_stick_y;
         double x1 = gamepad.left_stick_x;
         double x2 = gamepad.right_stick_x;
-        wheelFrontRightPower = -(y1 - x2 - x1);
-        wheelBackRightPower = -(y1 - x2 + x1);
-        wheelFrontLeftPower = (y1 + x2 + x1);
-        wheelBackLeftPower = (y1 + x2 - x1);
+
+        switch(hdw.invert) {
+
+            case RIGHT_SIDE:
+
+                wheelFrontRightPower = -(y1 - x2 - x1);
+                wheelBackRightPower = -(y1 - x2 + x1);
+                wheelFrontLeftPower = (y1 + x2 + x1);
+                wheelBackLeftPower = (y1 + x2 - x1);
+                break;
+
+            case LEFT_SIDE:
+
+                wheelFrontRightPower = (y1 - x2 - x1);
+                wheelBackRightPower = (y1 - x2 + x1);
+                wheelFrontLeftPower = -(y1 + x2 + x1);
+                wheelBackLeftPower = -(y1 + x2 - x1);
+                break;
+
+            case BOTH_SIDES:
+
+                wheelFrontRightPower = -(y1 - x2 - x1);
+                wheelBackRightPower = -(y1 - x2 + x1);
+                wheelFrontLeftPower = -(y1 + x2 + x1);
+                wheelBackLeftPower = -(y1 + x2 - x1);
+                break;
+
+            case NO_INVERT:
+
+                wheelFrontRightPower = (y1 - x2 - x1);
+                wheelBackRightPower = (y1 - x2 + x1);
+                wheelFrontLeftPower = (y1 + x2 + x1);
+                wheelBackLeftPower = (y1 + x2 - x1);
+                break;
+        }
 
         double max = Math.max(Math.abs(wheelFrontRightPower), Math.max(Math.abs(wheelBackRightPower),
                 Math.max(Math.abs(wheelFrontLeftPower), Math.abs(wheelBackLeftPower))));

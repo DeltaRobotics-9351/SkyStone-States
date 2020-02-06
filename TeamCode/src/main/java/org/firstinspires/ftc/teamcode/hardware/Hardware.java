@@ -91,26 +91,33 @@ public class Hardware {
 
     //servos set position
     public void SSAUp(){
-        servoStoneAutonomous.setPosition(0.07);
+        servoStoneAutonomous.setPosition(0.07); sleep(500);
     }
 
     public void SSADown(){
-        servoStoneAutonomous.setPosition(0.45);
+        servoStoneAutonomous.setPosition(0.45); sleep(500);
     }
 
     public void SSA2Grab(){
-        servoStoneAutonomous2.setPosition(0.6);
+        servoStoneAutonomous2.setPosition(0.6); sleep(500);
     }
 
     public void SSA2Release(){
-        servoStoneAutonomous2.setPosition(1);
-    }
+        servoStoneAutonomous2.setPosition(1); sleep(500); }
 
     public void putCapstone(){
-        servoCapstone.setPosition(0.25);
+        servoCapstone.setPosition(0.25); sleep(500);
     }
 
     public void saveCapstone(){
-        servoCapstone.setPosition(1);
+        servoCapstone.setPosition(1); sleep(500);
+    }
+
+    public final void sleep(long milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 }

@@ -1,6 +1,6 @@
 package com.github.deltarobotics9351.deltadrive.drive.mecanum;
 
-import com.github.deltarobotics9351.deltadrive.hardware.DeltaHardware;
+import com.github.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
 import com.github.deltarobotics9351.deltadrive.parameters.EncoderDriveParameters;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class EncoderDriveMecanum {
 
-    public DeltaHardware hdw;
+    public DeltaHardwareMecanum hdw;
 
     private final Telemetry telemetry;
 
@@ -20,7 +20,7 @@ public class EncoderDriveMecanum {
 
     private EncoderDriveParameters parameters;
 
-    public EncoderDriveMecanum(DeltaHardware hdw, Telemetry telemetry, LinearOpMode currentOpMode, EncoderDriveParameters parameters){
+    public EncoderDriveMecanum(DeltaHardwareMecanum hdw, Telemetry telemetry, LinearOpMode currentOpMode, EncoderDriveParameters parameters){
         this.hdw = hdw;
         this.telemetry = telemetry;
         this.currentOpMode = currentOpMode;
@@ -50,16 +50,40 @@ public class EncoderDriveMecanum {
         double COUNTS_PER_INCH = (parameters.COUNTS_PER_REV * parameters.DRIVE_GEAR_REDUCTION) /
                 (parameters.WHEEL_DIAMETER_INCHES * 3.1415);
 
-        int newFrontLeftTarget;
-        int newFrontRightTarget;
-        int newBackLeftTarget;
-        int newBackRightTarget;
+        int newFrontLeftTarget = 0;
+        int newFrontRightTarget = 0;
+        int newBackLeftTarget = 0;
+        int newBackRightTarget = 0;
 
         // Determine new target position, and pass to motor controller
-        newFrontLeftTarget = hdw.wheelFrontLeft.getCurrentPosition() + (int) (frontleft * COUNTS_PER_INCH);
-        newFrontRightTarget = hdw.wheelFrontRight.getCurrentPosition() + (int) (-frontright * COUNTS_PER_INCH);
-        newBackLeftTarget = hdw.wheelBackLeft.getCurrentPosition() + (int) (backleft * COUNTS_PER_INCH);
-        newBackRightTarget = hdw.wheelBackRight.getCurrentPosition() + (int) (-backright * COUNTS_PER_INCH);
+        switch(hdw.invert) {
+
+            case RIGHT_SIDE:
+                newFrontLeftTarget = hdw.wheelFrontLeft.getCurrentPosition() + (int) (frontleft * COUNTS_PER_INCH);
+                newFrontRightTarget = hdw.wheelFrontRight.getCurrentPosition() + (int) (-frontright * COUNTS_PER_INCH);
+                newBackLeftTarget = hdw.wheelBackLeft.getCurrentPosition() + (int) (backleft * COUNTS_PER_INCH);
+                newBackRightTarget = hdw.wheelBackRight.getCurrentPosition() + (int) (-backright * COUNTS_PER_INCH);
+                break;
+            case LEFT_SIDE:
+                newFrontLeftTarget = hdw.wheelFrontLeft.getCurrentPosition() + (int) (-frontleft * COUNTS_PER_INCH);
+                newFrontRightTarget = hdw.wheelFrontRight.getCurrentPosition() + (int) (frontright * COUNTS_PER_INCH);
+                newBackLeftTarget = hdw.wheelBackLeft.getCurrentPosition() + (int) (-backleft * COUNTS_PER_INCH);
+                newBackRightTarget = hdw.wheelBackRight.getCurrentPosition() + (int) (backright * COUNTS_PER_INCH);
+                break;
+            case BOTH_SIDES:
+                newFrontLeftTarget = hdw.wheelFrontLeft.getCurrentPosition() + (int) (-frontleft * COUNTS_PER_INCH);
+                newFrontRightTarget = hdw.wheelFrontRight.getCurrentPosition() + (int) (-frontright * COUNTS_PER_INCH);
+                newBackLeftTarget = hdw.wheelBackLeft.getCurrentPosition() + (int) (-backleft * COUNTS_PER_INCH);
+                newBackRightTarget = hdw.wheelBackRight.getCurrentPosition() + (int) (-backright * COUNTS_PER_INCH);
+                break;
+            case NO_INVERT:
+                _SIDE:
+                newFrontLeftTarget = hdw.wheelFrontLeft.getCurrentPosition() + (int) (frontleft * COUNTS_PER_INCH);
+                newFrontRightTarget = hdw.wheelFrontRight.getCurrentPosition() + (int) (frontright * COUNTS_PER_INCH);
+                newBackLeftTarget = hdw.wheelBackLeft.getCurrentPosition() + (int) (backleft * COUNTS_PER_INCH);
+                newBackRightTarget = hdw.wheelBackRight.getCurrentPosition() + (int) (backright * COUNTS_PER_INCH);
+                break;
+        }
 
         hdw.wheelFrontLeft.setTargetPosition(newFrontLeftTarget);
         hdw.wheelFrontRight.setTargetPosition(newFrontRightTarget);
@@ -134,12 +158,12 @@ public class EncoderDriveMecanum {
 
     public void strafeLeft(double inches, double speed, double timeoutS) {
         inches = Math.abs(inches);
-        encoderDrive(speed, inches, -inches, -inches, inches, timeoutS, "strafeLeft");
+        encoderDrive(speed, -inches, inches, inches, -inches, timeoutS, "strafeLeft");
     }
 
     public void strafeRight(double inches, double speed, double timeoutS) {
         inches = Math.abs(inches);
-        encoderDrive(speed, -inches, inches, inches, -inches, timeoutS, "strafeRight");
+        encoderDrive(speed, inches, -inches, -inches, inches, timeoutS, "strafeRight");
     }
 
     public void turnRight(double inches, double speed, double timeoutS) {
