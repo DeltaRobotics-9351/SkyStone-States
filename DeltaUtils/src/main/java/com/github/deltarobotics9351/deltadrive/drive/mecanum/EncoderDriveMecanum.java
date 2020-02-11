@@ -8,6 +8,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+/**
+ * Class to use encoders to move the robot precisely (in inches) during autonomous
+ */
 public class EncoderDriveMecanum {
 
     public DeltaHardwareMecanum hdw;
@@ -16,14 +19,17 @@ public class EncoderDriveMecanum {
 
     private ElapsedTime runtime = new ElapsedTime();
 
-    private LinearOpMode currentOpMode;
-
     private EncoderDriveParameters parameters;
 
-    public EncoderDriveMecanum(DeltaHardwareMecanum hdw, Telemetry telemetry, LinearOpMode currentOpMode, EncoderDriveParameters parameters){
+    /**
+     * Constructor for the encoder drive class
+     * @param hdw The initialized hardware containing all the chassis motors
+     * @param telemetry The current OpMode telemetry to show movement info.
+     * @param parameters Encoder parameters, in order to calculate the ticks per inch for each motor
+     */
+    public EncoderDriveMecanum(DeltaHardwareMecanum hdw, Telemetry telemetry, EncoderDriveParameters parameters){
         this.hdw = hdw;
         this.telemetry = telemetry;
-        this.currentOpMode = currentOpMode;
         this.parameters = parameters;
 
         hdw.wheelFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -38,7 +44,7 @@ public class EncoderDriveMecanum {
 
     }
 
-    public void encoderDrive(double speed,
+    private void encoderDrive(double speed,
                              double frontleft,
                              double frontright,
                              double backleft,

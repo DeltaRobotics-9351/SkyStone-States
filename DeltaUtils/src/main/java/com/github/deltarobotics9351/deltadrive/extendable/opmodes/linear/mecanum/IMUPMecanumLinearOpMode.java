@@ -1,29 +1,24 @@
 package com.github.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum;
 
-import com.github.deltarobotics9351.deltadrive.drive.mecanum.IMUDriveMecanum;
-import com.github.deltarobotics9351.deltadrive.drive.mecanum.TimeDriveMecanum;
+import com.github.deltarobotics9351.deltadrive.drive.mecanum.IMUDrivePIDMecanum;
+import com.github.deltarobotics9351.deltadrive.drive.mecanum.IMUDrivePMecanum;
 import com.github.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
 import com.github.deltarobotics9351.deltadrive.parameters.IMUDriveParameters;
 import com.github.deltarobotics9351.deltadrive.utils.Invert;
 import com.github.deltarobotics9351.deltadrive.utils.RobotHeading;
 import com.github.deltarobotics9351.deltamath.geometry.Rot2d;
+import com.github.deltarobotics9351.pid.PIDConstants;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
  * Remember to override setup() and define the 4 DcMotor variables in there!
  */
-public class IMUTimeMecanumLinearOpMode extends LinearOpMode {
+public class IMUPMecanumLinearOpMode extends LinearOpMode {
 
-    private IMUDriveMecanum imuDrive;
-    private TimeDriveMecanum timeDrive;
+    private IMUDrivePMecanum imuDrive;
 
     private DeltaHardwareMecanum deltaHardware;
-
-    /**
-     * IMU parameters that can be defined
-     */
-    public IMUDriveParameters imuParameters = new IMUDriveParameters();
 
     public DcMotor frontLeft = null;
     public DcMotor frontRight = null;
@@ -86,20 +81,14 @@ public class IMUTimeMecanumLinearOpMode extends LinearOpMode {
 
         deltaHardware.initHardware(frontLeft, frontRight, backLeft, backRight, WHEELS_BRAKE);
 
-        imuDrive = new IMUDriveMecanum(deltaHardware, telemetry);
-        imuDrive.initIMU(imuParameters);
+        imuDrive = new IMUDrivePMecanum(deltaHardware, this);
+        imuDrive.initIMU();
 
         while(!imuDrive.isIMUCalibrated() && !isStopRequested()){
             telemetry.addData("[/!\\]", "Calibrating IMU Gyro sensor, please wait...");
             telemetry.addData("[Status]", imuDrive.getIMUCalibrationStatus());
             telemetry.update();
         }
-
-        timeDrive = new TimeDriveMecanum(deltaHardware, telemetry);
-
-        Thread t = new Thread(new ParametersCheck());
-
-        t.start();
 
         _runOpMode();
 
@@ -122,47 +111,29 @@ public class IMUTimeMecanumLinearOpMode extends LinearOpMode {
 
     }
 
-    public final void rotate(Rot2d rot, double power, double timeoutS){
-        imuDrive.rotate(rot, power, timeoutS);
-    }
-    public final void forward(double power, double timeSecs){
-        timeDrive.forward(power, timeSecs);
-    }
-
-    public final void backwards(double power, double timeSecs){
-        timeDrive.backwards(power, timeSecs);
+    /**
+     * Set the Proportional coefficient
+     * @param P the Proportional coefficient
+     */
+    public final void setP(double p){
+        imuDrive.setP(p);
     }
 
-    public final void strafeLeft(double power, double timeSecs){
-        timeDrive.strafeLeft(power, timeSecs);
+    /**
+     * Sets the death zone, which is the minimum motor power in which the robot moves.
+     * @param P the Proportional coefficient
+     */
+    public final void setDeadZone(double deadZone){
+        imuDrive.setDeadZone(deadZone);
     }
 
-    public final void strafeRight(double power, double timeSecs){
-        timeDrive.strafeRight(power, timeSecs);
-    }
-
-    public final void turnLeft(double power, double timeSecs){
-        timeDrive.turnLeft(power, timeSecs);
-    }
-
-    public final void turnRight(double power, double timeSecs){
-        timeDrive.strafeRight(power, timeSecs);
+    public final void rotate(Rot2d rot, double power, double timeoutSecs){
+        imuDrive.rotate(rot, power, timeoutSecs);
     }
 
     public final Rot2d getRobotAngle(){
         return imuDrive.getRobotAngle();
     }
 
-    class ParametersCheck implements Runnable{
-
-        @Override
-        public void run(){
-            waitForStart();
-            if(!imuParameters.haveBeenDefined()){
-                telemetry.addData("[/!\\]", "Remember to define IMU constants, IMU functions may not work as expected because parameters are 0 by default.");
-            }
-            telemetry.update();
-        }
-    }
 
 }

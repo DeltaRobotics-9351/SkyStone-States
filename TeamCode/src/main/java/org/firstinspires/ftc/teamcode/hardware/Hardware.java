@@ -76,7 +76,7 @@ public class Hardware {
 
         //se define la posicion por default de estos servos
         servoStoneAutonomous.setPosition(0.1);
-        servoCapstone.setPosition(1);
+        servoCapstone.setPosition(0.9);
         servoStoneAutonomous2.setPosition(1);
 
         //definimos los motores que correran con y sin encoders 
@@ -99,7 +99,7 @@ public class Hardware {
     }
 
     public void SSA2Grab(){
-        servoStoneAutonomous2.setPosition(0.6); sleep(500);
+        servoStoneAutonomous2.setPosition(0.55); sleep(500);
     }
 
     public void SSA2Release(){
@@ -110,7 +110,7 @@ public class Hardware {
     }
 
     public void saveCapstone(){
-        servoCapstone.setPosition(1); sleep(500);
+        servoCapstone.setPosition(0.9); sleep(500);
     }
 
     public final void sleep(long milliseconds) {

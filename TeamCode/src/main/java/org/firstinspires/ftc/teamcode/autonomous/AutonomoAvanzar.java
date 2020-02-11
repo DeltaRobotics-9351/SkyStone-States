@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.github.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum.IMUEncoderMecanumLinearOpMode;
+import com.github.deltarobotics9351.deltadrive.motors.andymark.NeveRest_Orbital_20;
+import com.qualcomm.hardware.motors.NeveRest20Gearmotor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.MotivateTelemetry;
@@ -21,7 +23,7 @@ public class AutonomoAvanzar extends IMUEncoderMecanumLinearOpMode { //extendemo
 
         encoderParameters.LEFT_WHEELS_TURBO = 0.7; //definimos los parametros de los encoders
         encoderParameters.RIGHT_WHEELS_TURBO = 0.7;
-        encoderParameters.COUNTS_PER_REV = 537.6;
+        encoderParameters.COUNTS_PER_REV = NeveRest_Orbital_20.TICKS_PER_REVOLUTION;
         encoderParameters.DRIVE_GEAR_REDUCTION = 1;
         encoderParameters.WHEEL_DIAMETER_INCHES = 4;
 
@@ -36,7 +38,7 @@ public class AutonomoAvanzar extends IMUEncoderMecanumLinearOpMode { //extendemo
     }
 
     @Override
-    public void defineHardware(){
+    public void setup(){
         hdw = new Hardware(hardwareMap);
         hdw.initHardware(false);
 

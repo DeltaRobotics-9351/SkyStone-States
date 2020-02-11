@@ -19,6 +19,7 @@ public class AutonomoEncoderTuning extends LinearOpMode {
 
     private DeltaHardwareMecanum deltaHardware;
 
+    //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaababababababababababababdbgrjjbfjhdkjajajahjiuuygigfshrrkerhghdkgjhdkjghkjshkjhgkjsdhgjegondvojhbrjhhyjjfmobfisbhtrkjkjhgdjghdhgdjhgkdjhgkfhkdhgkdrjghkdrjhgkdjrhkerhkjhgkjddhfgkkdhdghdkfjghdkfjghdkghkhdfkgjhdfkjghdkjfhgkjfkjhfkjhgkjfhgkfdhgkjfkjghfkjhgkfjhgkjfkjhgkjfhgkfdjhgkdfjhgkfdjghkfdjhgjkdfjghkfjghfkjghfkjghkdfjhgkdjfhgkdjghkdfhgkdhgdjrgdifjgkdrhksjrgkojfngoomnrhppa no se que haces leyendo sto no tienes vida si lees esto pirue ya escribi demasuado deja de ver lo ue escribo stañkeiutyiuhgiudfhgiuherguhhgibsbvonoieygdkjnjdfhkdgtcihdyhguijgjhvhfjhkofvjhdgjhgfjhvfjhfhgvjhfgjhbgudfkhdfjkdfhjkfhjfbdufjdhhdgjkhdfigjhdfkjgjhdkfjhgkdjhgdkjfhgkjdhfkgjhdfkjhbfoidnvknibresres tubekdjdfdjgfjshdgfjdhfgjhgghghgkduhgfvjhdfgj///
     private EncoderDriveMecanum encoderDrive;
 
     @Override
@@ -36,7 +37,9 @@ public class AutonomoEncoderTuning extends LinearOpMode {
         parameters.DRIVE_GEAR_REDUCTION = 1;
         parameters.WHEEL_DIAMETER_INCHES = 4;
 
-        encoderDrive = new EncoderDriveMecanum(deltaHardware, telemetry, this, parameters);
+        //Si no eres sebas no se que haces en la programacion//
+
+        encoderDrive = new EncoderDriveMecanum(deltaHardware, telemetry, parameters);
 
         telemetry.addData("[/!\\]", "AUTONOMO DE PRUEBA! NO ESTA HECHO PARA SER USADO EN UNA COMPETENCIA.");
         telemetry.update();
@@ -55,6 +58,8 @@ public class AutonomoEncoderTuning extends LinearOpMode {
                 parameters.RIGHT_WHEELS_TURBO -= 0.05;
             }
 
+            //Espera esto no es Hopscotch//
+
             telemetry.addData("right", parameters.RIGHT_WHEELS_TURBO);
             telemetry.addData("left", parameters.LEFT_WHEELS_TURBO);
             telemetry.update();
@@ -68,6 +73,7 @@ public class AutonomoEncoderTuning extends LinearOpMode {
         //imuDrive.rotate(90, 0.4);
         //Salu2
 
+        //porque las palabars son de colores//
         encoderDrive.forward(10, 0.5, 10);
     }
 

@@ -1,13 +1,15 @@
 package com.github.deltarobotics9351.deltadrive.drive.mecanum;
 
 import com.github.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
+import com.github.deltarobotics9351.deltamath.geometry.Rot2d;
+import com.github.deltarobotics9351.deltamath.geometry.Vec2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
 
 /**
  * Class to control a mecanum chassis during teleop using a gamepad's joysticks.
  */
-public class JoystickDriveMecanum {
+public class JoystickFieldCentricDriveMecanum {
 
     //wheel motor power
     public double wheelFrontRightPower = 0;
@@ -20,20 +22,21 @@ public class JoystickDriveMecanum {
     private DeltaHardwareMecanum hdw;
 
     /**
-     * Constructor for the Joystick Drive
+     * Constructor for the Joystick Field Centric Drive
      * @param hdw The initialized hardware containing all the chassis motors
      */
-    public JoystickDriveMecanum(DeltaHardwareMecanum hdw){ this.hdw = hdw; }
-
+    public JoystickFieldCentricDriveMecanum(DeltaHardwareMecanum hdw){ this.hdw = hdw; }
 
     /**
-     * Control a mecanum chassis using a gamepad's joysticks.
+     * Control a mecanum chassis using a gamepad's joysticks, field centric.
+     * Field centric works like 3d games: Pushing forwards will always make the robot drive away from you, no matter the rotation.
      * Use left stick to go forward, backwards and strafe, and right stick to turn
      * This method should be called always in the teleop loop to update the motor powers
      * @param gamepad the gamepad used to control the chassis.
      * @param turbo the chassis max speed, from 0 to 1
+     * @param heading the current robot heading
      */
-    public void joystick(Gamepad gamepad, double turbo){
+    public void joystick(Gamepad gamepad, double turbo, Rot2d heading){
 
         turbo = Math.abs(turbo);
         turbo = Range.clip(Math.abs(turbo), 0, 1);
@@ -44,38 +47,39 @@ public class JoystickDriveMecanum {
         double x1 = gamepad.left_stick_x;
         double x2 = gamepad.right_stick_x;
 
-        switch(hdw.invert) {
+        Vec2d inputvector = new Vec2d(x1, y1);
+        inputvector.rotate(heading.invert());
 
+        double theta = Math.atan2(y1, x1);
+
+        double piconst = Math.PI / 4;
+
+        double inputMag = inputvector.mag();
+
+        wheelFrontLeftPower = x2 + (Math.sin(theta + piconst) * inputMag);
+        wheelFrontRightPower = (Math.sin(theta - piconst) * inputMag) - x2;
+        wheelBackLeftPower = x2 + (Math.sin(theta - piconst) * inputMag);
+        wheelBackRightPower = (Math.sin(theta + piconst) * inputMag) - x2;
+
+        switch(hdw.invert) {
             case RIGHT_SIDE:
 
-                wheelFrontRightPower = -(y1 - x2 - x1);
-                wheelBackRightPower = -(y1 - x2 + x1);
-                wheelFrontLeftPower = (y1 + x2 + x1);
-                wheelBackLeftPower = (y1 + x2 - x1);
+                wheelFrontRightPower = -wheelFrontRightPower;
+                wheelBackRightPower = -wheelBackRightPower;
                 break;
 
             case LEFT_SIDE:
 
-                wheelFrontRightPower = (y1 - x2 - x1);
-                wheelBackRightPower = (y1 - x2 + x1);
-                wheelFrontLeftPower = -(y1 + x2 + x1);
-                wheelBackLeftPower = -(y1 + x2 - x1);
+                wheelFrontLeftPower = -wheelFrontLeftPower;
+                wheelBackLeftPower = -wheelBackLeftPower;
                 break;
 
             case BOTH_SIDES:
 
-                wheelFrontRightPower = -(y1 - x2 - x1);
-                wheelBackRightPower = -(y1 - x2 + x1);
-                wheelFrontLeftPower = -(y1 + x2 + x1);
-                wheelBackLeftPower = -(y1 + x2 - x1);
-                break;
-
-            case NO_INVERT:
-
-                wheelFrontRightPower = (y1 - x2 - x1);
-                wheelBackRightPower = (y1 - x2 + x1);
-                wheelFrontLeftPower = (y1 + x2 + x1);
-                wheelBackLeftPower = (y1 + x2 - x1);
+                wheelFrontRightPower = -wheelFrontRightPower;
+                wheelBackRightPower = -wheelBackRightPower;
+                wheelFrontLeftPower = -wheelFrontLeftPower;
+                wheelBackLeftPower = -wheelBackLeftPower;
                 break;
         }
 

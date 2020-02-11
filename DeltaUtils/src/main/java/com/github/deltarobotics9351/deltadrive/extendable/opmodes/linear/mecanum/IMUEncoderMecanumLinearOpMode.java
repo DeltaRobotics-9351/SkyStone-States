@@ -6,10 +6,14 @@ import com.github.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardw
 import com.github.deltarobotics9351.deltadrive.parameters.EncoderDriveParameters;
 import com.github.deltarobotics9351.deltadrive.parameters.IMUDriveParameters;
 import com.github.deltarobotics9351.deltadrive.utils.Invert;
-import com.github.deltarobotics9351.deltamath.geometry.Rotation2d;
+import com.github.deltarobotics9351.deltadrive.utils.RobotHeading;
+import com.github.deltarobotics9351.deltamath.geometry.Rot2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+/**
+ * Remember to override setup() and define the 4 DcMotor variables in there!
+ */
 public class IMUEncoderMecanumLinearOpMode extends LinearOpMode {
 
     private IMUDriveMecanum imuDrive;
@@ -17,24 +21,59 @@ public class IMUEncoderMecanumLinearOpMode extends LinearOpMode {
 
     private DeltaHardwareMecanum deltaHardware;
 
+    /**
+     * IMU parameters that can be defined
+     */
     public IMUDriveParameters imuParameters = new IMUDriveParameters();
 
+    /**
+     * Encoder parameters that can be defined
+     */
     public EncoderDriveParameters encoderParameters = new EncoderDriveParameters();
-
-    public Invert invert = Invert.RIGHT_SIDE;
 
     public DcMotor frontLeft = null;
     public DcMotor frontRight = null;
     public DcMotor backLeft = null;
     public DcMotor backRight = null;
 
+    /**
+     * Enum that defines which side of the chassis will be inverted (motors)
+     */
     public Invert WHEELS_INVERT = Invert.RIGHT_SIDE;
 
+    /**
+     * boolean that defines if motors brake when their power is 0
+     */
     public boolean WHEELS_BRAKE = true;
+
+    /**
+     * boolean that indicates if we'll update the RobotHeading in this OpMode
+     * You need 2 Expansion Hubs for this!
+     */
+    public boolean UPDATE_ROBOT_HEADING = false;
+
+    /**
+     * boolean that indicates if we'll reset the RobotHeading
+     */
+    public boolean RESET_ROBOT_HEADING = false;
+
+    /**
+     * Robot's initial heading
+     * */
+    public Rot2d ROBOT_INITIAL_HEADING = new Rot2d();
+
 
     @Override
     public final void runOpMode() {
-        defineHardware();
+        setup();
+
+        if(RESET_ROBOT_HEADING){
+            RobotHeading.reset();
+        }
+
+        if(UPDATE_ROBOT_HEADING){
+            RobotHeading.start(ROBOT_INITIAL_HEADING, hardwareMap);
+        }
 
         if(frontLeft == null || frontRight == null || backLeft == null || backRight == null){
             telemetry.addData("[/!\\]", "OpMode will not start in order to avoid Robot Controller crash.");
@@ -42,10 +81,11 @@ public class IMUEncoderMecanumLinearOpMode extends LinearOpMode {
             telemetry.addData("frontRight", (frontRight == null) ? "is null" : "OK");
             telemetry.addData("backLeft", (backLeft == null) ? "is null" : "OK");
             telemetry.addData("backRight", (backRight == null) ? "is null" : "OK");
-            telemetry.addData("POSSIBLE SOLUTION 1", "Override defineHardware() method in your OpMode class and\ndefine the null motor variables specified above.");
+            telemetry.addData("POSSIBLE SOLUTION 1", "Override setup() method in your OpMode class and\ndefine the null motor variables specified above.");
             telemetry.addData("POSSIBLE SOLUTION 2", "Check that all your motors are correctly named and\nthat they are get from the hardwareMap");
             telemetry.update();
             while(opModeIsActive());
+            return;
         }
 
         deltaHardware = new DeltaHardwareMecanum(hardwareMap, WHEELS_INVERT);
@@ -53,7 +93,7 @@ public class IMUEncoderMecanumLinearOpMode extends LinearOpMode {
         deltaHardware.initHardware(frontLeft, frontRight, backLeft, backRight, WHEELS_BRAKE);
 
 
-        imuDrive = new IMUDriveMecanum(deltaHardware, this);
+        imuDrive = new IMUDriveMecanum(deltaHardware, telemetry);
         imuDrive.initIMU(imuParameters);
 
         while(!imuDrive.isIMUCalibrated() && !isStopRequested()){
@@ -62,25 +102,34 @@ public class IMUEncoderMecanumLinearOpMode extends LinearOpMode {
             telemetry.update();
         }
 
-        encoderDrive = new EncoderDriveMecanum(deltaHardware, telemetry, this, encoderParameters);
+        encoderDrive = new EncoderDriveMecanum(deltaHardware, telemetry, encoderParameters);
 
         Thread t = new Thread(new ParametersCheck());
 
         t.start();
 
         _runOpMode();
+
+        RobotHeading.stop();
     }
 
 
+    /**
+     * Overridable void to be executed after all required variables are initialized
+     */
     public void _runOpMode(){
 
     }
 
-    public void defineHardware(){
+    /**
+     * Overridable void to define all wheel motors, and the uppercase variables
+     * Define frontLeft, frontRight, backLeft and backRight DcMotor variables here!
+     */
+    public void setup(){
 
     }
 
-    public final void rotate(Rotation2d rot, double power, double timeoutSecs){
+    public final void rotate(Rot2d rot, double power, double timeoutSecs){
         imuDrive.rotate(rot, power, timeoutSecs);
     }
 
@@ -106,6 +155,10 @@ public class IMUEncoderMecanumLinearOpMode extends LinearOpMode {
 
     public final void turnRight(double inches, double speed, double timeOutSecs){
         encoderDrive.turnRight(inches, speed, timeOutSecs);
+    }
+
+    public final Rot2d getRobotAngle(){
+        return imuDrive.getRobotAngle();
     }
 
     class ParametersCheck implements Runnable{

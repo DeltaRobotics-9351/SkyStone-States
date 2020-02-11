@@ -1,310 +1,357 @@
 package com.github.deltarobotics9351.pid;
 
-public class PIDController
-{
+import com.github.deltarobotics9351.deltadrive.utils.Clamp;
 
-    private double m_P;                     // factor for "proportional" control
-    private double m_I;                     // factor for "integral" control
-    private double m_D;                     // factor for "derivative" control
-    private double m_input;                 // sensor input for pid controller
-    private double m_maximumOutput = 1.0;	// |maximum output|
-    private double m_minimumOutput = -1.0;	// |minimum output|
-    private double m_maximumInput = 0.0;	// maximum input - limit setpoint to this
-    private double m_minimumInput = 0.0;	// minimum input - limit setpoint to this
-    private boolean m_continuous = false;	// do the endpoints wrap around? eg. Absolute encoder
-    private boolean m_enabled = false;      // is the pid controller enabled
-    private double m_prevError = 0.0;       // the prior sensor input (used to compute velocity)
-    private double m_totalError = 0.0;      // the sum of the errors for use in the integral calc
-    private double m_tolerance = 0.05;      // the percentage error that is considered on target
-    private double m_setpoint = 0.0;
-    private double m_error = 0.0;
-    private double m_result = 0.0;
+/**
+*Implements a PID control loop*
+  */
+@SuppressWarnings("PMD.TooManyFields")
+public class PIDController {
+    private static int instances;
+
+    // Factor for "proportional" control
+    @SuppressWarnings("MemberName")
+    private double m_Kp;
+
+    // Factor for "integral" control
+    @SuppressWarnings("MemberName")
+    private double m_Ki;
+
+    // Factor for "derivative" control
+    @SuppressWarnings("MemberName")
+    private double m_Kd;
+
+    // The period (in seconds) of the loop that calls the controller
+    private final double m_period;
+
+    private double m_maximumIntegral = 1.0;
+
+    private double m_minimumIntegral = -1.0;
+
+    // Maximum input - limit setpoint to this
+    private double m_maximumInput;
+
+    // Minimum input - limit setpoint to this
+    private double m_minimumInput;
+
+    // Input range - difference between maximum and minimum
+    private double m_inputRange;
+
+    // Do the endpoints wrap around? eg. Absolute encoder
+    private boolean m_continuous;
+
+    // The error at the time of the most recent call to calculate()
+    private double m_positionError;
+    private double m_velocityError;
+
+    // The error at the time of the second-most-recent call to calculate() (used to compute velocity)
+    private double m_prevError;
+
+    // The sum of the errors for use in the integral calc
+    private double m_totalError;
+
+    // The percentage or absolute error that is considered at setpoint.
+    private double m_positionTolerance = 0.05;
+    private double m_velocityTolerance = Double.POSITIVE_INFINITY;
+
+    private double m_setpoint;
 
     /**
-     * Allocate a PID object with the given constants for P, I, D
-     * @param Kp the proportional coefficient
-     * @param Ki the integral coefficient
-     * @param Kd the derivative coefficient
+     * Allocates a PIDController with the given constants for Kp, Ki, and Kd and a default period of
+     * 0.02 seconds.
+     *
+     * @param Kp The proportional coefficient.
+     * @param Ki The integral coefficient.
+     * @param Kd The derivative coefficient.
      */
-    public PIDController(double Kp, double Ki, double Kd)
-    {
-        m_P = Kp;
-        m_I = Ki;
-        m_D = Kd;
+    @SuppressWarnings("ParameterName")
+    public PIDController(double Kp, double Ki, double Kd) {
+        this(Kp, Ki, Kd, 0.02);
     }
 
     /**
-     * Read the input, calculate the output accordingly, and write to the output.
-     * This should only be called by the PIDTask
-     * and is created during initialization.
+     * Allocates a PIDController with the given constants for Kp, Ki, and Kd.
+     *
+     * @param Kp     The proportional coefficient.
+     * @param Ki     The integral coefficient.
+     * @param Kd     The derivative coefficient.
+     * @param period The period between controller updates in seconds.
      */
-    private void calculate()
-    {
-        int     sign = 1;
+    @SuppressWarnings("ParameterName")
+    public PIDController(double Kp, double Ki, double Kd, double period) {
+        m_Kp = Kp;
+        m_Ki = Ki;
+        m_Kd = Kd;
 
-        // If enabled then proceed into controller calculations
-        if (m_enabled)
-        {
-            // Calculate the error signal
-            m_error = m_setpoint - m_input;
+        m_period = period;
 
-            // If continuous is set to true allow wrap around
-            if (m_continuous)
-            {
-                if (Math.abs(m_error) > (m_maximumInput - m_minimumInput) / 2)
-                {
-                    if (m_error > 0)
-                        m_error = m_error - m_maximumInput + m_minimumInput;
-                    else
-                        m_error = m_error + m_maximumInput - m_minimumInput;
-                }
-            }
+        instances++;
 
-            // Integrate the errors as long as the upcoming integrator does
-            // not exceed the minimum and maximum output thresholds.
-
-            if ((Math.abs(m_totalError + m_error) * m_I < m_maximumOutput) &&
-                    (Math.abs(m_totalError + m_error) * m_I > m_minimumOutput))
-                m_totalError += m_error;
-
-            // Perform the primary PID calculation
-            m_result = m_P * m_error + m_I * m_totalError + m_D * (m_error - m_prevError);
-
-            // Set the current error to the previous error for the next cycle.
-            m_prevError = m_error;
-
-            if (m_result < 0) sign = -1;    // Record sign of result.
-
-            // Make sure the final result is within bounds. If we constrain the result, we make
-            // sure the sign of the constrained result matches the original result sign.
-            if (Math.abs(m_result) > m_maximumOutput)
-                m_result = m_maximumOutput * sign;
-            else if (Math.abs(m_result) < m_minimumOutput)
-                m_result = m_minimumOutput * sign;
-        }
     }
 
     /**
-     * Set the PID Controller gain parameters.
-     * Set the proportional, integral, and differential coefficients.
-     * @param p Proportional coefficient
-     * @param i Integral coefficient
-     * @param d Differential coefficient
+     * Sets the PID Controller gain parameters.
+     *
+     * <p>Set the proportional, integral, and differential coefficients.
+     *
+     * @param Kp The proportional coefficient.
+     * @param Ki The integral coefficient.
+     * @param Kd The derivative coefficient.
      */
-    public void setPID(double p, double i, double d)
-    {
-        m_P = p;
-        m_I = i;
-        m_D = d;
+    @SuppressWarnings("ParameterName")
+    public void setPID(double Kp, double Ki, double Kd) {
+        m_Kp = Kp;
+        m_Ki = Ki;
+        m_Kd = Kd;
     }
 
     /**
-     * Get the Proportional coefficient
+     * Sets the Proportional coefficient of the PID controller gain.
+     *
+     * @param Kp proportional coefficient
+     */
+    @SuppressWarnings("ParameterName")
+    public void setP(double Kp) {
+        m_Kp = Kp;
+    }
+
+    /**
+     * Sets the Integral coefficient of the PID controller gain.
+     *
+     * @param Ki integral coefficient
+     */
+    @SuppressWarnings("ParameterName")
+    public void setI(double Ki) {
+        m_Ki = Ki;
+    }
+
+    /**
+     * Sets the Differential coefficient of the PID controller gain.
+     *
+     * @param Kd differential coefficient
+     */
+    @SuppressWarnings("ParameterName")
+    public void setD(double Kd) {
+        m_Kd = Kd;
+    }
+
+    /**
+     * Get the Proportional coefficient.
+     *
      * @return proportional coefficient
      */
-    public double getP()
-    {
-        return m_P;
+    public double getP() {
+        return m_Kp;
     }
 
     /**
-     * Get the Integral coefficient
+     * Get the Integral coefficient.
+     *
      * @return integral coefficient
      */
-    public double getI()
-    {
-        return m_I;
+    public double getI() {
+        return m_Ki;
     }
 
     /**
-     * Get the Differential coefficient
+     * Get the Differential coefficient.
+     *
      * @return differential coefficient
      */
-    public double getD()
-    {
-        return m_D;
+    public double getD() {
+        return m_Kd;
     }
 
     /**
-     * Return the current PID result for the last input set with setInput().
-     * This is always centered on zero and constrained the the max and min outs
-     * @return the latest calculated output
-     */
-    public double performPID()
-    {
-        calculate();
-        return m_result;
-    }
-
-    /**
-     * Return the current PID result for the specified input.
-     * @param input The input value to be used to calculate the PID result.
-     * This is always centered on zero and constrained the the max and min outs
-     * @return the latest calculated output
-     */
-    public double performPID(double input)
-    {
-        setInput(input);
-        return performPID();
-    }
-
-    /**
-     *  Set the PID controller to consider the input to be continuous,
-     *  Rather then using the max and min in as constraints, it considers them to
-     *  be the same point and automatically calculates the shortest route to
-     *  the setpoint.
-     * @param continuous Set to true turns on continuous, false turns off continuous
-     */
-    public void setContinuous(boolean continuous)
-    {
-        m_continuous = continuous;
-    }
-
-    /**
-     *  Set the PID controller to consider the input to be continuous,
-     *  Rather then using the max and min in as constraints, it considers them to
-     *  be the same point and automatically calculates the shortest route to
-     *  the setpoint.
-     */
-    public void setContinuous()
-    {
-        this.setContinuous(true);
-    }
-
-    /**
-     * Sets the maximum and minimum values expected from the input.
+     * Returns the period of this controller.
      *
-     * @param minimumInput the minimum value expected from the input, always positive
-     * @param maximumInput the maximum value expected from the output, always positive
+     * @return the period of the controller.
      */
-    public void setInputRange(double minimumInput, double maximumInput)
-    {
-        m_minimumInput = Math.abs(minimumInput);
-        m_maximumInput = Math.abs(maximumInput);
-        setSetpoint(m_setpoint);
+    public double getPeriod() {
+        return m_period;
     }
 
     /**
-     * Sets the minimum and maximum values to write.
+     * Sets the setpoint for the PIDController.
      *
-     * @param minimumOutput the minimum value to write to the output, always positive
-     * @param maximumOutput the maximum value to write to the output, always positive
+     * @param setpoint The desired setpoint.
      */
-    public void setOutputRange(double minimumOutput, double maximumOutput)
-    {
-        m_minimumOutput = Math.abs(minimumOutput);
-        m_maximumOutput = Math.abs(maximumOutput);
-    }
-
-    /**
-     * Set the setpoint for the PIDController
-     * @param setpoint the desired setpoint
-     */
-    public void setSetpoint(double setpoint)
-    {
-        int     sign = 1;
-
-        if (m_maximumInput > m_minimumInput)
-        {
-            if (setpoint < 0) sign = -1;
-
-            if (Math.abs(setpoint) > m_maximumInput)
-                m_setpoint = m_maximumInput * sign;
-            else if (Math.abs(setpoint) < m_minimumInput)
-                m_setpoint = m_minimumInput * sign;
-            else
-                m_setpoint = setpoint;
-        }
-        else
+    public void setSetpoint(double setpoint) {
+        if (m_maximumInput > m_minimumInput) {
+            m_setpoint = Clamp.clamp(setpoint, m_minimumInput, m_maximumInput);
+        } else {
             m_setpoint = setpoint;
+        }
     }
 
     /**
-     * Returns the current setpoint of the PIDController
-     * @return the current setpoint
+     * Returns the current setpoint of the PIDController.
+     *
+     * @return The current setpoint.
      */
-    public double getSetpoint()
-    {
+    public double getSetpoint() {
         return m_setpoint;
     }
 
     /**
-     * Retruns the current difference of the input from the setpoint
-     * @return the current error
+     * Returns true if the error is within the percentage of the total input range, determined by
+     * SetTolerance. This asssumes that the maximum and minimum input were set using SetInput.
+     *
+     * <p>This will return false until at least one input value has been computed.
+     *
+     * @return Whether the error is within the acceptable bounds.
      */
-    public synchronized double getError()
-    {
-        return m_error;
+    public boolean atSetpoint() {
+        return Math.abs(m_positionError) < m_positionTolerance
+                && Math.abs(m_velocityError) < m_velocityTolerance;
     }
 
     /**
-     * Set the percentage error which is considered tolerable for use with
-     * OnTarget. (Input of 15.0 = 15 percent)
-     * @param percent error which is tolerable
+     * Enables continuous input.
+     *
+     * <p>Rather then using the max and min input range as constraints, it considers
+     * them to be the same point and automatically calculates the shortest route
+     * to the setpoint.
+     *
+     * @param minimumInput The minimum value expected from the input.
+     * @param maximumInput The maximum value expected from the input.
      */
-    public void setTolerance(double percent)
-    {
-        m_tolerance = percent;
+    public void enableContinuousInput(double minimumInput, double maximumInput) {
+        m_continuous = true;
+        setInputRange(minimumInput, maximumInput);
     }
 
     /**
-     * Return true if the error is within the percentage of the total input range,
-     * determined by setTolerance. This assumes that the maximum and minimum input
-     * were set using setInputRange.
-     * @return true if the error is less than the tolerance
+     * Disables continuous input.
      */
-    public boolean onTarget()
-    {
-        return (Math.abs(m_error) < Math.abs(m_tolerance / 100.0 * (m_maximumInput - m_minimumInput)));
+    public void disableContinuousInput() {
+        m_continuous = false;
     }
 
     /**
-     * Begin running the PIDController
+     * Sets the minimum and maximum values for the integrator.
+     *
+     * <p>When the cap is reached, the integrator value is added to the controller
+     * output rather than the integrator value times the integral gain.
+     *
+     * @param minimumIntegral The minimum value of the integrator.
+     * @param maximumIntegral The maximum value of the integrator.
      */
-    public void enable()
-    {
-        m_enabled = true;
+    public void setIntegratorRange(double minimumIntegral, double maximumIntegral) {
+        m_minimumIntegral = minimumIntegral;
+        m_maximumIntegral = maximumIntegral;
     }
 
     /**
-     * Stop running the PIDController.
+     * Sets the error which is considered tolerable for use with atSetpoint().
+     *
+     * @param positionTolerance Position error which is tolerable.
      */
-    public void disable()
-    {
-        m_enabled = false;
+    public void setTolerance(double positionTolerance) {
+        setTolerance(positionTolerance, Double.POSITIVE_INFINITY);
     }
 
     /**
-     * Reset the previous error,, the integral term, and disable the controller.
+     * Sets the error which is considered tolerable for use with atSetpoint().
+     *
+     * @param positionTolerance Position error which is tolerable.
+     * @param velocityTolerance Velocity error which is tolerable.
      */
-    public void reset()
-    {
-        disable();
+    public void setTolerance(double positionTolerance, double velocityTolerance) {
+        m_positionTolerance = positionTolerance;
+        m_velocityTolerance = velocityTolerance;
+    }
+
+    /**
+     * Returns the difference between the setpoint and the measurement.
+     *
+     * @return The error.
+     */
+    public double getPositionError() {
+        return getContinuousError(m_positionError);
+    }
+
+    /**
+     * Returns the velocity error.
+     */
+    public double getVelocityError() {
+        return m_velocityError;
+    }
+
+    /**
+     * Returns the next output of the PID controller.
+     *
+     * @param measurement The current measurement of the process variable.
+     * @param setpoint    The new setpoint of the controller.
+     */
+    public double calculate(double measurement, double setpoint) {
+        // Set setpoint to provided value
+        setSetpoint(setpoint);
+        return calculate(measurement);
+    }
+
+    /**
+     * Returns the next output of the PID controller.
+     *
+     * @param measurement The current measurement of the process variable.
+     */
+    public double calculate(double measurement) {
+        m_prevError = m_positionError;
+        m_positionError = getContinuousError(m_setpoint - measurement);
+        m_velocityError = (m_positionError - m_prevError) / m_period;
+
+        if (m_Ki != 0) {
+            m_totalError = Clamp.clamp(m_totalError + m_positionError * m_period,
+                    m_minimumIntegral / m_Ki, m_maximumIntegral / m_Ki);
+        }
+
+        return m_Kp * m_positionError + m_Ki * m_totalError + m_Kd * m_velocityError;
+    }
+
+    /**
+     * Resets the previous error and the integral term. Also disables the controller.
+     */
+    public void reset() {
         m_prevError = 0;
         m_totalError = 0;
-        m_result = 0;
     }
 
     /**
-     * Set the input value to be used by the next call to performPID().
-     * @param input Input value to the PID calculation.
+     * Wraps error around for continuous inputs. The original error is returned if continuous mode is
+     * disabled.
+     *
+     * @param error The current error of the PID controller.
+     * @return Error for continuous inputs.
      */
-    public void setInput(double input)
-    {
-        int     sign = 1;
-
-        if (m_maximumInput > m_minimumInput)
-        {
-            if (input < 0) sign = -1;
-
-            if (Math.abs(input) > m_maximumInput)
-                m_input = m_maximumInput * sign;
-            else if (Math.abs(input) < m_minimumInput)
-                m_input = m_minimumInput * sign;
-            else
-                m_input = input;
+    protected double getContinuousError(double error) {
+        if (m_continuous && m_inputRange > 0) {
+            error %= m_inputRange;
+            if (Math.abs(error) > m_inputRange / 2) {
+                if (error > 0) {
+                    return error - m_inputRange;
+                } else {
+                    return error + m_inputRange;
+                }
+            }
         }
-        else
-            m_input = input;
+        return error;
     }
+
+    /**
+     * Sets the minimum and maximum values expected from the input.
+     *
+     * @param minimumInput The minimum value expected from the input.
+     * @param maximumInput The maximum value expected from the input.
+     */
+    private void setInputRange(double minimumInput, double maximumInput) {
+        m_minimumInput = minimumInput;
+        m_maximumInput = maximumInput;
+        m_inputRange = maximumInput - minimumInput;
+
+        // Clamp setpoint to new input
+        if (m_maximumInput > m_minimumInput) {
+            m_setpoint = Clamp.clamp(m_setpoint, m_minimumInput, m_maximumInput);
+        }
+    }
+
 }

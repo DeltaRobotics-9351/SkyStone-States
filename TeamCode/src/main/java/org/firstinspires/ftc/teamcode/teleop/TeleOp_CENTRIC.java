@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 import com.github.deltarobotics9351.deltadrive.drive.mecanum.JoystickDriveMecanum;
+import com.github.deltarobotics9351.deltadrive.drive.mecanum.JoystickFieldCentricDriveMecanum;
 import com.github.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
 import com.github.deltarobotics9351.deltadrive.utils.Invert;
+import com.github.deltarobotics9351.deltadrive.utils.RobotHeading;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
@@ -10,8 +12,8 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.MotivateTelemetry;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Control Manual de Don Cangrejo", group="TeleOps") //se define que la clase se trata de un teleop con una annotation
-public class TeleOp extends LinearOpMode { //la clase extendera a otra llamada 'LinearOpMode'
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Field Centric TEST", group="TeleOps") //se define que la clase se trata de un teleop con una annotation
+public class TeleOp_CENTRIC extends LinearOpMode { //la clase extendera a otra llamada 'LinearOpMode'
 
     //objeto que contiene el hardware del robot
     Hardware hdw;
@@ -19,7 +21,7 @@ public class TeleOp extends LinearOpMode { //la clase extendera a otra llamada '
     long runmillis;
     long disappearmillis;
 
-    JoystickDriveMecanum mecanumWheels; //en este objeto se contiene el codigo para las llantas mecanum
+    JoystickFieldCentricDriveMecanum mecanumWheels; //en este objeto se contiene el codigo para las llantas mecanum
     DeltaHardwareMecanum deltaHardware;
 
     @Override
@@ -27,13 +29,15 @@ public class TeleOp extends LinearOpMode { //la clase extendera a otra llamada '
         hdw = new Hardware(hardwareMap); //init hardware
         hdw.initHardware(false);
 
+        RobotHeading.start(hardwareMap);
+
         deltaHardware = new DeltaHardwareMecanum(hardwareMap, Invert.RIGHT_SIDE);
 
         deltaHardware.initHardware(hdw.wheelFrontLeft, hdw.wheelFrontRight, hdw.wheelBackLeft, hdw.wheelBackRight, true);
 
-        mecanumWheels = new JoystickDriveMecanum(deltaHardware);
+        mecanumWheels = new JoystickFieldCentricDriveMecanum(deltaHardware);
 
-        String[] s = MotivateTelemetry.doMotivateGlobal();
+        String[] s = MotivateTelemetry.doMotivateGlobal(); //motivacion para los cracks =)
 
         telemetry.addData(s[0], s[1]);
         telemetry.update();
@@ -66,7 +70,7 @@ public class TeleOp extends LinearOpMode { //la clase extendera a otra llamada '
             telemetry.update();  //manda los mensajes telemetry a la driver station
         }
 
-        telemetry.addData("[>]", "Mucha suerte cracks, nos vemos en la proxima partida =)");
+        telemetry.addData("[>]", "Mucha suerte, nos vemos en la proxima partida =)");
         telemetry.update();
 
         sleep(300);
@@ -78,11 +82,11 @@ public class TeleOp extends LinearOpMode { //la clase extendera a otra llamada '
         //de velocidad. el fin de esto es para que el arrastrar la foundation en el endgame no sea
         //tan arriesgado y haya menos probabilidad de que tiremos cualquier stone
         if (gamepad.left_trigger > 0.2) {
-            mecanumWheels.joystick(gamepad,  1 - Range.clip(gamepad.left_trigger, 0,0.7));
+            mecanumWheels.joystick(gamepad,  1 - Range.clip(gamepad.left_trigger, 0,0.7), RobotHeading.getHeading());
         }else if(gamepad.right_trigger > 0.2){
-            mecanumWheels.joystick(gamepad, 1 -  Range.clip(gamepad.right_trigger, 0,0.7));
+            mecanumWheels.joystick(gamepad, 1 -  Range.clip(gamepad.right_trigger, 0,0.7), RobotHeading.getHeading());
         } else {
-            mecanumWheels.joystick(gamepad, 1);
+            mecanumWheels.joystick(gamepad, 1, RobotHeading.getHeading());
         }
 
         //servos para agarrar las stones

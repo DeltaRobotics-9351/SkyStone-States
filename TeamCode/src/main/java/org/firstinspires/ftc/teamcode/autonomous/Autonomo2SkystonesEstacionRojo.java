@@ -12,8 +12,8 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
-@Autonomous(name="Autonomo Completo Rojo", group="Final")
-public class AutonomoCompletoRojo extends IMUEncoderMecanumLinearOpMode { //extendemos una clase que ya contiene todos los metodos de encoders y IMU para optimizar el codigo y el tiempo
+@Autonomous(name="Autonomo 2Skystones Estacionarse ROJO", group="Final")
+public class Autonomo2SkystonesEstacionRojo extends IMUEncoderMecanumLinearOpMode { //extendemos una clase que ya contiene todos los metodos de encoders y IMU para optimizar el codigo y el tiempo
 
     Hardware hdw;
 
@@ -36,7 +36,7 @@ public class AutonomoCompletoRojo extends IMUEncoderMecanumLinearOpMode { //exte
 //a
         cvCamera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
 //mmmmmmmmmm
-        imuParameters.ROTATE_CORRECTION_POWER = 0.2; //definimos los parametros del imu
+        imuParameters.ROTATE_CORRECTION_POWER = 0.15; //definimos los parametros del imu
         imuParameters.ROTATE_MAX_CORRECTION_TIMES = 2;
 //Ivan no estuvo aqui
         encoderParameters.LEFT_WHEELS_TURBO = 1; //definimos los parametros de los encoders
@@ -61,73 +61,69 @@ public class AutonomoCompletoRojo extends IMUEncoderMecanumLinearOpMode { //exte
 //me programas un juego
 //ignora esto
 //sigue programando
-        if(isStarted()) { //para evitar que el robot se mueva cuando se presiona stop
-            switch (pattern) {
-                case ND: //no se ha detectado ningun pattern
+        switch(pattern) {
+            case ND: //no se ha detectado ningun pattern
 //gfhgfhfn
-                    telemetry.addData("[/!\\]", "No se ha podido detectar un patron.");
-                    telemetry.update();
+                telemetry.addData("[/!\\]", "No se ha podido detectar un patron.");
+                telemetry.update();
 //aaaaaa
-                    while (opModeIsActive()) ;
+                while(opModeIsActive());
 //Hola
-                    break;
-                case A: //Pattern A
+                break;
+            case A: //Pattern A
 //iVAN
-                    break;
-                case B: //Pattern B
+                break;
+            case B: //Pattern B
 //ESTUVO
-                    strafeLeft(6, 0.2, 10); //nos deslizamos hacia la skystone 2
+                strafeLeft(10, 0.4, 10); //nos deslizamos hacia la skystone 2
 //AQUI
-                    forward(3, 1, 2);
+                forward(3, 1, 2);
 //iVAN ESTUVO AQUI
-                    backwards(24, 1, 10); //avanzamos hacia ella
+                backwards(25, 1, 10); //avanzamos hacia ella
 //iVAN estuvo aqui
-                    hdw.SSADown(); //bajamos el brazo
-                    hdw.SSA2Grab(); //cerramos la articulacion
-                    hdw.SSAUp(); // subimos el brazo
+                hdw.SSADown(); //bajamos el brazo
+                hdw.SSA2Grab(); //cerramos la articulacion
+                hdw.SSAUp(); // subimos el brazo
 //Ivan estuvo aqui
-                    forward(23, 1, 10); //avanzamos hacia la pared
+                forward(23, 1, 10); //avanzamos hacia la pared
 //hola
-                    rotate(Rot2d.fromDegrees(-90), 0.4, 4); //giramos hacia el skybridge
-                    backwards(75, 0.7, 10); //nos movemos hacia la building zone
-//aaaaaa
-                    rotate(Rot2d.fromDegrees(90), 0.4, 4);
-                    backwards(21, 1, 10);
-//IVAN ESTUVO AUQUI
+                rotate(Rot2d.fromDegrees(-90), 0.3, 4); //giramos hacia el skybridge
+                backwards(6, 1, 10); //nos movemos hacia la building zone
 
-                    hdw.SSA2Release(); //abrimos la articulacion
-                    hdw.SSA2Grab(); // cerramos la articulacion
+                hdw.SSA2Release(); //abrimos la articulacion
+                hdw.SSA2Grab(); // cerramos la articulacion
+
+                forward(108, 1, 10);
+
+                rotate(Rot2d.fromDegrees(90), 0.3, 4);
+
+//iVAN ESTUVO AQUI
+                backwards(25, 1, 10); //avanzamos hacia ella
+//iVAN estuvo aqui
+
+                hdw.SSA2Release();
+                hdw.SSADown(); //bajamos el brazo
+                hdw.SSA2Grab(); //cerramos la articulacion
+                hdw.SSAUp(); // subimos el brazo
+//Ivan estuvo aqui
 
 //que hacemos si el robot se vuelve malo?
-                    forward(23, 1, 10);
+                forward(23, 1, 10);
 
-                    rotate(Rot2d.fromDegrees(-90), 0.4, 4);
+                rotate(Rot2d.fromDegrees(-90), 0.3, 4);
 
-                    forward(110, 0.8, 10);
+                backwards(75, 0.8, 10);
 
-                    rotate(Rot2d.fromDegrees(90), 0.4, 4);
+                hdw.SSA2Release();
+                hdw.SSADown(); //bajamos el brazo
+                hdw.SSA2Grab(); //cerramos la articulacion
+                hdw.SSAUp(); // subimos el brazo
 
-                    backwards(21, 0.7, 10);
+                forward(30, 1, 5);
+                break;
+            case C: //Pattern C
 
-                    hdw.SSA2Release();
-                    hdw.SSADown(); //bajamos el brazo
-                    hdw.SSA2Grab(); //cerramos la articulacion
-                    hdw.SSAUp(); // subimos el brazo
-
-                    forward(25, 0.7, 10); //avanzamos hacia la pared
-//hola
-                    rotate(Rot2d.fromDegrees(-90), 0.4, 10); //giramos hacia el skybridge
-                    backwards(75, 1, 10); //nos movemos hacia la building zone
-
-                    hdw.SSA2Release(); //abrimos la articulacion
-                    hdw.SSA2Grab(); // cerramos la articulacion
-
-                    forward(5, 1, 5);
-                    break;
-                case C: //Pattern C
-
-                    break;
-            }
+                break;
         }
     }
 

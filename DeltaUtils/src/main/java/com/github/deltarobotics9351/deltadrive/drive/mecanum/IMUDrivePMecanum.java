@@ -1,62 +1,50 @@
 package com.github.deltarobotics9351.deltadrive.drive.mecanum;
 
+import com.github.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
+import com.github.deltarobotics9351.deltadrive.parameters.IMUDriveParameters;
+import com.github.deltarobotics9351.deltadrive.utils.Clamp;
+import com.github.deltarobotics9351.deltamath.geometry.Rot2d;
+import com.github.deltarobotics9351.pid.PIDController;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-import com.github.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
-import com.github.deltarobotics9351.deltadrive.parameters.IMUDriveParameters;
-
-import com.github.deltarobotics9351.deltamath.geometry.Rot2d;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-/**
- * Class to use the IMU sensor integrated in the Rev Expansion Hub to make precise turns
- *
-*/
-public class IMUDriveMecanum {
+public class IMUDrivePMecanum {
 
     public BNO055IMU imu;
     DeltaHardwareMecanum hdw;
+
     DcMotor frontleft;
     DcMotor frontright;
     DcMotor backleft;
     DcMotor backright;
 
+    Orientation lastAngles = new Orientation();
+    double globalAngle;
+
     Telemetry telemetry;
 
-    Orientation             lastAngles = new Orientation();
-    double                  globalAngle;
-
-    IMUDriveParameters parameters;
+    LinearOpMode currentOpMode;
 
     private ElapsedTime runtime = new ElapsedTime();
 
-    /**
-     * Constructor for the IMU drive class
-     * (Do not forget to call initIMU() before the OpMode starts!)
-     * @param hdw The initialized hardware containing all the chassis motors
-     * @param telemetry Current OpMode telemetry to show movement info
-     */
-    public IMUDriveMecanum(DeltaHardwareMecanum hdw, Telemetry telemetry){
+    private double P;
+    private double deadZone = 0;
+
+    public IMUDrivePMecanum(DeltaHardwareMecanum hdw, LinearOpMode currentOpMode){
         this.hdw = hdw;
-        this.telemetry = telemetry;
+        this.telemetry = currentOpMode.telemetry;
+        this.currentOpMode = currentOpMode;
     }
 
-    /**
-     * Initialize the IMU sensor and set the parameters
-     * (Remember to wait for the imu calibration [waitForIMUCalibration()] before the OpMode starts!)
-     * @param parameters Object containing the parameters for IMU Turns
-     */
-    public void initIMU(IMUDriveParameters parameters){
-        this.parameters = parameters;
-
-        parameters.secureParameters();
+    public void initIMU(){
 
         frontleft = hdw.wheelFrontLeft;
         frontright = hdw.wheelFrontRight;
@@ -76,23 +64,36 @@ public class IMUDriveMecanum {
     }
 
     /**
-     * Loop until the IMU sensor reports it is calibrated or until OpMode stops.
+     * Dead zone is the minimum motor "power" value in which the robot has motion, in order to avoid it getting stuck during P loop.
+     * @param deadZone the dead zone said above
      */
-    public void waitForIMUCalibration(){
-        while (!imu.isGyroCalibrated() && !Thread.interrupted()){ }
+    public void setDeadZone(double deadZone){
+        this.deadZone = deadZone;
+    }
+
+    public double getDeadZone(){
+        return deadZone;
     }
 
     /**
-     * Get the IMU calibration status as an String.
-     * @return the String containing the sensor calibration status.
+     * @param P the Proportional coefficient
      */
+    public void setP(double P){
+        this.P = P;
+    }
+
+    public double getP(){
+        return P;
+    }
+
+    public void waitForIMUCalibration(){
+        while (!imu.isGyroCalibrated() && currentOpMode.opModeIsActive()){ }
+    }
+
     public String getIMUCalibrationStatus(){
         return imu.getCalibrationStatus().toString();
     }
 
-    /**
-     * @return boolean depending if IMU sensor is calibrated.
-     */
     public boolean isIMUCalibrated(){ return imu.isGyroCalibrated(); }
 
     private double getAngle()
@@ -125,23 +126,13 @@ public class IMUDriveMecanum {
         globalAngle = 0;
     }
 
-    /**
-     * Get the current robot angle as a Rot2d
-     * WARNING: It resets back to 0 after every turn.
-     * @return Rot2d with current the Robot angle.
-     */
+
     public Rot2d getRobotAngle(){
         return Rot2d.fromDegrees(getAngle());
     }
 
     int correctedTimes = 0;
 
-    /**
-     * Rotate to a specific angle, with error correction
-     * @param rotation
-     * @param power Speed to rotate
-     * @param timeoutS Max time (in seconds) that the rotation may take, set to 0 for infinite time.
-     */
     public void rotate(Rot2d rotation, double power, double timeoutS)
     {
 
@@ -167,87 +158,69 @@ public class IMUDriveMecanum {
 
         double  backleftpower, backrightpower, frontrightpower, frontleftpower;
 
-        parameters.secureParameters();
-
-        if (degrees < 0) //si es menor que el angulo actual significa que el robot girara a la derecha
-        {   // girar a la derecha
-            backleftpower = power;
-            backrightpower = -power;
-            frontleftpower = power;
-            frontrightpower = -power;
-        }
-
-        else if (degrees > 0) // si es mayor que el angulo actual significa que el robot girara a la izquierda
-        {   // girar a la izquierda
-            backleftpower = -power;
-            backrightpower = power;
-            frontleftpower = -power;
-            frontrightpower = power;
-        }
-        else return;
-
-        // definimos el power de los motores
-        defineAllWheelPower(frontleftpower,frontrightpower,backleftpower,backrightpower);
-
         // rotaremos hasta que se complete la vuelta
         if (degrees < 0)
         {
-            while (getAngle() == 0 && !Thread.interrupted() && (runtime.seconds() < timeoutS)) { //al girar a la derecha necesitamos salirnos de 0 grados primero
+            while (getAngle() == 0  && currentOpMode.opModeIsActive() && (runtime.seconds() < timeoutS)) { //al girar a la derecha necesitamos salirnos de 0 grados primero
                 telemetry.addData("IMU Angle", getAngle());
                 telemetry.addData("Targeted degrees", degrees);
-                telemetry.update();
+                telemetry.addData("PID error", "Not calculated yet");
+                telemetry.addData("Power", power);
+
+                backleftpower = power;
+                backrightpower = -power;
+                frontleftpower = power;
+                frontrightpower = -power;
+                defineAllWheelPower(frontleftpower,frontrightpower,backleftpower,backrightpower);
             }
 
-            while (getAngle() > degrees && !Thread.interrupted() && (runtime.seconds() < timeoutS)) { //entramos en un bucle hasta que los degrees sean los esperados
+            while ((degrees - getAngle()) != 0 && currentOpMode.opModeIsActive() && (runtime.seconds() < timeoutS)) { //entramos en un bucle hasta que los degrees sean los esperados
+                double error = degrees - getAngle();
+                double correction = error * P;
+
+                power *= Clamp.clamp(correction, 0.15, 1); //el power sera negativo al girar a la derecha
+
+                backleftpower = power;
+                backrightpower = -power;
+                frontleftpower = power;
+                frontrightpower = -power;
+
+                defineAllWheelPower(frontleftpower,frontrightpower,backleftpower,backrightpower);
+
                 telemetry.addData("IMU Angle", getAngle());
                 telemetry.addData("Targeted degrees", degrees);
-                telemetry.update();
+                telemetry.addData("Error", error);
+                telemetry.addData("Power", power);
             }
         }
         else
-            while (getAngle() < degrees && !Thread.interrupted() && (runtime.seconds() < timeoutS)) { //entramos en un bucle hasta que los degrees sean los esperados
+            while ((degrees - getAngle()) != 0 && currentOpMode.opModeIsActive() && (runtime.seconds() < timeoutS)) { //entramos en un bucle hasta que los degrees sean los esperados
+                double error = degrees - getAngle();
+                double correction = error * P;
+
+                power *= Clamp.clamp(correction, 0.15, 1); //el power sera negativo al girar a la derecha
+
+                backleftpower = -power;
+                backrightpower = power;
+                frontleftpower = -power;
+                frontrightpower = power;
+                defineAllWheelPower(frontleftpower,frontrightpower,backleftpower,backrightpower);
+
+
                 telemetry.addData("IMU Angle", getAngle());
                 telemetry.addData("Targeted degrees", degrees);
+                telemetry.addData("Error", error);
+                telemetry.addData("Power", power);
                 telemetry.update();
             }
 
         // stop the movement
         defineAllWheelPower(0,0,0,0);
-
-        correctRotation(degrees);
     }
 
-    private void correctRotation(double expectedAngle){
 
-        correctedTimes += 1;
-
-        if(correctedTimes > parameters.ROTATE_MAX_CORRECTION_TIMES) {
-            correctedTimes = 0;
-            return;
-        }
-
-        double deltaAngle = calculateDeltaAngles(expectedAngle, getAngle());
-
-        telemetry.addData("error", deltaAngle);
-        telemetry.update();
-
-        rotate(Rot2d.fromDegrees(deltaAngle), parameters.ROTATE_CORRECTION_POWER, 0);
-
-    }
-
-    /**
-     * Get the difference (delta) between two angles (in degrees)
-     * @param angle1 The angle to be subtracted by the angle2
-     * @param angle2 The angle to be subtracted to angle1
-     * @return The result of the angles difference, considering the -360 to 360 range.
-     */
     public static double calculateDeltaAngles(double angle1, double angle2){
         double deltaAngle = angle1 - angle2;
-
-        if (deltaAngle < -180)
-            deltaAngle += 360;
-        else if (deltaAngle > 180)
-            deltaAngle -= 360;
 
         return deltaAngle;
     }

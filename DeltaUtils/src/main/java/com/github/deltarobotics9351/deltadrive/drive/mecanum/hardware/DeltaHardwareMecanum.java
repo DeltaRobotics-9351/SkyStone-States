@@ -1,6 +1,5 @@
 package com.github.deltarobotics9351.deltadrive.drive.mecanum.hardware;
 
-import com.github.deltarobotics9351.deltadrive.utils.ChassisType;
 import com.github.deltarobotics9351.deltadrive.utils.Invert;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -12,18 +11,33 @@ public class DeltaHardwareMecanum {
     public DcMotor wheelBackLeft = null;
     public DcMotor wheelBackRight = null;
 
-    public DcMotor wheelHDriveMiddle = null;
-
+    /**
+     * Enum specifying the side which will be inverted
+     * Most of the time, you need to invert the right side.
+     */
     public Invert invert = null;
 
     public HardwareMap hdwMap = null;
 
-    //Constructor
+    /**
+     * Constructor for the delta hardware mecanum class
+     * Do not forget to initialize the motors with initHardware()
+     * @param hdwMap The current OpMode hardware map
+     * @param invert Enum specifying which side will be inverted (motors), most of the time you need to invert the right side.
+     */
     public DeltaHardwareMecanum(HardwareMap hdwMap, Invert invert){
         this.invert = invert;
         this.hdwMap = hdwMap;
     }
 
+    /**
+     * Initialize motors.
+     * @param frontleft The front left motor of the chassis.
+     * @param frontright The front right motor of the chassis.
+     * @param backleft The back left motor of the chassis.
+     * @param backright The back right motor of the chassis.
+     * @param brake brake the motors when their power is 0
+     */
     public void initHardware(DcMotor frontleft, DcMotor frontright, DcMotor backleft, DcMotor backright, boolean brake){
 
 		wheelFrontLeft = frontleft;

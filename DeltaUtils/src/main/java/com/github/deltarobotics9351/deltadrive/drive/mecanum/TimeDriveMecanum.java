@@ -4,11 +4,19 @@ import com.github.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardw
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+/**
+ * Class to control
+ */
 public class TimeDriveMecanum {
 
     DeltaHardwareMecanum hdw;
     Telemetry telemetry;
 
+    /**
+     * Constructor for the time drive class
+     * @param hdw The initialized hardware containing all the chassis motors
+     * @param telemetry The current OpMode telemetry to show info related tnto the moveme
+     */
     public TimeDriveMecanum(DeltaHardwareMecanum hdw, Telemetry telemetry){
         this.hdw = hdw;
         this.telemetry = telemetry;
@@ -17,7 +25,6 @@ public class TimeDriveMecanum {
     //se define el power de todos los motores y el tiempo en el que avanzaran a este power
     //la string es simplemente para mostrarla en la driver station con un mensaje telemetry.
     //(el tiempo es en segundos)
-
     public void setAllWheelPower(double frontleft, double frontright, double backleft, double backright, double time, String movementDescription){
 
         switch(hdw.invert) {
