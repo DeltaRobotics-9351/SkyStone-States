@@ -69,7 +69,7 @@ public class IMUDrivePMecanum {
      * @param deadZone the dead zone said above
      */
     public void setDeadZone(double deadZone){
-        this.deadZone = deadZone;
+        this.deadZone = Math.abs(deadZone);
     }
 
     public double getDeadZone(){
@@ -80,7 +80,7 @@ public class IMUDrivePMecanum {
      * @param P the Proportional coefficient
      */
     public void setP(double P){
-        this.P = P;
+        this.P = Math.abs(P);
     }
 
     public double getP(){
@@ -175,12 +175,23 @@ public class IMUDrivePMecanum {
 
             while ((degrees - getAngle()) != 0 && currentOpMode.opModeIsActive() && (runtime.seconds() < timeoutS)) { //entramos en un bucle hasta que los degrees sean los esperados
                 double delta = degrees - getAngle();
-                double turbo = Util.clamp(delta * P, deadZone, 1);
 
-                backleftpower = power * turbo;
-                backrightpower = -power * turbo;
-                frontleftpower = power * turbo;
-                frontrightpower = -power * turbo;
+                double div90 = degrees / 90;
+
+                double turbo = Util.clamp(delta * (P / div90), 0, 1);
+
+                double powerF;
+
+                if(turbo > 0){
+                    powerF = power * Util.clamp(turbo, deadZone, 1);
+                }else{
+                    powerF = power * Util.clamp(turbo, -1, deadZone);
+                }
+
+                backleftpower = powerF;
+                backrightpower = -powerF;
+                frontleftpower = powerF;
+                frontrightpower = -powerF;
 
                 defineAllWheelPower(frontleftpower,frontrightpower,backleftpower,backrightpower);
 
@@ -194,13 +205,26 @@ public class IMUDrivePMecanum {
         }
         else
             while ((degrees - getAngle()) != 0 && currentOpMode.opModeIsActive() && (runtime.seconds() < timeoutS)) { //entramos en un bucle hasta que los degrees sean los esperados
-                double delta = degrees - getAngle();
-                double turbo = Util.clamp(delta * P, deadZone, 1);
 
-                backleftpower = -power * turbo;
-                backrightpower = power * turbo;
-                frontleftpower = -power * turbo;
-                frontrightpower = power * turbo;
+                double delta = degrees - getAngle();
+
+                double div90 = degrees / 90;
+
+                double turbo = Util.clamp(delta * (P / div90), 0, 1);
+
+                double powerF;
+
+                if(turbo > 0){
+                    powerF = power * Util.clamp(turbo, deadZone, 1);
+                }else{
+                    powerF = power * Util.clamp(turbo, -1, deadZone);
+                }
+
+                backleftpower = -powerF;
+                backrightpower = powerF;
+                frontleftpower = -powerF;
+                frontrightpower = powerF;
+
 
                 defineAllWheelPower(frontleftpower,frontrightpower,backleftpower,backrightpower);
 
@@ -208,7 +232,7 @@ public class IMUDrivePMecanum {
                 telemetry.addData("Targeted degrees", degrees);
                 telemetry.addData("Delta", delta);
                 telemetry.addData("Turbo", turbo);
-                telemetry.addData("Power", power * turbo);
+                telemetry.addData("Power", fPower);
                 telemetry.update();
             }
 
