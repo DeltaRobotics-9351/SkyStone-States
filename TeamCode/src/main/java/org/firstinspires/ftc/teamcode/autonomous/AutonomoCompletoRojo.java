@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.github.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum.IMUEncoderMecanumLinearOpMode;
+import com.github.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum.IMUPEncoderMecanumLinearOpMode;
+import com.github.deltarobotics9351.deltadrive.motors.andymark.NeveRest_Orbital_20;
 import com.github.deltarobotics9351.deltamath.geometry.Rot2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -13,7 +15,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
 @Autonomous(name="Autonomo Completo Rojo", group="Final")
-public class AutonomoCompletoRojo extends IMUEncoderMecanumLinearOpMode { //extendemos una clase que ya contiene todos los metodos de encoders y IMU para optimizar el codigo y el tiempo
+public class AutonomoCompletoRojo extends IMUPEncoderMecanumLinearOpMode { //extendemos una clase que ya contiene todos los metodos de encoders y IMU para optimizar el codigo y el tiempo
 
     Hardware hdw;
 
@@ -36,12 +38,11 @@ public class AutonomoCompletoRojo extends IMUEncoderMecanumLinearOpMode { //exte
 //a
         cvCamera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
 //mmmmmmmmmm
-        imuParameters.ROTATE_CORRECTION_POWER = 0.2; //definimos los parametros del imu
-        imuParameters.ROTATE_MAX_CORRECTION_TIMES = 2;
+        setP(0.0185);
 //Ivan no estuvo aqui
         encoderParameters.LEFT_WHEELS_TURBO = 1; //definimos los parametros de los encoders
         encoderParameters.RIGHT_WHEELS_TURBO = 1;
-        encoderParameters.COUNTS_PER_REV = 537.6;
+        encoderParameters.COUNTS_PER_REV = NeveRest_Orbital_20.TICKS_PER_REVOLUTION;
         encoderParameters.DRIVE_GEAR_REDUCTION = 1;
         encoderParameters.WHEEL_DIAMETER_INCHES = 4;
 //hhvdgdfg
@@ -68,7 +69,7 @@ public class AutonomoCompletoRojo extends IMUEncoderMecanumLinearOpMode { //exte
                     telemetry.addData("[/!\\]", "No se ha podido detectar un patron.");
                     telemetry.update();
 //aaaaaa
-                    while (opModeIsActive()) ;
+                    while (opModeIsActive());
 //Hola
                     break;
                 case A: //Pattern A
@@ -88,10 +89,10 @@ public class AutonomoCompletoRojo extends IMUEncoderMecanumLinearOpMode { //exte
 //Ivan estuvo aqui
                     forward(23, 1, 10); //avanzamos hacia la pared
 //hola
-                    rotate(Rot2d.fromDegrees(-90), 0.4, 4); //giramos hacia el skybridge
+                    rotate(Rot2d.fromDegrees(-90), 0.7, 2); //giramos hacia el skybridge
                     backwards(75, 0.7, 10); //nos movemos hacia la building zone
 //aaaaaa
-                    rotate(Rot2d.fromDegrees(90), 0.4, 4);
+                    rotate(Rot2d.fromDegrees(90), 0.7, 2);
                     backwards(21, 1, 10);
 //IVAN ESTUVO AUQUI
 
@@ -101,11 +102,11 @@ public class AutonomoCompletoRojo extends IMUEncoderMecanumLinearOpMode { //exte
 //que hacemos si el robot se vuelve malo?
                     forward(23, 1, 10);
 
-                    rotate(Rot2d.fromDegrees(-90), 0.4, 4);
+                    rotate(Rot2d.fromDegrees(-90), 0.7, 2);
 
                     forward(110, 0.8, 10);
 
-                    rotate(Rot2d.fromDegrees(90), 0.4, 4);
+                    rotate(Rot2d.fromDegrees(90), 0.7, 2);
 
                     backwards(21, 0.7, 10);
 
@@ -116,7 +117,7 @@ public class AutonomoCompletoRojo extends IMUEncoderMecanumLinearOpMode { //exte
 
                     forward(25, 0.7, 10); //avanzamos hacia la pared
 //hola
-                    rotate(Rot2d.fromDegrees(-90), 0.4, 10); //giramos hacia el skybridge
+                    rotate(Rot2d.fromDegrees(-90), 0.7, 2); //giramos hacia el skybridge
                     backwards(75, 1, 10); //nos movemos hacia la building zone
 
                     hdw.SSA2Release(); //abrimos la articulacion

@@ -1,6 +1,6 @@
 package com.github.deltarobotics9351.pid;
 
-import com.github.deltarobotics9351.deltadrive.utils.Clamp;
+import com.github.deltarobotics9351.deltadrive.utils.Util;
 
 /**
 *Implements a PID control loop*
@@ -178,7 +178,7 @@ public class PIDController {
      */
     public void setSetpoint(double setpoint) {
         if (m_maximumInput > m_minimumInput) {
-            m_setpoint = Clamp.clamp(setpoint, m_minimumInput, m_maximumInput);
+            m_setpoint = Util.clamp(setpoint, m_minimumInput, m_maximumInput);
         } else {
             m_setpoint = setpoint;
         }
@@ -301,7 +301,7 @@ public class PIDController {
         m_velocityError = (m_positionError - m_prevError) / m_period;
 
         if (m_Ki != 0) {
-            m_totalError = Clamp.clamp(m_totalError + m_positionError * m_period,
+            m_totalError = Util.clamp(m_totalError + m_positionError * m_period,
                     m_minimumIntegral / m_Ki, m_maximumIntegral / m_Ki);
         }
 
@@ -348,9 +348,9 @@ public class PIDController {
         m_maximumInput = maximumInput;
         m_inputRange = maximumInput - minimumInput;
 
-        // Clamp setpoint to new input
+        // Util setpoint to new input
         if (m_maximumInput > m_minimumInput) {
-            m_setpoint = Clamp.clamp(m_setpoint, m_minimumInput, m_maximumInput);
+            m_setpoint = Util.clamp(m_setpoint, m_minimumInput, m_maximumInput);
         }
     }
 

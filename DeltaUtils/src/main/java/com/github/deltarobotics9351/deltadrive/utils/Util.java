@@ -1,6 +1,6 @@
 package com.github.deltarobotics9351.deltadrive.utils;
 
-public class Clamp {
+public class Util {
     /**
      * Returns value clamped between low and high boundaries.
      *

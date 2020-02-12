@@ -2,6 +2,7 @@ package com.github.deltarobotics9351.deltadrive.drive.mecanum;
 
 import com.github.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
 import com.github.deltarobotics9351.deltadrive.parameters.IMUDriveParameters;
+import com.github.deltarobotics9351.deltadrive.utils.Util;
 import com.github.deltarobotics9351.deltamath.geometry.Rot2d;
 import com.github.deltarobotics9351.pid.PIDConstants;
 import com.github.deltarobotics9351.pid.PIDController;
@@ -169,7 +170,7 @@ public class IMUDrivePIDMecanum {
             }
 
             while (!pidControl.atSetpoint() && currentOpMode.opModeIsActive() && (runtime.seconds() < timeoutS)) { //entramos en un bucle hasta que los degrees sean los esperados
-                power = PIDController.MathUtils.clamp(pidControl.calculate(getAngle()), 0, 1); //el power sera negativo al girar a la derecha
+                power = Util.clamp(pidControl.calculate(getAngle()), 0, 1); //el power sera negativo al girar a la derecha
 
                 backleftpower = -power;
                 backrightpower = power;
@@ -185,15 +186,15 @@ public class IMUDrivePIDMecanum {
         }
         else
             while (!pidControl.atSetpoint() && currentOpMode.opModeIsActive() && (runtime.seconds() < timeoutS)) { //entramos en un bucle hasta que los degrees sean los esperados
-                power = PIDController.MathUtils.clamp(pidControl.calculate(getAngle()), 0, 1); //el power sera positivo al girar a la izquierda
-
+                power = Util.clamp(pidControl.calculate(getAngle()), 0, 1); //el power sera positivo al girar a la izquierda
+//que es esto
                 backleftpower = -power;
                 backrightpower = power;
                 frontleftpower = -power;
                 frontrightpower = power;
                 defineAllWheelPower(frontleftpower,frontrightpower,backleftpower,backrightpower);
-
-
+//que es un whil
+//por que en lugar de usar un . usas ;
                 telemetry.addData("IMU Angle", getAngle());
                 telemetry.addData("Targeted degrees", degrees);
                 telemetry.addData("PID error", pidControl.getPositionError());
