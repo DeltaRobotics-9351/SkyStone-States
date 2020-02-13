@@ -1,16 +1,10 @@
 package org.firstinspires.ftc.teamcode.autonomous.test;
 
-import com.github.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum.IMUMecanumLinearOpMode;
-import com.github.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum.IMUPIDMecanumLinearOpMode;
-import com.github.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum.IMUPMecanumLinearOpMode;
-import com.github.deltarobotics9351.deltadrive.utils.RobotHeading;
-import com.github.deltarobotics9351.deltamath.geometry.Rot2d;
-import com.github.deltarobotics9351.pid.PIDConstants;
+import com.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum.IMUPMecanumLinearOpMode;
+import com.deltarobotics9351.deltamath.geometry.Rot2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
-import org.firstinspires.ftc.teamcode.pipeline.SkystonePatternPipelineRojo;
-import org.openftc.easyopencv.OpenCvCamera;
 
 @Autonomous(name="Autonomo 90 degrees P loop", group="Test")
 public class Autonomo90degreesP extends IMUPMecanumLinearOpMode { //extendemos una clase que ya contiene todos los metodos de encoders y IMU para optimizar el codigo y el tiempo
@@ -23,7 +17,7 @@ public class Autonomo90degreesP extends IMUPMecanumLinearOpMode { //extendemos u
 //hola, ya volvi
         //double P = 0.02;
 
-        setP(0.0185);
+        setP(0.0191);
 
         waitForStart();
 

@@ -1,19 +1,13 @@
 package org.firstinspires.ftc.teamcode.autonomous.test;
 
-import com.github.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum.IMUEncoderMecanumLinearOpMode;
-import com.github.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum.IMUMecanumLinearOpMode;
-import com.github.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum.IMUPIDMecanumLinearOpMode;
-import com.github.deltarobotics9351.deltadrive.utils.RobotHeading;
-import com.github.deltarobotics9351.deltamath.geometry.Rot2d;
+import com.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum.IMUMecanumLinearOpMode;
+import com.deltarobotics9351.deltadrive.utils.RobotHeading;
+import com.deltarobotics9351.deltamath.geometry.Rot2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.MotivateTelemetry;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 import org.firstinspires.ftc.teamcode.pipeline.SkystonePatternPipelineRojo;
 import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvInternalCamera;
 
 @Autonomous(name="Autonomo 90 degrees", group="Test")
 public class Autonomo90degrees extends IMUMecanumLinearOpMode { //extendemos una clase que ya contiene todos los metodos de encoders y IMU para optimizar el codigo y el tiempo

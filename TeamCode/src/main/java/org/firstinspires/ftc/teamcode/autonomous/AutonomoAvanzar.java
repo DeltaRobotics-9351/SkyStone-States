@@ -1,17 +1,11 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import com.github.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum.IMUEncoderMecanumLinearOpMode;
-import com.github.deltarobotics9351.deltadrive.motors.andymark.NeveRest_Orbital_20;
-import com.qualcomm.hardware.motors.NeveRest20Gearmotor;
+import com.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum.IMUEncoderMecanumLinearOpMode;
+import com.deltarobotics9351.deltadrive.motors.andymark.NeveRest_Orbital_20;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.MotivateTelemetry;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
-import org.firstinspires.ftc.teamcode.pipeline.SkystonePatternPipelineRojo;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvInternalCamera;
 
 @Autonomous(name="Autonomo Avanzar", group="Final")
 public class AutonomoAvanzar extends IMUEncoderMecanumLinearOpMode { //extendemos una clase que ya contiene todos los metodos de encoders y IMU para optimizar el codigo y el tiempo

@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode.autonomous.test;
 
 
-import com.github.deltarobotics9351.deltadrive.drive.mecanum.EncoderDriveMecanum;
-import com.github.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
-import com.github.deltarobotics9351.deltadrive.parameters.EncoderDriveParameters;
+import com.deltarobotics9351.deltadrive.drive.mecanum.EncoderDriveMecanum;
+import com.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
+import com.deltarobotics9351.deltadrive.parameters.EncoderDriveParameters;
 
-import com.github.deltarobotics9351.deltadrive.utils.Invert;
+import com.deltarobotics9351.deltadrive.utils.Invert;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 

@@ -1,9 +1,8 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import com.github.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum.IMUEncoderMecanumLinearOpMode;
-import com.github.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum.IMUPEncoderMecanumLinearOpMode;
-import com.github.deltarobotics9351.deltadrive.motors.andymark.NeveRest_Orbital_20;
-import com.github.deltarobotics9351.deltamath.geometry.Rot2d;
+import com.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum.IMUPEncoderMecanumLinearOpMode;
+import com.deltarobotics9351.deltadrive.motors.andymark.NeveRest_Orbital_20;
+import com.deltarobotics9351.deltamath.geometry.Rot2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.MotivateTelemetry;
@@ -38,7 +37,7 @@ public class AutonomoCompletoRojo extends IMUPEncoderMecanumLinearOpMode { //ext
 //a
         cvCamera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
 //mmmmmmmmmm
-        setP(0.0185);
+        setP(0.019);
 //Ivan no estuvo aqui
         encoderParameters.LEFT_WHEELS_TURBO = 1; //definimos los parametros de los encoders
         encoderParameters.RIGHT_WHEELS_TURBO = 1;

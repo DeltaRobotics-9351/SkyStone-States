@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-import com.github.deltarobotics9351.deltadrive.drive.mecanum.JoystickDriveMecanum;
-import com.github.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
-import com.github.deltarobotics9351.deltadrive.utils.Invert;
+import com.deltarobotics9351.deltadrive.drive.mecanum.JoystickDriveMecanum;
+import com.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
+import com.deltarobotics9351.deltadrive.utils.Invert;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
