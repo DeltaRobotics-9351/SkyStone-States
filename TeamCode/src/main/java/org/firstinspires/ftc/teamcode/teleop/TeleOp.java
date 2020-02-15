@@ -115,11 +115,19 @@ public class TeleOp extends LinearOpMode { //la clase extendera a otra llamada '
             hdw.motorIntakeLeft.setPower(0);
             hdw.motorIntakeRight.setPower(0);
         }
-
+//aqui tambien
         if(gamepad.dpad_up){
             hdw.servoCapstone.setPosition(1);
         }else if (gamepad.dpad_down){
             hdw.servoCapstone.setPosition(0.25);
+        }
+//aqui se crashea el programa
+        if(gamepad.dpad_left){
+            hdw.servoFoundationLeft.setPosition(0);
+            hdw.servoFoundationRight.setPosition(0);
+        }else if(gamepad.dpad_right){
+            hdw.servoFoundationLeft.setPosition(1);
+            hdw.servoFoundationRight.setPosition(1);
         }
 
         //slider del intake
@@ -131,7 +139,8 @@ public class TeleOp extends LinearOpMode { //la clase extendera a otra llamada '
         }else{
             hdw.motorSliders.setPower(0);
         }
-
+//muy brutal
     }
 
 }
+//aqui esta muy vacio, eso no es brutal

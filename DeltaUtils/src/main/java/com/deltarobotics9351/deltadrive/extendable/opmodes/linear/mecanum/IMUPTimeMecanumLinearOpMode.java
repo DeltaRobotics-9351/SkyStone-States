@@ -146,7 +146,7 @@ public class IMUPTimeMecanumLinearOpMode extends LinearOpMode {
 
     /**
      * Sets the death zone, which is the minimum motor power in which the robot moves.
-     * @param P the Proportional coefficient
+     * @param deadZone the death zone mentioned above
      */
     public final void setDeadZone(double deadZone){
         imuDrive.setDeadZone(deadZone);

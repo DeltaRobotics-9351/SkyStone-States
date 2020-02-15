@@ -27,6 +27,8 @@ public class Hardware {
     public Servo servoStoneAutonomous = null;
     public Servo servoCapstone = null;
     public Servo servoStoneAutonomous2 = null;
+    public Servo servoFoundationLeft = null;
+    public Servo servoFoundationRight = null;
 
     //sensores
     //public ColorSensor colorSensor = null; (ejemplo)
@@ -52,6 +54,8 @@ public class Hardware {
         servoStoneAutonomous = hwMap.servo.get("FS");
         servoStoneAutonomous2 = hwMap.servo.get("FS2");
         servoCapstone = hwMap.servo.get("SC");
+        servoFoundationLeft = hwMap.servo.get("SFL");
+        servoFoundationRight = hwMap.servo.get("SFR");
 
         //La direccion por default de estos motores sera FORWARD
         motorIntakeRight.setDirection(DcMotor.Direction.FORWARD);
@@ -78,6 +82,8 @@ public class Hardware {
         servoStoneAutonomous.setPosition(0.1);
         servoCapstone.setPosition(0.9);
         servoStoneAutonomous2.setPosition(1);
+        servoFoundationLeft.setPosition(1);
+        servoFoundationRight.setPosition(1);
 
         //definimos los motores que correran con y sin encoders 
         wheelFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -99,18 +105,31 @@ public class Hardware {
     }
 
     public void SSA2Grab(){
-        servoStoneAutonomous2.setPosition(0.55); sleep(500);
+        servoStoneAutonomous2.setPosition(0.55); sleep(300);
     }
 
     public void SSA2Release(){
-        servoStoneAutonomous2.setPosition(1); sleep(500); }
+        servoStoneAutonomous2.setPosition(1); sleep(300);
+    }
 
     public void putCapstone(){
-        servoCapstone.setPosition(0.25); sleep(500);
+        servoCapstone.setPosition(0.25); sleep(300);
     }
 
     public void saveCapstone(){
-        servoCapstone.setPosition(0.9); sleep(500);
+        servoCapstone.setPosition(0.9); sleep(300);
+    }
+
+    public void grabFoundation(){
+        servoFoundationRight.setPosition(0);
+        servoFoundationLeft.setPosition(0);
+        sleep(300);
+    }
+
+    public void releaseFoundation(){
+        servoFoundationRight.setPosition(1);
+        servoFoundationLeft.setPosition(1);
+        sleep(300);
     }
 
     public final void sleep(long milliseconds) {

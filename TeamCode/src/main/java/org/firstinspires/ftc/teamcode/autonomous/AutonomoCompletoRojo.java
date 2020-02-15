@@ -38,6 +38,7 @@ public class AutonomoCompletoRojo extends IMUPEncoderMecanumLinearOpMode { //ext
         cvCamera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
 //mmmmmmmmmm
         setP(0.019);
+        setDeadZone(0.15);
 //Ivan no estuvo aqui
         encoderParameters.LEFT_WHEELS_TURBO = 1; //definimos los parametros de los encoders
         encoderParameters.RIGHT_WHEELS_TURBO = 1;
@@ -55,9 +56,14 @@ public class AutonomoCompletoRojo extends IMUPEncoderMecanumLinearOpMode { //ext
             telemetry.update();
         }
 //Daniel es un otaku
-        cvCamera.closeCameraDevice();
-//aqui decia java, porque no me sale minecraft
         SkystonePatternPipelineRojo.Pattern pattern = pipelineRojo.pattern;
+        while(pattern == SkystonePatternPipelineRojo.Pattern.ND && opModeIsActive()){
+            pattern = pipelineRojo.pattern;
+        }
+
+        cvCamera.closeCameraDevice();
+
+//aqui decia java, porque no me sale minecraft
 //me programas un juego
 //ignora esto
 //sigue programando
@@ -98,10 +104,14 @@ public class AutonomoCompletoRojo extends IMUPEncoderMecanumLinearOpMode { //ext
                     hdw.SSA2Release(); //abrimos la articulacion
                     hdw.SSA2Grab(); // cerramos la articulacion
 
+                    hdw.grabFoundation();
+
 //que hacemos si el robot se vuelve malo?
                     forward(23, 1, 10);
 
                     rotate(Rot2d.fromDegrees(-90), 0.7, 2);
+
+                    hdw.releaseFoundation();
 
                     forward(110, 0.8, 10);
 
