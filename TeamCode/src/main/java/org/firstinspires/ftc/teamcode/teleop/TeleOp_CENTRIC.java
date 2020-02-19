@@ -4,6 +4,7 @@ import com.deltarobotics9351.deltadrive.drive.mecanum.JoystickFieldCentricDriveM
 import com.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
 import com.deltarobotics9351.deltadrive.utils.Invert;
 import com.deltarobotics9351.deltadrive.utils.RobotHeading;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
@@ -11,6 +12,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.MotivateTelemetry;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 
+@Disabled
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Field Centric TEST", group="TeleOps") //se define que la clase se trata de un teleop con una annotation
 public class TeleOp_CENTRIC extends LinearOpMode { //la clase extendera a otra llamada 'LinearOpMode'
 

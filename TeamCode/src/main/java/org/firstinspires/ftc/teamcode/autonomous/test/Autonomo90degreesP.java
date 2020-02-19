@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode.autonomous.test;
 
-import com.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum.IMUPMecanumLinearOpMode;
+import com.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum.IMUPIDMecanumLinearOpMode;
 import com.deltarobotics9351.deltamath.geometry.Rot2d;
+import com.deltarobotics9351.pid.PIDConstants;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 
 @Autonomous(name="Autonomo 90 degrees P loop", group="Test")
-public class Autonomo90degreesP extends IMUPMecanumLinearOpMode { //extendemos una clase que ya contiene todos los metodos de encoders y IMU para optimizar el codigo y el tiempo
+public class Autonomo90degreesP extends IMUPIDMecanumLinearOpMode { //extendemos una clase que ya contiene todos los metodos de encoders y IMU para optimizar el codigo y el tiempo
 
     Hardware hdw;
 
@@ -17,7 +18,7 @@ public class Autonomo90degreesP extends IMUPMecanumLinearOpMode { //extendemos u
 //hola, ya volvi
         //double P = 0.02;
 
-        setP(0.0191);
+        setPID(new PIDConstants(0.0191, 0, 0));
 
         waitForStart();
 

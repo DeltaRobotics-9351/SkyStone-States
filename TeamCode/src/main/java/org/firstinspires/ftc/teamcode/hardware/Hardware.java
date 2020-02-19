@@ -51,6 +51,7 @@ public class Hardware {
         motorIntakeLeft = hwMap.get(DcMotor.class, "IL");
         motorIntakeRight = hwMap.get(DcMotor.class, "IR");
         motorSliders = hwMap.get(DcMotor.class, "SL");
+
         servoStoneAutonomous = hwMap.servo.get("FS");
         servoStoneAutonomous2 = hwMap.servo.get("FS2");
         servoCapstone = hwMap.servo.get("SC");
@@ -83,7 +84,7 @@ public class Hardware {
         servoCapstone.setPosition(0.9);
         servoStoneAutonomous2.setPosition(1);
         servoFoundationLeft.setPosition(1);
-        servoFoundationRight.setPosition(1);
+        servoFoundationRight.setPosition(0);
 
         //definimos los motores que correran con y sin encoders 
         wheelFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -105,31 +106,31 @@ public class Hardware {
     }
 
     public void SSA2Grab(){
-        servoStoneAutonomous2.setPosition(0.55); sleep(300);
+        servoStoneAutonomous2.setPosition(0.55); sleep(600);
     }
 
     public void SSA2Release(){
-        servoStoneAutonomous2.setPosition(1); sleep(300);
+        servoStoneAutonomous2.setPosition(1); sleep(600);
     }
 
     public void putCapstone(){
-        servoCapstone.setPosition(0.25); sleep(300);
+        servoCapstone.setPosition(0.25); sleep(500);
     }
 
     public void saveCapstone(){
-        servoCapstone.setPosition(0.9); sleep(300);
+        servoCapstone.setPosition(0.9); sleep(500);
     }
 
     public void grabFoundation(){
-        servoFoundationRight.setPosition(0);
         servoFoundationLeft.setPosition(0);
-        sleep(300);
+        servoFoundationRight.setPosition(1);
+        sleep(500);
     }
 
     public void releaseFoundation(){
-        servoFoundationRight.setPosition(1);
         servoFoundationLeft.setPosition(1);
-        sleep(300);
+        servoFoundationRight.setPosition(0);
+        sleep(500);
     }
 
     public final void sleep(long milliseconds) {

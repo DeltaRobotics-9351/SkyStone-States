@@ -1,8 +1,9 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import com.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum.IMUPEncoderMecanumLinearOpMode;
+import com.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum.IMUPIDEncoderMecanumLinearOpMode;
 import com.deltarobotics9351.deltadrive.motors.andymark.NeveRest_Orbital_20;
 import com.deltarobotics9351.deltamath.geometry.Rot2d;
+import com.deltarobotics9351.pid.PIDConstants;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.MotivateTelemetry;
@@ -14,7 +15,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
 @Autonomous(name="Autonomo Completo Rojo", group="Final")
-public class AutonomoCompletoRojo extends IMUPEncoderMecanumLinearOpMode { //extendemos una clase que ya contiene todos los metodos de encoders y IMU para optimizar el codigo y el tiempo
+public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //extendemos una clase que ya contiene todos los metodos de encoders y IMU para optimizar el codigo y el tiempo
 
     Hardware hdw;
 
@@ -24,6 +25,10 @@ public class AutonomoCompletoRojo extends IMUPEncoderMecanumLinearOpMode { //ext
 
     @Override
     public void _runOpMode(){
+
+        setPID(new PIDConstants(0.0151, 0, 0));
+        setDeadZone(0.15);
+
 //inserte chiste del programa crasheando aqui
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 //aqui se crashea
@@ -37,8 +42,7 @@ public class AutonomoCompletoRojo extends IMUPEncoderMecanumLinearOpMode { //ext
 //a
         cvCamera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
 //mmmmmmmmmm
-        setP(0.019);
-        setDeadZone(0.15);
+
 //Ivan no estuvo aqui
         encoderParameters.LEFT_WHEELS_TURBO = 1; //definimos los parametros de los encoders
         encoderParameters.RIGHT_WHEELS_TURBO = 1;

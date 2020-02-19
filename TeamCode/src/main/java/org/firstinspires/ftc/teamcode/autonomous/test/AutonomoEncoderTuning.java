@@ -7,11 +7,12 @@ import com.deltarobotics9351.deltadrive.parameters.EncoderDriveParameters;
 
 import com.deltarobotics9351.deltadrive.utils.Invert;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 
-//@Disabled
+@Disabled
 @Autonomous(name="Autonomo Encoder Tuning", group="TEST")
 public class AutonomoEncoderTuning extends LinearOpMode {
 
@@ -19,7 +20,6 @@ public class AutonomoEncoderTuning extends LinearOpMode {
 
     private DeltaHardwareMecanum deltaHardware;
 
-    //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaababababababababababababdbgrjjbfjhdkjajajahjiuuygigfshrrkerhghdkgjhdkjghkjshkjhgkjsdhgjegondvojhbrjhhyjjfmobfisbhtrkjkjhgdjghdhgdjhgkdjhgkfhkdhgkdrjghkdrjhgkdjrhkerhkjhgkjddhfgkkdhdghdkfjghdkfjghdkghkhdfkgjhdfkjghdkjfhgkjfkjhfkjhgkjfhgkfdhgkjfkjghfkjhgkfjhgkjfkjhgkjfhgkfdjhgkdfjhgkfdjghkfdjhgjkdfjghkfjghfkjghfkjghkdfjhgkdjfhgkdjghkdfhgkdhgdjrgdifjgkdrhksjrgkojfngoomnrhppa no se que haces leyendo sto no tienes vida si lees esto pirue ya escribi demasuado deja de ver lo ue escribo stañkeiutyiuhgiudfhgiuherguhhgibsbvonoieygdkjnjdfhkdgtcihdyhguijgjhvhfjhkofvjhdgjhgfjhvfjhfhgvjhfgjhbgudfkhdfjkdfhjkfhjfbdufjdhhdgjkhdfigjhdfkjgjhdkfjhgkdjhgdkjfhgkjdhfkgjhdfkjhbfoidnvknibresres tubekdjdfdjgfjshdgfjdhfgjhgghghgkduhgfvjhdfgj///
     private EncoderDriveMecanum encoderDrive;
 
     @Override

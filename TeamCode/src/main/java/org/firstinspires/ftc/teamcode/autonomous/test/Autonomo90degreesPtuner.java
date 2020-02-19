@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode.autonomous.test;
 
-import com.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum.IMUPMecanumLinearOpMode;
+import com.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum.IMUPIDMecanumLinearOpMode;
 import com.deltarobotics9351.deltamath.geometry.Rot2d;
+import com.deltarobotics9351.pid.PIDConstants;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 
 @Autonomous(name="Autonomo 90 degrees P loop tuner", group="Test")
-public class Autonomo90degreesPtuner extends IMUPMecanumLinearOpMode { //extendemos una clase que ya contiene todos los metodos de encoders y IMU para optimizar el codigo y el tiempo
+public class Autonomo90degreesPtuner extends IMUPIDMecanumLinearOpMode { //extendemos una clase que ya contiene todos los metodos de encoders y IMU para optimizar el codigo y el tiempo
 
     Hardware hdw;
 
@@ -30,7 +31,8 @@ public class Autonomo90degreesPtuner extends IMUPMecanumLinearOpMode { //extende
             sleep(80);
         }
 
-        setP(P);
+        setPID(new PIDConstants(P, 0, 0));
+
 
 //que fue primero, el huevo o la gallina
         rotate(Rot2d.fromDegrees(90), 0.7, 5);
@@ -44,7 +46,6 @@ public class Autonomo90degreesPtuner extends IMUPMecanumLinearOpMode { //extende
 //se le cierra android studios
     }
 //se le da una cobija
-
 
     @Override
     public void setup(){

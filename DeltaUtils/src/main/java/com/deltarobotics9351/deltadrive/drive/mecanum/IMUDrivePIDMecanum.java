@@ -1,10 +1,12 @@
 package com.deltarobotics9351.deltadrive.drive.mecanum;
 
 import com.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
+import com.deltarobotics9351.deltadrive.parameters.IMUDriveParameters;
 import com.deltarobotics9351.deltamath.MathUtil;
 import com.deltarobotics9351.deltamath.geometry.Rot2d;
+import com.deltarobotics9351.deltamath.geometry.Twist2d;
+import com.deltarobotics9351.pid.PIDConstants;
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -17,7 +19,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 /**
  * Turning using the IMU sensor integrated in the Expansion Hub and a P loop, which slows the motors speed the more closer the robot is to the target.
  */
-public class IMUDrivePMecanum {
+public class IMUDrivePIDMecanum {
 
     public BNO055IMU imu;
     DeltaHardwareMecanum hdw;
@@ -32,23 +34,35 @@ public class IMUDrivePMecanum {
 
     Telemetry telemetry;
 
-    LinearOpMode currentOpMode;
-
     private ElapsedTime runtime = new ElapsedTime();
 
+    private IMUDriveParameters parameters;
+
     private double P = 0;
+    private double I = 0;
+    private double D = 0;
+
     private double deadZone = 0;
 
     private double errorTolerance = 1;
     private double velocityTolerance = 1;
 
-    public IMUDrivePMecanum(DeltaHardwareMecanum hdw, LinearOpMode currentOpMode) {
+    private boolean isInitialized = false;
+
+    /**
+     * Constructor for the IMU drive class
+     * (Do not forget to call initIMU() before the OpMode starts!)
+     * @param hdw The initialized hardware containing all the chassis motors
+     * @param telemetry Current OpMode telemetry to show movement info
+     */
+    public IMUDrivePIDMecanum(DeltaHardwareMecanum hdw, Telemetry telemetry) {
         this.hdw = hdw;
-        this.telemetry = currentOpMode.telemetry;
-        this.currentOpMode = currentOpMode;
+        this.telemetry = telemetry;
     }
 
-    public void initIMU() {
+    public void initIMU(IMUDriveParameters parameters) {
+
+        this.parameters = parameters;
 
         frontleft = hdw.wheelFrontLeft;
         frontright = hdw.wheelFrontRight;
@@ -65,6 +79,8 @@ public class IMUDrivePMecanum {
         imu = hdw.hdwMap.get(BNO055IMU.class, "imu");
 
         imu.initialize(param);
+
+        isInitialized = true;
     }
 
     /**
@@ -81,21 +97,31 @@ public class IMUDrivePMecanum {
     }
 
     /**
-     * @param P the Proportional coefficient
+     * @param coefficients the coefficients, in a PIDConstants object
      */
-    public void setP(double P) {
-        this.P = Math.abs(P);
+    public void setPID(PIDConstants coefficients) {
+        this.P = Math.abs(coefficients.p);
+        this.I = Math.abs(coefficients.i);
+        this.D = Math.abs(coefficients.d);
     }
 
     public double getP() {
         return P;
     }
 
+    public double getI() {
+        return I;
+    }
+
+    public double getD() {
+        return D;
+    }
+
     /**
      * Enter in a while loop until the IMU reports it is calibrated or until the opmode stops
      */
     public void waitForIMUCalibration() {
-        while (!imu.isGyroCalibrated() && currentOpMode.opModeIsActive()) {
+        while (!imu.isGyroCalibrated() && !Thread.interrupted()) {
         }
     }
 
@@ -111,12 +137,23 @@ public class IMUDrivePMecanum {
     }
 
     private double getAngle() {
-        // We experimentally determined the Z axis is the axis we want to use for heading angle.
-        // We have to process the angle because the imu works in euler angles so the Z axis is
+        // We have to process the angle because the imu works in euler angles so the axis is
         // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
         // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
 
-        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        Orientation angles = null;
+
+        switch(parameters.IMU_AXIS) {
+            case X:
+                angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+                break;
+            case Y:
+                angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.YZX, AngleUnit.DEGREES);
+                break;
+            default:
+                angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                break;
+        }
 
         double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
 
@@ -134,7 +171,6 @@ public class IMUDrivePMecanum {
 
     private void resetAngle() {
         lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
         globalAngle = 0;
     }
 
@@ -143,7 +179,18 @@ public class IMUDrivePMecanum {
         return Rot2d.fromDegrees(getAngle());
     }
 
-    public void rotate(Rot2d rotation, double power, double timeoutS) {
+    public Twist2d rotate(Rot2d rotation, double power, double timeoutS) {
+
+        parameters.secureParameters();
+
+        if(!isInitialized){
+            telemetry.addData("[/!\\]", "Call initIMU() method before rotating.");
+            telemetry.update();
+            sleep(2000);
+            return new Twist2d();
+        }
+
+        if (!isIMUCalibrated()) return new Twist2d();
 
         resetAngle();
 
@@ -157,19 +204,18 @@ public class IMUDrivePMecanum {
 
         power = Math.abs(power);
 
-        if (!isIMUCalibrated()) return;
-
         double prevErrorDelta = 0;
         double prevMillis = 0;
+        double prevIntegral = 0;
 
-        double velocityDelta = 0;
-        double errorDelta = 0;
+        double velocityDelta = -1;
+        double errorDelta = -1;
 
         double backleftpower, backrightpower, frontrightpower, frontleftpower;
 
         // rotaremos hasta que se complete la vuelta
         if (degrees < 0) {
-            while (getAngle() == 0 && currentOpMode.opModeIsActive() && (runtime.seconds() < timeoutS)) { //al girar a la derecha necesitamos salirnos de 0 grados primero
+            while (getAngle() == 0 && !Thread.interrupted() && (runtime.seconds() < timeoutS)) { //al girar a la derecha necesitamos salirnos de 0 grados primero
                 telemetry.addData("IMU Angle", getAngle());
                 telemetry.addData("Targeted degrees", degrees);
                 telemetry.addData("Delta", "Not calculated yet");
@@ -182,7 +228,7 @@ public class IMUDrivePMecanum {
                 defineAllWheelPower(frontleftpower, frontrightpower, backleftpower, backrightpower);
             }
 
-            while (velocityDelta != 0 && currentOpMode.opModeIsActive() && (runtime.seconds() < timeoutS)) { //entramos en un bucle hasta que los degrees sean los esperados
+            while (velocityDelta != 0 && !Thread.interrupted() && (runtime.seconds() < timeoutS)) { //entramos en un bucle hasta que los degrees sean los esperados
                 double nowMillis = System.currentTimeMillis();
 
                 errorDelta = -(degrees + getAngle());
@@ -191,10 +237,16 @@ public class IMUDrivePMecanum {
 
                 double divBy = Math.abs(degrees / 90);
 
-                double turbo = MathUtil.clamp(errorDelta * (P / divBy), 0, 1);
+                prevIntegral += errorDelta;
+
+                double proportional = (errorDelta * (P / divBy)) ;
+                double integral = (prevIntegral * (I / divBy));
+                double derivative = (velocityDelta * (D / divBy));
+
+                double turbo = MathUtil.clamp(proportional + integral - derivative, 0, 1);
                 double powerF;
 
-                if (turbo > 0) {
+                if (turbo > deadZone) {
                     powerF = power * MathUtil.clamp(turbo, deadZone, 1);
                 } else {
                     powerF = power * MathUtil.clamp(turbo, -1, deadZone);
@@ -218,7 +270,7 @@ public class IMUDrivePMecanum {
                 prevMillis = nowMillis;
             }
         } else
-            while (velocityDelta != 0 && currentOpMode.opModeIsActive() && (runtime.seconds() < timeoutS)) { //entramos en un bucle hasta que los degrees sean los esperados
+            while (velocityDelta != 0 && !Thread.interrupted() && (runtime.seconds() < timeoutS)) { //entramos en un bucle hasta que los degrees sean los esperados
 
                 double nowMillis = System.currentTimeMillis();
 
@@ -228,11 +280,17 @@ public class IMUDrivePMecanum {
 
                 double divBy = Math.abs(degrees / 90);
 
-                double turbo = MathUtil.clamp(errorDelta * (P / divBy), 0, 1);
+                prevIntegral += errorDelta;
+
+                double proportional = (errorDelta * (P / divBy)) ;
+                double integral = (prevIntegral * (I / divBy));
+                double derivative = (velocityDelta * (D / divBy));
+
+                double turbo = MathUtil.clamp(proportional + integral - derivative, 0, 1);
 
                 double powerF;
 
-                if (turbo > 0) {
+                if (turbo > deadZone) {
                     powerF = power * MathUtil.clamp(turbo, deadZone, 1);
                 } else {
                     powerF = power * MathUtil.clamp(turbo, -1, -deadZone);
@@ -259,14 +317,9 @@ public class IMUDrivePMecanum {
         // stop the movement
         defineAllWheelPower(0, 0, 0, 0);
 
-        currentOpMode.sleep(100);
+        sleep(100);
+        return new Twist2d(0, 0, Rot2d.fromDegrees(getAngle()));
     }
-
-    private boolean onTarget(double velocityDelta, double errorDelta) {
-        return Math.abs(errorDelta) < errorTolerance
-                && Math.abs(velocityDelta) < velocityTolerance;
-    }
-
 
     private void defineAllWheelPower(double frontleft, double frontright, double backleft, double backright){
         switch(hdw.invert) {

@@ -87,15 +87,15 @@ public class TeleOp extends LinearOpMode { //la clase extendera a otra llamada '
 
         //servos para agarrar las stones
         if(gamepad.dpad_up){
-            hdw.servoStoneAutonomous.setPosition(0.1);
+           hdw.SSAUp();
         }else if(gamepad.dpad_down){
-            hdw.servoStoneAutonomous.setPosition(0.45);
+            hdw.SSADown();
         }
 //ayuda dijo que mataria a mi fxmilia si no le syudo, ya viene ayuda me tenngo que ir aaaaaa
         if(gamepad.dpad_left){
-            hdw.servoStoneAutonomous2.setPosition(0.6);
+            hdw.SSA2Release();
          }else if(gamepad.dpad_right){
-            hdw.servoStoneAutonomous2.setPosition(0.9);
+            hdw.SSA2Grab();
         }
     }
 
@@ -117,17 +117,15 @@ public class TeleOp extends LinearOpMode { //la clase extendera a otra llamada '
         }
 //aqui tambien
         if(gamepad.dpad_up){
-            hdw.servoCapstone.setPosition(1);
+            hdw.saveCapstone();
         }else if (gamepad.dpad_down){
-            hdw.servoCapstone.setPosition(0.25);
+            hdw.putCapstone();
         }
 //aqui se crashea el programa
         if(gamepad.dpad_left){
-            hdw.servoFoundationLeft.setPosition(0);
-            hdw.servoFoundationRight.setPosition(0);
+            hdw.releaseFoundation();
         }else if(gamepad.dpad_right){
-            hdw.servoFoundationLeft.setPosition(1);
-            hdw.servoFoundationRight.setPosition(1);
+            hdw.grabFoundation();
         }
 
         //slider del intake

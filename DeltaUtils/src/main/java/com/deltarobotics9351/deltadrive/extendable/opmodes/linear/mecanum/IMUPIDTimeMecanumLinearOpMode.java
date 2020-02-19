@@ -1,19 +1,28 @@
 package com.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum;
 
-import com.deltarobotics9351.deltadrive.drive.mecanum.IMUDrivePMecanum;
+import com.deltarobotics9351.LibraryData;
+import com.deltarobotics9351.deltadrive.drive.mecanum.IMUDrivePIDMecanum;
+import com.deltarobotics9351.deltadrive.drive.mecanum.TimeDriveMecanum;
 import com.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
+import com.deltarobotics9351.deltadrive.parameters.IMUDriveParameters;
 import com.deltarobotics9351.deltadrive.utils.Invert;
 import com.deltarobotics9351.deltadrive.utils.RobotHeading;
 import com.deltarobotics9351.deltamath.geometry.Rot2d;
+import com.deltarobotics9351.deltamath.geometry.Twist2d;
+import com.deltarobotics9351.pid.PIDConstants;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
  * Remember to override setup() and define the 4 DcMotor variables in there!
  */
-public class IMUPMecanumLinearOpMode extends LinearOpMode {
+public class IMUPIDTimeMecanumLinearOpMode extends LinearOpMode {
 
-    private IMUDrivePMecanum imuDrive;
+    private IMUDrivePIDMecanum imuDrive;
+
+    private IMUDriveParameters parameters;
+
+    private TimeDriveMecanum timeDrive;
 
     private DeltaHardwareMecanum deltaHardware;
 
@@ -21,6 +30,11 @@ public class IMUPMecanumLinearOpMode extends LinearOpMode {
     public DcMotor frontRight = null;
     public DcMotor backLeft = null;
     public DcMotor backRight = null;
+
+    /**
+     * IMU parameters that can be defined
+     */
+    public IMUDriveParameters imuParameters = new IMUDriveParameters();
 
     /**
      * Enum that defines which side of the chassis will be inverted (motors)
@@ -78,12 +92,14 @@ public class IMUPMecanumLinearOpMode extends LinearOpMode {
 
         deltaHardware.initHardware(frontLeft, frontRight, backLeft, backRight, WHEELS_BRAKE);
 
-        imuDrive = new IMUDrivePMecanum(deltaHardware, this);
-        imuDrive.initIMU();
+        imuDrive = new IMUDrivePIDMecanum(deltaHardware, telemetry);
+        imuDrive.initIMU(imuParameters);
+
+        timeDrive = new TimeDriveMecanum(deltaHardware, telemetry);
 
         while(!imuDrive.isIMUCalibrated() && !isStopRequested()){
             telemetry.addData("[/!\\]", "Calibrating IMU Gyro sensor, please wait...");
-            telemetry.addData("[Status]", imuDrive.getIMUCalibrationStatus());
+            telemetry.addData("[Status]", imuDrive.getIMUCalibrationStatus() + "\nDeltaUtils v" + LibraryData.VERSION);
             telemetry.update();
         }
 
@@ -92,6 +108,29 @@ public class IMUPMecanumLinearOpMode extends LinearOpMode {
         RobotHeading.stop();
     }
 
+    public final void forward(double power, double timeSecs){
+        timeDrive.forward(power, timeSecs);
+    }
+
+    public final void backwards(double power, double timeSecs){
+        timeDrive.backwards(power, timeSecs);
+    }
+
+    public final void strafeLeft(double power, double timeSecs){
+        timeDrive.strafeLeft(power, timeSecs);
+    }
+
+    public final void strafeRight(double power, double timeSecs){
+        timeDrive.strafeRight(power, timeSecs);
+    }
+
+    public final void turnLeft(double power, double timeSecs){
+        timeDrive.turnLeft(power, timeSecs);
+    }
+
+    public final void turnRight(double power, double timeSecs){
+        timeDrive.strafeRight(power, timeSecs);
+    }
 
     /**
      * Overridable void to be executed after all required variables are initialized
@@ -109,11 +148,32 @@ public class IMUPMecanumLinearOpMode extends LinearOpMode {
     }
 
     /**
-     * Set the Proportional coefficient
-     * @param P the Proportional coefficient
+     * Set the PID coefficients
+     * @param pid the PID coefficients
      */
-    public final void setP(double p){
-        imuDrive.setP(p);
+    public final void setPID(PIDConstants pid){
+        imuDrive.setPID(pid);
+    }
+
+    /**
+     * @return the P coefficient
+     */
+    public final double getP(){
+        return imuDrive.getP();
+    }
+
+    /**
+     * @return the I coefficient
+     */
+    public final double getI(){
+        return imuDrive.getI();
+    }
+
+    /**
+     * @return the D coefficient
+     */
+    public final double getD(){
+        return imuDrive.getD();
     }
 
     /**
@@ -124,13 +184,12 @@ public class IMUPMecanumLinearOpMode extends LinearOpMode {
         imuDrive.setDeadZone(deadZone);
     }
 
-    public final void rotate(Rot2d rot, double power, double timeoutSecs){
-        imuDrive.rotate(rot, power, timeoutSecs);
+    public final Twist2d rotate(Rot2d rot, double power, double timeoutSecs){
+        return imuDrive.rotate(rot, power, timeoutSecs);
     }
 
     public final Rot2d getRobotAngle(){
         return imuDrive.getRobotAngle();
     }
-
 
 }

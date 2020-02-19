@@ -112,8 +112,6 @@ public class EncoderDriveMecanum {
         // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
         // its target position, the motion will stop.  This is "safer" in the event that the robot will
         // always end the motion as soon as possible.
-        // However, if you require that BOTH motors have finished their moves before the robot continues
-        // onto the next step, use (isBusy() || isBusy()) in the loop test.
         while ((runtime.seconds() < timeoutS) &&
                 (hdw.wheelFrontRight.isBusy() &&
                         hdw.wheelFrontLeft.isBusy() &&
