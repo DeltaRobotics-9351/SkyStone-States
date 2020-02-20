@@ -28,11 +28,10 @@ public class Autonomo90degreesPtuner extends IMUPIDMecanumLinearOpMode { //exten
             telemetry.addData("P", P);
             telemetry.update();
 
-            sleep(80);
+            sleep(60);
         }
 
         setPID(new PIDConstants(P, 0, 0));
-
 
 //que fue primero, el huevo o la gallina
         rotate(Rot2d.fromDegrees(90), 0.7, 5);

@@ -1,3 +1,9 @@
+/*
+ * Created by FTC team Delta Robotics #9351
+ *  Source code licensed under the MIT License
+ *  More info at https://choosealicense.com/licenses/mit/
+ */
+
 package com.deltarobotics9351.deltadrive.drive.mecanum;
 
 import com.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
@@ -82,7 +88,6 @@ public class EncoderDriveMecanum {
                 newBackRightTarget = hdw.wheelBackRight.getCurrentPosition() + (int) (-backright * COUNTS_PER_INCH);
                 break;
             case NO_INVERT:
-                _SIDE:
                 newFrontLeftTarget = hdw.wheelFrontLeft.getCurrentPosition() + (int) (frontleft * COUNTS_PER_INCH);
                 newFrontRightTarget = hdw.wheelFrontRight.getCurrentPosition() + (int) (frontright * COUNTS_PER_INCH);
                 newBackLeftTarget = hdw.wheelBackLeft.getCurrentPosition() + (int) (backleft * COUNTS_PER_INCH);

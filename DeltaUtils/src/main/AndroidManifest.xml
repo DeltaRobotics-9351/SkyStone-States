@@ -1,2 +1,18 @@
+<!--
+  ~ Created by FTC team Delta Robotics #9351
+  ~  Source code licensed under the MIT License
+  ~  More info at https://choosealicense.com/licenses/mit/
+  -->
+
+<!--
+  ~ /*
+  ~  * Created by Delta Robotics 9351
+  ~  * Source code licensed under the MIT License
+  ~  * More info at https://choosealicense.com/licenses/mit/
+  ~  *
+  ~  *  Class last modification:  2/12/20 8:19 PM
+  ~  */
+  -->
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.deltarobotics9351.deltadrive" />

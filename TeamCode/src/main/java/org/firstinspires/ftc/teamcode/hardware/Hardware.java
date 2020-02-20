@@ -106,7 +106,7 @@ public class Hardware {
     }
 
     public void SSA2Grab(){
-        servoStoneAutonomous2.setPosition(0.55); sleep(600);
+        servoStoneAutonomous2.setPosition(0.6); sleep(600);
     }
 
     public void SSA2Release(){

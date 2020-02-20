@@ -23,6 +23,7 @@ public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //e
 
     public OpenCvCamera cvCamera;
 
+
     @Override
     public void _runOpMode(){
 
@@ -50,21 +51,27 @@ public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //e
         encoderParameters.DRIVE_GEAR_REDUCTION = 1;
         encoderParameters.WHEEL_DIAMETER_INCHES = 4;
 //hhvdgdfg
-        String[] s = MotivateTelemetry.doMotivateGlobal();
+
 //ya me dio flo jera escribir
         while(!isStarted()){ //mientras no se ha presionado play, se mostrara un mensaje telemetry con el pattern detectado
-            telemetry.addData(s[0], s[1]);
+
+            //String[] s = MotivateTelemetry.doMotivateAmigo();
+
+            //telemetry.addData(s[0], s[1]);
+
             telemetry.addData("Pattern", pipelineRojo.pattern.toString());
-            //telemetry.addData("si", Rot2d.fromDegrees(-90));
 //hola
             telemetry.update();
         }
+
 //Daniel es un otaku
-        SkystonePatternPipelineRojo.Pattern pattern = pipelineRojo.pattern;
-        while(pattern == SkystonePatternPipelineRojo.Pattern.ND && opModeIsActive()){
+        SkystonePatternPipelineRojo.Pattern pattern;
+
+        while(pipelineRojo.pattern == SkystonePatternPipelineRojo.Pattern.ND && opModeIsActive()){
             pattern = pipelineRojo.pattern;
         }
 
+        pattern = pipelineRojo.pattern;
         cvCamera.closeCameraDevice();
 
 //aqui decia java, porque no me sale minecraft
@@ -104,12 +111,10 @@ public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //e
                     rotate(Rot2d.fromDegrees(90), 0.7, 2);
                     backwards(21, 1, 10);
 //IVAN ESTUVO AUQUI
-
                     hdw.SSA2Release(); //abrimos la articulacion
                     hdw.SSA2Grab(); // cerramos la articulacion
 
                     hdw.grabFoundation();
-
 //que hacemos si el robot se vuelve malo?
                     forward(23, 1, 10);
 
@@ -144,6 +149,8 @@ public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //e
             }
         }
     }
+
+    public void sleepINS(long ms){ if(!isStarted()) sleep(ms); }
 
     @Override
     public void setup(){

@@ -56,5 +56,29 @@ public class MotivateTelemetry {
         return array[rnd];
     }
 
+    private static int currIndex = 0;
+
+    public static String[] doMotivateAmigo(){
+        String[] motivateAmigo = { "¡Yo soy!", "¿¡Quien!?", "¡Yo soy!", "¿¡Quien!?", "¡Amigo de", "Delta!", "¡Que si!", "¡Que no!", "¡Amigo de", "Delta!" };
+
+        String[] message = {"[Sebas]", motivateAmigo[currIndex]};
+
+        currIndex += 1;
+
+        if(currIndex > motivateAmigo.length){ currIndex = 0; sleep(950); }
+
+        sleep(950);
+
+        return message;
+    }
+
+    public static void sleep(long millis){
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
 
 }

@@ -1,3 +1,9 @@
+/*
+ * Created by FTC team Delta Robotics #9351
+ *  Source code licensed under the MIT License
+ *  More info at https://choosealicense.com/licenses/mit/
+ */
+
 package com.deltarobotics9351.deltadrive.drive.mecanum;
 
 import com.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
@@ -17,7 +23,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 /**
- * Turning using the IMU sensor integrated in the Expansion Hub and a P loop, which slows the motors speed the more closer the robot is to the target.
+ * Turning using the IMU sensor integrated in the Expansion Hub and a PID loop, which slows the motors speed the more closer the robot is to the target.
  */
 public class IMUDrivePIDMecanum {
 
@@ -44,8 +50,7 @@ public class IMUDrivePIDMecanum {
 
     private double deadZone = 0;
 
-    private double errorTolerance = 1;
-    private double velocityTolerance = 1;
+    private boolean invertRotations = false;
 
     private boolean isInitialized = false;
 
@@ -170,10 +175,30 @@ public class IMUDrivePIDMecanum {
     }
 
     private void resetAngle() {
-        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        switch(parameters.IMU_AXIS) {
+            case X:
+                lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+                break;
+            case Y:
+                lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.YZX, AngleUnit.DEGREES);
+                break;
+            default:
+                lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                break;
+        }
         globalAngle = 0;
     }
 
+    /**
+     * Invert the turning direction.
+     */
+    public void invert(){ invertRotations = !invertRotations; }
+
+    /**
+     * Invert the turning direction
+     * @param invert inverted or not.
+     */
+    public void invert(boolean invert){ invertRotations = invert; }
 
     public Rot2d getRobotAngle() {
         return Rot2d.fromDegrees(getAngle());
@@ -195,6 +220,8 @@ public class IMUDrivePIDMecanum {
         resetAngle();
 
         double degrees = rotation.getDegrees();
+
+        if(invertRotations) degrees = -degrees;
 
         runtime.reset();
 
@@ -231,7 +258,7 @@ public class IMUDrivePIDMecanum {
             while (velocityDelta != 0 && !Thread.interrupted() && (runtime.seconds() < timeoutS)) { //entramos en un bucle hasta que los degrees sean los esperados
                 double nowMillis = System.currentTimeMillis();
 
-                errorDelta = -(degrees + getAngle());
+                errorDelta = -((-getAngle()) + degrees);
 
                 velocityDelta = errorDelta - prevErrorDelta;
 
