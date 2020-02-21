@@ -18,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  */
 public class EncoderDriveMecanum {
 
-    public DeltaHardwareMecanum hdw;
+    private DeltaHardwareMecanum hdw;
 
     private final Telemetry telemetry;
 
@@ -54,7 +54,10 @@ public class EncoderDriveMecanum {
                              double frontright,
                              double backleft,
                              double backright,
-                             double timeoutS, double rightTurbo, double leftTurbo, String movementDescription) {
+                             double timeoutS,
+                              double rightTurbo,
+                              double leftTurbo,
+                              String movementDescription) {
 
         parameters.secureParameters();
 

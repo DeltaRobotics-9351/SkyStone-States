@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.autonomous.test;
 
-import com.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum.IMUPIDMecanumLinearOpMode;
+import com.deltarobotics9351.deltadrive.extendable.linearopmodes.mecanum.IMUPIDMecanumLinearOpMode;
 import com.deltarobotics9351.deltamath.geometry.Rot2d;
 import com.deltarobotics9351.pid.PIDConstants;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;

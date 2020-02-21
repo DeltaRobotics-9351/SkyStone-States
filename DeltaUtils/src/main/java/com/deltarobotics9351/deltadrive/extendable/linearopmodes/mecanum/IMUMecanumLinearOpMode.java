@@ -4,13 +4,11 @@
  *  More info at https://choosealicense.com/licenses/mit/
  */
 
-package com.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum;
+package com.deltarobotics9351.deltadrive.extendable.linearopmodes.mecanum;
 
 import com.deltarobotics9351.LibraryData;
-import com.deltarobotics9351.deltadrive.drive.mecanum.EncoderDriveMecanum;
 import com.deltarobotics9351.deltadrive.drive.mecanum.IMUDriveMecanum;
 import com.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
-import com.deltarobotics9351.deltadrive.parameters.EncoderDriveParameters;
 import com.deltarobotics9351.deltadrive.parameters.IMUDriveParameters;
 import com.deltarobotics9351.deltadrive.utils.Invert;
 import com.deltarobotics9351.deltadrive.utils.RobotHeading;
@@ -22,10 +20,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  * Remember to override setup() and define the 4 DcMotor variables in there!
  */
-public class IMUEncoderMecanumLinearOpMode extends LinearOpMode {
+public class IMUMecanumLinearOpMode extends LinearOpMode {
 
     private IMUDriveMecanum imuDrive;
-    private EncoderDriveMecanum encoderDrive;
 
     private DeltaHardwareMecanum deltaHardware;
 
@@ -33,11 +30,6 @@ public class IMUEncoderMecanumLinearOpMode extends LinearOpMode {
      * IMU parameters that can be defined
      */
     public IMUDriveParameters imuParameters = new IMUDriveParameters();
-
-    /**
-     * Encoder parameters that can be defined
-     */
-    public EncoderDriveParameters encoderParameters = new EncoderDriveParameters();
 
     public DcMotor frontLeft = null;
     public DcMotor frontRight = null;
@@ -67,9 +59,9 @@ public class IMUEncoderMecanumLinearOpMode extends LinearOpMode {
 
     /**
      * Robot's initial heading
-     * */
+     *
+     */
     public Rot2d ROBOT_INITIAL_HEADING = new Rot2d();
-
 
     @Override
     public final void runOpMode() {
@@ -82,6 +74,7 @@ public class IMUEncoderMecanumLinearOpMode extends LinearOpMode {
         if(UPDATE_ROBOT_HEADING){
             RobotHeading.start(ROBOT_INITIAL_HEADING, hardwareMap);
         }
+
 
         if(frontLeft == null || frontRight == null || backLeft == null || backRight == null){
             telemetry.addData("[/!\\]", "OpMode will not start in order to avoid Robot Controller crash.");
@@ -100,7 +93,6 @@ public class IMUEncoderMecanumLinearOpMode extends LinearOpMode {
 
         deltaHardware.initHardware(frontLeft, frontRight, backLeft, backRight, WHEELS_BRAKE);
 
-
         imuDrive = new IMUDriveMecanum(deltaHardware, telemetry);
         imuDrive.initIMU(imuParameters);
 
@@ -109,8 +101,6 @@ public class IMUEncoderMecanumLinearOpMode extends LinearOpMode {
             telemetry.addData("[Status]", imuDrive.getIMUCalibrationStatus() + "\n\nDeltaUtils v" + LibraryData.VERSION);
             telemetry.update();
         }
-
-        encoderDrive = new EncoderDriveMecanum(deltaHardware, telemetry, encoderParameters);
 
         Thread t = new Thread(new ParametersCheck());
 
@@ -141,30 +131,6 @@ public class IMUEncoderMecanumLinearOpMode extends LinearOpMode {
         return imuDrive.rotate(rot, power, timeoutS);
     }
 
-    public final void forward(double inches, double speed, double timeOutSecs){
-        encoderDrive.forward(inches, speed, timeOutSecs);
-    }
-
-    public final void backwards(double inches, double speed, double timeOutSecs){
-        encoderDrive.backwards(inches, speed, timeOutSecs);
-    }
-
-    public final void strafeLeft(double inches, double speed, double timeOutSecs){
-        encoderDrive.strafeLeft(inches, speed, timeOutSecs);
-    }
-
-    public final void strafeRight(double inches, double speed, double timeOutSecs){
-        encoderDrive.strafeRight(inches, speed, timeOutSecs);
-    }
-
-    public final void turnLeft(double inches, double speed, double timeOutSecs){
-        encoderDrive.turnLeft(inches, speed, timeOutSecs);
-    }
-
-    public final void turnRight(double inches, double speed, double timeOutSecs){
-        encoderDrive.turnRight(inches, speed, timeOutSecs);
-    }
-
     public final Rot2d getRobotAngle(){
         return imuDrive.getRobotAngle();
     }
@@ -174,10 +140,6 @@ public class IMUEncoderMecanumLinearOpMode extends LinearOpMode {
         @Override
         public void run(){
             waitForStart();
-            if(!encoderParameters.haveBeenDefined()) {
-                telemetry.addData("[/!\\]", "Remember to define encoder constants, encoder functions will not work because parameters are 0 by default.");
-            }
-
             if(!imuParameters.haveBeenDefined()){
                 telemetry.addData("[/!\\]", "Remember to define IMU constants, IMU functions may not work as expected because parameters are 0 by default.");
             }

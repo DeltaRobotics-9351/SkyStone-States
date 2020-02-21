@@ -4,7 +4,7 @@
  *  More info at https://choosealicense.com/licenses/mit/
  */
 
-package com.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum;
+package com.deltarobotics9351.deltadrive.extendable.linearopmodes.mecanum;
 
 import com.deltarobotics9351.deltadrive.drive.mecanum.EncoderDriveMecanum;
 import com.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;

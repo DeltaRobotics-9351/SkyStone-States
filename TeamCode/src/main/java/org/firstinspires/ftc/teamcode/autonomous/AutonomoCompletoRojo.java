@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import com.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum.IMUPIDEncoderMecanumLinearOpMode;
+import com.deltarobotics9351.deltadrive.extendable.linearopmodes.mecanum.IMUPIDEncoderMecanumLinearOpMode;
 import com.deltarobotics9351.deltadrive.motors.andymark.NeveRest_Orbital_20;
 import com.deltarobotics9351.deltamath.geometry.Rot2d;
 import com.deltarobotics9351.pid.PIDConstants;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.MotivateTelemetry;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 import org.firstinspires.ftc.teamcode.pipeline.SkystonePatternPipelineRojo;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -27,7 +26,7 @@ public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //e
     @Override
     public void _runOpMode(){
 
-        setPID(new PIDConstants(0.0151, 0, 0));
+        setPID(new PIDConstants(0.0152, 0, 0));
         setDeadZone(0.15);
 
 //inserte chiste del programa crasheando aqui
@@ -78,6 +77,7 @@ public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //e
 //me programas un juego
 //ignora esto
 //sigue programando
+
         if(isStarted()) { //para evitar que el robot se mueva cuando se presiona stop
             switch (pattern) {
                 case ND: //no se ha detectado ningun pattern
@@ -93,7 +93,7 @@ public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //e
                     break;
                 case B: //Pattern B
 //ESTUVO
-                    strafeLeft(6, 0.2, 10); //nos deslizamos hacia la skystone 2
+                    strafeLeft(7, 0.2, 10); //nos deslizamos hacia la skystone 2
 //AQUI
                     forward(3, 1, 2);
 //iVAN ESTUVO AQUI
@@ -116,11 +116,11 @@ public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //e
 
                     hdw.grabFoundation();
 //que hacemos si el robot se vuelve malo?
-                    forward(23, 1, 10);
-
                     rotate(Rot2d.fromDegrees(-90), 0.7, 2);
 
                     hdw.releaseFoundation();
+
+                    backwards(10, 0.3, 10);
 
                     forward(110, 0.8, 10);
 
@@ -141,7 +141,7 @@ public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //e
                     hdw.SSA2Release(); //abrimos la articulacion
                     hdw.SSA2Grab(); // cerramos la articulacion
 
-                    forward(5, 1, 5);
+                    forward(12, 1, 5);
                     break;
                 case C: //Pattern C
 
@@ -149,8 +149,6 @@ public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //e
             }
         }
     }
-
-    public void sleepINS(long ms){ if(!isStarted()) sleep(ms); }
 
     @Override
     public void setup(){

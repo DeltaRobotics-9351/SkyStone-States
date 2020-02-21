@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import com.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum.IMUEncoderMecanumLinearOpMode;
+import com.deltarobotics9351.deltadrive.extendable.linearopmodes.mecanum.IMUEncoderMecanumLinearOpMode;
 import com.deltarobotics9351.deltadrive.motors.andymark.NeveRest_Orbital_20;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -27,6 +27,8 @@ public class AutonomoAvanzar extends IMUEncoderMecanumLinearOpMode { //extendemo
         telemetry.update();
 
         waitForStart();
+
+        if(!isStarted()){ return; }
 
         forward(30, 1, 10);
     }

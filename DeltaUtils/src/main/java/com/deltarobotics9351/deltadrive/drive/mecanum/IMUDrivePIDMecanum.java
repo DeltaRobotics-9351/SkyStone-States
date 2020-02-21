@@ -110,6 +110,8 @@ public class IMUDrivePIDMecanum {
         this.D = Math.abs(coefficients.d);
     }
 
+    public PIDConstants getPID(){ return new PIDConstants(P, I, D); }
+
     public double getP() {
         return P;
     }

@@ -68,9 +68,9 @@ public class SkystonePatternPipelineAzul extends OpenCvPipeline {
 
     //definimos el pattern a una variable basandonos en que hay tres posibilidades, como ya se explico arriba
     public void definePattern(){
-        if(valLeft == 255 && valRight == 0){
+        if(valLeft == 0 && valRight == 255){
             pattern = Pattern.A;
-        }else if(valLeft == 0 && valRight == 255){
+        }else if(valLeft == 255 && valRight == 0){
             pattern = Pattern.B;
         }else if(valLeft == 255 && valRight == 255){
             pattern = Pattern.C;

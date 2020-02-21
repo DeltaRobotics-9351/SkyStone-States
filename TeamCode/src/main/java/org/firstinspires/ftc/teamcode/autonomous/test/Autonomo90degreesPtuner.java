@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.autonomous.test;
 
-import com.deltarobotics9351.deltadrive.extendable.opmodes.linear.mecanum.IMUPIDMecanumLinearOpMode;
+import com.deltarobotics9351.deltadrive.extendable.linearopmodes.mecanum.IMUPIDMecanumLinearOpMode;
 import com.deltarobotics9351.deltamath.geometry.Rot2d;
 import com.deltarobotics9351.pid.PIDConstants;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -55,7 +55,7 @@ public class Autonomo90degreesPtuner extends IMUPIDMecanumLinearOpMode { //exten
         frontRight = hdw.wheelFrontRight;
         backLeft = hdw.wheelBackLeft;
         backRight = hdw.wheelBackRight;
-//listo, has reiniciado a sobas. Si sigue sin funcionr se vende un esclavo
+//listo, has reiniciado a sobas. Si sigue sin funcionr se vende como esclavo
         this.UPDATE_ROBOT_HEADING = false;
         this.ROBOT_INITIAL_HEADING = Rot2d.fromDegrees(0);
     }
