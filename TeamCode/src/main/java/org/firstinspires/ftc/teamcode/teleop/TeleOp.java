@@ -27,6 +27,8 @@ public class TeleOp extends LinearOpMode { //la clase extendera a otra llamada '
         hdw = new Hardware(hardwareMap); //init hardware
         hdw.initHardware(false);
 
+        hdw.useSleeps = false;
+
         deltaHardware = new DeltaHardwareMecanum(hardwareMap, Invert.RIGHT_SIDE);
 
         deltaHardware.initHardware(hdw.wheelFrontLeft, hdw.wheelFrontRight, hdw.wheelBackLeft, hdw.wheelBackRight, true);
@@ -69,7 +71,7 @@ public class TeleOp extends LinearOpMode { //la clase extendera a otra llamada '
         telemetry.addData("[>]", "Mucha suerte cracks, nos vemos en la proxima partida =)");
         telemetry.update();
 
-        sleep(300);
+        sleep(800);
 
     }
 

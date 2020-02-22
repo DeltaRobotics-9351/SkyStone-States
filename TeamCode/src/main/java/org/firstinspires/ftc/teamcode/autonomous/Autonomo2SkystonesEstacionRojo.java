@@ -41,7 +41,7 @@ public class Autonomo2SkystonesEstacionRojo extends IMUEncoderMecanumLinearOpMod
 //Ivan no estuvo aqui
         encoderParameters.LEFT_WHEELS_TURBO = 1; //definimos los parametros de los encoders
         encoderParameters.RIGHT_WHEELS_TURBO = 1;
-        encoderParameters.COUNTS_PER_REV = 537.6;
+        encoderParameters.TICKS_PER_REV = 537.6;
         encoderParameters.DRIVE_GEAR_REDUCTION = 1;
         encoderParameters.WHEEL_DIAMETER_INCHES = 4;
 //hhvdgdfg

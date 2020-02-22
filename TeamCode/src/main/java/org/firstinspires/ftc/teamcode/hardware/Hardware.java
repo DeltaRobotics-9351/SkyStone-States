@@ -30,6 +30,8 @@ public class Hardware {
     public Servo servoFoundationLeft = null;
     public Servo servoFoundationRight = null;
 
+    public boolean useSleeps = true;
+
     //sensores
     //public ColorSensor colorSensor = null; (ejemplo)
 
@@ -77,7 +79,6 @@ public class Hardware {
         motorSliders.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorIntakeLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorIntakeRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
 
         //se define la posicion por default de estos servos
         servoStoneAutonomous.setPosition(0.1);
@@ -134,6 +135,8 @@ public class Hardware {
     }
 
     public final void sleep(long milliseconds) {
+        if(!useSleeps) return;
+
         try {
             Thread.sleep(milliseconds);
         } catch (InterruptedException e) {

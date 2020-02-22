@@ -45,4 +45,10 @@ public class TimeMecanumOpMode extends TimeMecanumLinearOpMode {
      * Code to be run REPETITIVELY until stop ([]) is pressed
      */
     public void _run_loop(){ }
+
+    /**
+     * Code to be run ONCE when stop ([]) is pressed
+     */
+    public void _stop(){ }
+
 }

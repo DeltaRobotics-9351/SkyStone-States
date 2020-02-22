@@ -17,7 +17,7 @@ public class AutonomoAvanzar extends IMUEncoderMecanumLinearOpMode { //extendemo
 
         encoderParameters.LEFT_WHEELS_TURBO = 0.7; //definimos los parametros de los encoders
         encoderParameters.RIGHT_WHEELS_TURBO = 0.7;
-        encoderParameters.COUNTS_PER_REV = NeveRest_Orbital_20.TICKS_PER_REVOLUTION;
+        encoderParameters.TICKS_PER_REV = NeveRest_Orbital_20.TICKS_PER_REVOLUTION;
         encoderParameters.DRIVE_GEAR_REDUCTION = 1;
         encoderParameters.WHEEL_DIAMETER_INCHES = 4;
 

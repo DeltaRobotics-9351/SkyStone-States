@@ -33,7 +33,7 @@ public class AutonomoEncoderTuning extends LinearOpMode {
         EncoderDriveParameters parameters = new EncoderDriveParameters();
         parameters.LEFT_WHEELS_TURBO = 0.6;
         parameters.RIGHT_WHEELS_TURBO = 0.9;
-        parameters.COUNTS_PER_REV = 537.6;
+        parameters.TICKS_PER_REV = 537.6;
         parameters.DRIVE_GEAR_REDUCTION = 1;
         parameters.WHEEL_DIAMETER_INCHES = 4;
 

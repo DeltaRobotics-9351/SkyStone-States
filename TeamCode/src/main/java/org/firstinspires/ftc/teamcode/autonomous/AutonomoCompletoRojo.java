@@ -26,7 +26,7 @@ public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //e
     @Override
     public void _runOpMode(){
 
-        setPID(new PIDConstants(0.0152, 0, 0));
+        setPID(new PIDConstants(0.0152, 0.00000152, 0));
         setDeadZone(0.15);
 
 //inserte chiste del programa crasheando aqui
@@ -46,7 +46,7 @@ public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //e
 //Ivan no estuvo aqui
         encoderParameters.LEFT_WHEELS_TURBO = 1; //definimos los parametros de los encoders
         encoderParameters.RIGHT_WHEELS_TURBO = 1;
-        encoderParameters.COUNTS_PER_REV = NeveRest_Orbital_20.TICKS_PER_REVOLUTION;
+        encoderParameters.TICKS_PER_REV = NeveRest_Orbital_20.TICKS_PER_REVOLUTION;
         encoderParameters.DRIVE_GEAR_REDUCTION = 1;
         encoderParameters.WHEEL_DIAMETER_INCHES = 4;
 //hhvdgdfg
@@ -106,10 +106,10 @@ public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //e
                     forward(23, 1, 10); //avanzamos hacia la pared
 //hola
                     rotate(Rot2d.fromDegrees(-90), 0.7, 2); //giramos hacia el skybridge
-                    backwards(75, 0.7, 10); //nos movemos hacia la building zone
+                    backwards(75, 0.85, 10); //nos movemos hacia la building zone
 //aaaaaa
                     rotate(Rot2d.fromDegrees(90), 0.7, 2);
-                    backwards(21, 1, 10);
+                    backwards(23, 0.4, 10);
 //IVAN ESTUVO AUQUI
                     hdw.SSA2Release(); //abrimos la articulacion
                     hdw.SSA2Grab(); // cerramos la articulacion
@@ -122,21 +122,21 @@ public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //e
 
                     backwards(10, 0.3, 10);
 
-                    forward(110, 0.8, 10);
+                    forward(110, 0.85, 10);
 
                     rotate(Rot2d.fromDegrees(90), 0.7, 2);
 
-                    backwards(21, 0.7, 10);
+                    backwards(21, 0.85, 10);
 
                     hdw.SSA2Release();
                     hdw.SSADown(); //bajamos el brazo
                     hdw.SSA2Grab(); //cerramos la articulacion
                     hdw.SSAUp(); // subimos el brazo
 
-                    forward(25, 0.7, 10); //avanzamos hacia la pared
+                    forward(25, 0.85, 10); //avanzamos hacia la pared
 //hola
                     rotate(Rot2d.fromDegrees(-90), 0.7, 2); //giramos hacia el skybridge
-                    backwards(75, 1, 10); //nos movemos hacia la building zone
+                    backwards(72, 1, 10); //nos movemos hacia la building zone
 
                     hdw.SSA2Release(); //abrimos la articulacion
                     hdw.SSA2Grab(); // cerramos la articulacion
