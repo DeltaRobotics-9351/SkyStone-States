@@ -4,14 +4,14 @@
  *  More info at https://choosealicense.com/licenses/mit/
  */
 
-package com.deltarobotics9351.deltadrive.extendable.opmodes;
+package com.deltarobotics9351.deltadrive.extendable.opmodes.mecanum;
 
-import com.deltarobotics9351.deltadrive.extendable.linearopmodes.mecanum.EncoderMecanumLinearOpMode;
+import com.deltarobotics9351.deltadrive.extendable.linearopmodes.mecanum.IMUEncoderMecanumLinearOpMode;
 
 /**
  * Remember to override setup() and define the 4 DcMotor variables in there!
  */
-public class EncoderMecanumOpMode extends EncoderMecanumLinearOpMode {
+public class IMUEncoderMecanumOpMode extends IMUEncoderMecanumLinearOpMode {
 
     @Override
     public final void _runOpMode(){
@@ -24,6 +24,8 @@ public class EncoderMecanumOpMode extends EncoderMecanumLinearOpMode {
         _run();
 
         while(opModeIsActive()){ _run_loop(); }
+
+        _stop();
     }
 
     /**

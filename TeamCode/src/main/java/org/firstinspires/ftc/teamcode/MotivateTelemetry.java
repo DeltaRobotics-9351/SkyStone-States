@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.Calendar;
@@ -9,9 +11,9 @@ public class MotivateTelemetry {
 
     public static String[] messagesGlobal = {"GO DELTA ROBOTICS!!", "VAMOS CRACKSSS!", "Ya lo han demostrado en otras ocasiones, ustedes pueden!", "(enigma rifa)", "Vamos hasta las finales CON TODOOOO!"};
 
-    public static String[] messagesRed = { "GO RED ALLIANCE!", "Don Cangrejo is ready"};
+    public static String[] messagesRed = { "GO RED ALLIANCE!", "*Don Cangrejo is ready*", "Ojala y no falle el autonomo... Suerte cracks =)"};
 
-    public static String[] messagesBlue = {"GO BLUE ALLIANCE!", "*Don Cangrejo esta listo para agarrar esas skystones*"};
+    public static String[] messagesBlue = {"GO BLUE ALLIANCE!", "*Don Cangrejo is ready*", "Ojala y no falle el autonomo... Suerte cracks =)"};
 
     static Calendar cal = Calendar.getInstance();
     static int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH); //Obtenemos el dia
@@ -58,27 +60,30 @@ public class MotivateTelemetry {
 
     private static int currIndex = 0;
 
-    public static String[] doMotivateAmigo(){
+    public static String[] doMotivateAmigo(LinearOpMode opMode){
+
         String[] motivateAmigo = { "¡Yo soy!", "¿¡Quien!?", "¡Yo soy!", "¿¡Quien!?", "¡Amigo de", "Delta!", "¡Que si!", "¡Que no!", "¡Amigo de", "Delta!" };
 
         String[] message = {"[Sebas]", motivateAmigo[currIndex]};
 
         currIndex += 1;
 
-        if(currIndex > motivateAmigo.length){ currIndex = 0; sleep(950); }
+        if(currIndex == motivateAmigo.length){ currIndex = 0; }
 
-        sleep(950);
+        sleep(950, opMode);
 
         return message;
     }
 
-    public static void sleep(long millis){
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+
+    public static void sleep(long millis, LinearOpMode opMode){
+        long continueMillis = System.currentTimeMillis() + millis;
+
+        while(System.currentTimeMillis() < continueMillis && !opMode.isStarted());
+
     }
+
+
 
 
 }

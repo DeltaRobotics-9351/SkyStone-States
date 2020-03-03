@@ -39,7 +39,7 @@ android {
     defaultConfig {
         signingConfig signingConfigs.debug
         applicationId 'com.qualcomm.ftcrobotcontroller'
-        minSdkVersion 19
+        minSdkVersion 23
         targetSdkVersion 28
 
         /**
@@ -95,13 +95,13 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
-
+//no te asustes, ya se termino de instalar
     sourceSets.main {
         jni.srcDirs = []
         jniLibs.srcDir rootProject.file('libs')
     }
 }
-
+//no se que poner
 repositories {
     flatDir {
         dirs rootProject.file('libs')

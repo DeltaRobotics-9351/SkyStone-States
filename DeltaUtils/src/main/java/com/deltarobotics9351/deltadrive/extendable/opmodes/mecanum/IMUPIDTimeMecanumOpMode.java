@@ -4,7 +4,7 @@
  *  More info at https://choosealicense.com/licenses/mit/
  */
 
-package com.deltarobotics9351.deltadrive.extendable.opmodes;
+package com.deltarobotics9351.deltadrive.extendable.opmodes.mecanum;
 
 import com.deltarobotics9351.deltadrive.extendable.linearopmodes.mecanum.IMUPIDTimeMecanumLinearOpMode;
 
@@ -24,6 +24,8 @@ public class IMUPIDTimeMecanumOpMode extends IMUPIDTimeMecanumLinearOpMode {
         _run();
 
         while(opModeIsActive()){ _run_loop(); }
+
+        _stop();
     }
 
     /**

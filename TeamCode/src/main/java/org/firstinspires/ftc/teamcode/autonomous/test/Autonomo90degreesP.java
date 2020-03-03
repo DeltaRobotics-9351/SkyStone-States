@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.autonomous.test;
 
 import com.deltarobotics9351.deltadrive.extendable.linearopmodes.mecanum.IMUPIDMecanumLinearOpMode;
 import com.deltarobotics9351.deltamath.geometry.Rot2d;
-import com.deltarobotics9351.pid.PIDConstants;
+import com.deltarobotics9351.pid.PIDCoefficients;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
@@ -18,7 +18,9 @@ public class Autonomo90degreesP extends IMUPIDMecanumLinearOpMode { //extendemos
 //hola, ya volvi
         //double P = 0.02;
 
-        setPID(new PIDConstants(0.0191, 0, 0));
+        setPID(new PIDCoefficients(0.0157, 0, 0));
+
+        imuParameters.DEAD_ZONE = 0.15;
 
         waitForStart();
 

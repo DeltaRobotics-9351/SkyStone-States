@@ -4,14 +4,14 @@
  *  More info at https://choosealicense.com/licenses/mit/
  */
 
-package com.deltarobotics9351.deltadrive.extendable.opmodes;
+package com.deltarobotics9351.deltadrive.extendable.opmodes.mecanum;
 
-import com.deltarobotics9351.deltadrive.extendable.linearopmodes.mecanum.JoystickMecanumLinearOpMode;
+import com.deltarobotics9351.deltadrive.extendable.linearopmodes.mecanum.IMUTimeMecanumLinearOpMode;
 
 /**
  * Remember to override setup() and define the 4 DcMotor variables in there!
  */
-public class JoystickMecanumOpMode extends JoystickMecanumLinearOpMode {
+public class IMUTimeMecanumOpMode extends IMUTimeMecanumLinearOpMode {
 
     @Override
     public final void _runOpMode(){
@@ -24,6 +24,8 @@ public class JoystickMecanumOpMode extends JoystickMecanumLinearOpMode {
         _run();
 
         while(opModeIsActive()){ _run_loop(); }
+
+        _stop();
     }
 
     /**

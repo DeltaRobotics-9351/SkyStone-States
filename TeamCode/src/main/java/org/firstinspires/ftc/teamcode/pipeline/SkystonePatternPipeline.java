@@ -11,7 +11,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SkystonePatternPipelineRojo extends OpenCvPipeline {
+public class SkystonePatternPipeline extends OpenCvPipeline {
 
     //el funcionamiento de esta pipeline consiste en detectar las dos ultimas stones de la derecha de
     //el quarry y determinar con estas el pattern, y a partir de este pattern seguir instrucciones
@@ -24,15 +24,15 @@ public class SkystonePatternPipelineRojo extends OpenCvPipeline {
     //para mover los rectangulos (las zonas en las que se detecta el color) usa las siguientes variables y
     //no tendras que mover nada mas. La posicion es en relacion al tamano de la vista de la camara
 
-    private static final float rectanguloIzquierdoX = 12.5f;
-    private static final float rectanguloDerechoX = 11f;
+    private static float rectanguloIzquierdoX = 12.5f;
+    private static float rectanguloDerechoX = 11f;
 
-    private static final float rectanguloIzquierdoY = 5.3f;
-    private static final float rectanguloDerechoY = 5.3f;
+    private static float rectanguloIzquierdoY = 5.3f;
+    private static float rectanguloDerechoY = 5.3f;
 
     //en teoria no hay necesidad de tocar nada a partir de aqui.
-    public static int valLeft = -1;
-    public static int valRight = -1;
+    private static int valLeft = -1;
+    private static int valRight = -1;
 
     private static float rectHeight = .6f/8f;
     private static float rectWidth = 1.5f/8f;
@@ -46,10 +46,14 @@ public class SkystonePatternPipelineRojo extends OpenCvPipeline {
     private final int rows = 640;
     private final int cols = 480;
 
-    public enum Pattern { ND, A, B, C }
-
     //Como se ve en el manual del juego
     public Pattern pattern = Pattern.ND;
+
+    public enum Alliance{
+        RED, BLUE
+    }
+
+    public Alliance alliance = Alliance.RED;
 
     Mat yCbCrChan2Mat = new Mat();
     Mat thresholdMat = new Mat();
@@ -68,20 +72,43 @@ public class SkystonePatternPipelineRojo extends OpenCvPipeline {
 
     //definimos el pattern a una variable basandonos en que hay tres posibilidades, como ya se explico arriba
     public void definePattern(){
-        if(valLeft == 0 && valRight == 255){
-            pattern = Pattern.A;
-        }else if(valLeft == 255 && valRight == 0){
-            pattern = Pattern.B;
-        }else if(valLeft == 255 && valRight == 255){
-            pattern = Pattern.C;
-        }else{
-            pattern = Pattern.ND; // desconocido, se posiciono de forma erronea el robot.
+        switch(alliance) {
+            case RED:
+                if (valLeft == 0 && valRight == 255) {
+                    pattern = Pattern.A;
+                } else if (valLeft == 255 && valRight == 0) {
+                    pattern = Pattern.B;
+                } else if (valLeft == 255 && valRight == 255) {
+                    pattern = Pattern.C;
+                } else {
+                    pattern = Pattern.ND; // desconocido, se posiciono de forma erronea el robot.
+                }
+             break;
+            case BLUE:
+                if (valLeft == 255 && valRight == 0) {
+                    pattern = Pattern.A;
+                } else if (valLeft == 0 && valRight == 255) {
+                    pattern = Pattern.B;
+                } else if (valLeft == 255 && valRight == 255) {
+                    pattern = Pattern.C;
+                } else {
+                    pattern = Pattern.ND; // desconocido, se posiciono de forma erronea el robot.
+                }
+                break;
         }
     }
 
     @Override
     public Mat processFrame(Mat input)
     {
+        if(alliance == Alliance.BLUE){
+            rectanguloIzquierdoX = 12.5f;
+            rectanguloDerechoX = 11f;
+
+            rectanguloIzquierdoY = 5.3f;
+            rectanguloDerechoY = 5.3f;
+        }
+
         contoursList.clear();
 
         //lower cb = more blue = skystone = white

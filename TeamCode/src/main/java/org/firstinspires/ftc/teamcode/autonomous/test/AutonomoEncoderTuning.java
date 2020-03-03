@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 
-@Disabled
+@Disabled //ya no es necesario jajajaaj
 @Autonomous(name="Autonomo Encoder Tuning", group="TEST")
 public class AutonomoEncoderTuning extends LinearOpMode {
 

@@ -6,7 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.MotivateTelemetry;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
-import org.firstinspires.ftc.teamcode.pipeline.SkystonePatternPipelineRojo;
+import org.firstinspires.ftc.teamcode.pipeline.Pattern;
+import org.firstinspires.ftc.teamcode.pipeline.SkystonePatternPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -17,7 +18,7 @@ public class Autonomo2SkystonesEstacionRojo extends IMUEncoderMecanumLinearOpMod
 
     Hardware hdw;
 
-    public SkystonePatternPipelineRojo pipelineRojo = new SkystonePatternPipelineRojo();
+    public SkystonePatternPipeline pipelineRojo = new SkystonePatternPipeline();
 
     public OpenCvCamera cvCamera;
 
@@ -57,7 +58,7 @@ public class Autonomo2SkystonesEstacionRojo extends IMUEncoderMecanumLinearOpMod
 //Daniel es un otaku
         cvCamera.closeCameraDevice();
 //aqui decia java, porque no me sale minecraft
-        SkystonePatternPipelineRojo.Pattern pattern = pipelineRojo.pattern;
+        Pattern pattern = pipelineRojo.pattern;
 //me programas un juego
 //ignora esto
 //sigue programando

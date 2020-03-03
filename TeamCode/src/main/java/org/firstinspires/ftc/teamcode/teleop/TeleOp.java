@@ -45,6 +45,8 @@ public class TeleOp extends LinearOpMode { //la clase extendera a otra llamada '
         runmillis = System.currentTimeMillis();
         disappearmillis = runmillis + (3000); //el tiempo en el que desaparecera el mensaje "GO!!!" (milisegundos)
 
+        hdw.SSA2Grab();
+
         while(opModeIsActive()){
 
             if(System.currentTimeMillis() < disappearmillis) { //se ejecuta mientras que no hayan pasado mas de 3 segundos (3000 ms) desde que se dio a <play>

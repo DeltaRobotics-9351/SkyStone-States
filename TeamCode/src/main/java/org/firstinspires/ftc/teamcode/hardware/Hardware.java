@@ -25,8 +25,8 @@ public class Hardware {
 
     //servos
     public Servo servoStoneAutonomous = null;
-    public Servo servoCapstone = null;
     public Servo servoStoneAutonomous2 = null;
+    public Servo servoCapstone = null;
     public Servo servoFoundationLeft = null;
     public Servo servoFoundationRight = null;
 
@@ -35,7 +35,7 @@ public class Hardware {
     //sensores
     //public ColorSensor colorSensor = null; (ejemplo)
 
-    //si el boolean "invertedChassis" es true, entonces las llantas de atras se convierten en las de adelante.
+    //si el boolean "invertedChassis" es true, las llantas de atras se convierten en las de adelante.
     public void initHardware(boolean invertedChassis){
 
         //se obtienen todos los motores, servos y sensores del hardwaremap dado
@@ -107,7 +107,7 @@ public class Hardware {
     }
 
     public void SSA2Grab(){
-        servoStoneAutonomous2.setPosition(0.6); sleep(600);
+        servoStoneAutonomous2.setPosition(0.55); sleep(600);
     }
 
     public void SSA2Release(){
@@ -117,7 +117,7 @@ public class Hardware {
     public void putCapstone(){
         servoCapstone.setPosition(0.25); sleep(500);
     }
-
+//la wea buena
     public void saveCapstone(){
         servoCapstone.setPosition(0.9); sleep(500);
     }
@@ -144,3 +144,5 @@ public class Hardware {
         }
     }
 }
+
+//el vacio

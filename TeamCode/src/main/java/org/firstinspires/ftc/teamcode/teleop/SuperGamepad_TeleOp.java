@@ -14,6 +14,7 @@ import com.deltarobotics9351.deltainput.gamepad.button.Button;
 import com.deltarobotics9351.deltainput.gamepad.SuperGamepad;
 import com.deltarobotics9351.deltainput.event.GamepadEvent;
 import com.deltarobotics9351.deltainput.gamepad.button.Buttons;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
@@ -21,6 +22,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.MotivateTelemetry;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 
+//@Disabled
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="SuperGamepad TEST", group="TeleOps") //se define que la clase se trata de un teleop con una annotation
 public class SuperGamepad_TeleOp extends LinearOpMode { //la clase extendera a otra llamada 'LinearOpMode'
 
@@ -33,13 +35,16 @@ public class SuperGamepad_TeleOp extends LinearOpMode { //la clase extendera a o
     JoystickDriveMecanum mecanumWheels; //en este objeto se contiene el codigo para las llantas mecanum
     DeltaHardwareMecanum deltaHardware;
 
-    public SuperGamepad superGamepad1 = new SuperGamepad(gamepad1);
-    public SuperGamepad superGamepad2 = new SuperGamepad(gamepad1);
+    public SuperGamepad superGamepad1;
+    public SuperGamepad superGamepad2;
 
     @Override
     public void runOpMode() {
         hdw = new Hardware(hardwareMap); //init hardware
         hdw.initHardware(false);
+
+        superGamepad1 = new SuperGamepad(gamepad1);
+        superGamepad2 = new SuperGamepad(gamepad2);
 
         hdw.useSleeps = false;
 
@@ -65,14 +70,14 @@ public class SuperGamepad_TeleOp extends LinearOpMode { //la clase extendera a o
         superGamepad1.registerEvent(new GamepadEvent() {
 
             @Override
-            public void buttonPressed(Buttons buttons) {
-                if (buttons.is(Button.DPAD_UP)) hdw.SSAUp(); //subir arti de skystones
+            public void buttonsPressed(Buttons buttons) {
+                if (buttons.is(DPAD_UP)) hdw.SSAUp(); //subir arti de skystones
 
-                if (buttons.is(Button.DPAD_DOWN)) hdw.SSADown(); //bajar arti de skystones
+                if (buttons.is(DPAD_DOWN)) hdw.SSADown(); //bajar arti de skystones
 
-                if (buttons.is(Button.DPAD_LEFT)) hdw.SSA2Release(); //abrir garra de skystones
+                if (buttons.is(DPAD_LEFT)) hdw.SSA2Release(); //abrir garra de skystones
 
-                if (buttons.is(Button.DPAD_RIGHT)) hdw.SSA2Grab(); //cerrar garra de skystones
+                if (buttons.is(DPAD_RIGHT)) hdw.SSA2Grab(); //cerrar garra de skystones
             }
 
             @Override
@@ -96,27 +101,27 @@ public class SuperGamepad_TeleOp extends LinearOpMode { //la clase extendera a o
         superGamepad2.registerEvent(new GamepadEvent() {
 
             @Override
-            public void buttonBeingPressed(Buttons buttons) {
+            public void buttonsBeingPressed(Buttons buttons) {
 
-                if (buttons.is(Button.A)) {
+                if (buttons.is(A)) {
                     double minusPowerLeft = Range.clip(left_trigger, 0,0.5);
                     double minusPowerRight = Range.clip(right_trigger, 0,0.5);
                     hdw.motorIntakeLeft.setPower(1 +  minusPowerLeft);
                     hdw.motorIntakeRight.setPower(1 +  minusPowerRight);
-                } else if (buttons.is(Button.B)) {
+                } else if (buttons.is(B)) {
                     double minusPowerLeft = Range.clip(left_trigger, 0,0.5);
                     double minusPowerRight = Range.clip(right_trigger, 0,0.5);
                     hdw.motorIntakeLeft.setPower(-1 +  minusPowerLeft);
                     hdw.motorIntakeRight.setPower(-1 +  minusPowerRight);
                 }
 
-                if(buttons.is(Button.DPAD_UP)){
+                if(buttons.is(DPAD_UP)){
                     hdw.saveCapstone();
-                }else if (buttons.is(Button.DPAD_DOWN)){
+                }else if (buttons.is(DPAD_DOWN)){
                     hdw.putCapstone();
                 }
 
-                if(buttons.is(Button.DPAD_LEFT)){
+                if(buttons.is(DPAD_LEFT)){
                     hdw.releaseFoundation();
                 }else if(buttons.is(Button.DPAD_RIGHT)){
                     hdw.grabFoundation();
@@ -125,8 +130,8 @@ public class SuperGamepad_TeleOp extends LinearOpMode { //la clase extendera a o
             }
 
             @Override
-            public void buttonReleased(Buttons buttons){
-                if(buttons.is(Button.A) || buttons.is(Button.B)){
+            public void buttonsReleased(Buttons buttons){
+                if(buttons.is(A) || buttons.is(B)){
                     hdw.motorIntakeLeft.setPower(0);
                     hdw.motorIntakeRight.setPower(0);
                 }

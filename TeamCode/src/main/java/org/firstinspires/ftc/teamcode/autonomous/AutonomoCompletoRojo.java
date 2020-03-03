@@ -3,11 +3,13 @@ package org.firstinspires.ftc.teamcode.autonomous;
 import com.deltarobotics9351.deltadrive.extendable.linearopmodes.mecanum.IMUPIDEncoderMecanumLinearOpMode;
 import com.deltarobotics9351.deltadrive.motors.andymark.NeveRest_Orbital_20;
 import com.deltarobotics9351.deltamath.geometry.Rot2d;
-import com.deltarobotics9351.pid.PIDConstants;
+import com.deltarobotics9351.pid.PIDCoefficients;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.MotivateTelemetry;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
-import org.firstinspires.ftc.teamcode.pipeline.SkystonePatternPipelineRojo;
+import org.firstinspires.ftc.teamcode.pipeline.Pattern;
+import org.firstinspires.ftc.teamcode.pipeline.SkystonePatternPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -18,16 +20,15 @@ public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //e
 
     Hardware hdw;
 
-    public SkystonePatternPipelineRojo pipelineRojo = new SkystonePatternPipelineRojo();
+    public SkystonePatternPipeline skystonePipeline = new SkystonePatternPipeline();
 
     public OpenCvCamera cvCamera;
-
 
     @Override
     public void _runOpMode(){
 
-        setPID(new PIDConstants(0.0152, 0.00000152, 0));
-        setDeadZone(0.15);
+        setPID(new PIDCoefficients(0.0153, 0, 0));
+        imuParameters.DEAD_ZONE = 0.15;
 
 //inserte chiste del programa crasheando aqui
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -38,14 +39,12 @@ public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //e
         //la inicializamos
         cvCamera.openCameraDevice();
 //b
-        cvCamera.setPipeline(pipelineRojo);
+        cvCamera.setPipeline(skystonePipeline);
 //a
         cvCamera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
 //mmmmmmmmmm
 
 //Ivan no estuvo aqui
-        encoderParameters.LEFT_WHEELS_TURBO = 1; //definimos los parametros de los encoders
-        encoderParameters.RIGHT_WHEELS_TURBO = 1;
         encoderParameters.TICKS_PER_REV = NeveRest_Orbital_20.TICKS_PER_REVOLUTION;
         encoderParameters.DRIVE_GEAR_REDUCTION = 1;
         encoderParameters.WHEEL_DIAMETER_INCHES = 4;
@@ -54,23 +53,23 @@ public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //e
 //ya me dio flo jera escribir
         while(!isStarted()){ //mientras no se ha presionado play, se mostrara un mensaje telemetry con el pattern detectado
 
-            //String[] s = MotivateTelemetry.doMotivateAmigo();
+            //String[] s = MotivateTelemetry.doMotivateAmigo(this);
 
             //telemetry.addData(s[0], s[1]);
 
-            telemetry.addData("Pattern", pipelineRojo.pattern.toString());
+            telemetry.addData("Pattern", skystonePipeline.pattern.toString());
 //hola
             telemetry.update();
         }
 
 //Daniel es un otaku
-        SkystonePatternPipelineRojo.Pattern pattern;
+        Pattern pattern;
 
-        while(pipelineRojo.pattern == SkystonePatternPipelineRojo.Pattern.ND && opModeIsActive()){
-            pattern = pipelineRojo.pattern;
+        while(skystonePipeline.pattern == Pattern.ND && opModeIsActive()){
+            pattern = skystonePipeline.pattern;
         }
 
-        pattern = pipelineRojo.pattern;
+        pattern = skystonePipeline.pattern;
         cvCamera.closeCameraDevice();
 
 //aqui decia java, porque no me sale minecraft
@@ -95,7 +94,7 @@ public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //e
 //ESTUVO
                     strafeLeft(7, 0.2, 10); //nos deslizamos hacia la skystone 2
 //AQUI
-                    forward(3, 1, 2);
+                    forward(3, 1, 2); //nos alineamos con la pared
 //iVAN ESTUVO AQUI
                     backwards(24, 1, 10); //avanzamos hacia ella
 //iVAN estuvo aqui
@@ -106,7 +105,7 @@ public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //e
                     forward(23, 1, 10); //avanzamos hacia la pared
 //hola
                     rotate(Rot2d.fromDegrees(-90), 0.7, 2); //giramos hacia el skybridge
-                    backwards(75, 0.85, 10); //nos movemos hacia la building zone
+                    backwards(80, 0.85, 10); //nos movemos hacia la building zone
 //aaaaaa
                     rotate(Rot2d.fromDegrees(90), 0.7, 2);
                     backwards(23, 0.4, 10);
@@ -116,7 +115,10 @@ public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //e
 
                     hdw.grabFoundation();
 //que hacemos si el robot se vuelve malo?
-                    rotate(Rot2d.fromDegrees(-90), 0.7, 2);
+
+                    forward(20, 0.4, 10);
+
+                    rotate(Rot2d.fromDegrees(90), 0.7, 2);
 
                     hdw.releaseFoundation();
 

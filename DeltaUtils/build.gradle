@@ -4,16 +4,6 @@
  *  More info at https://choosealicense.com/licenses/mit/
  */
 
-/*
- *
- *  * Created by Delta Robotics 9351
- *  * Source code licensed under the MIT License
- *  * More info at https://choosealicense.com/licenses/mit/
- *  *
- *  *  Class last modification:  1/24/20 3:50 PM
- *
- */
-
 buildscript {
     repositories {
         jcenter()
@@ -33,9 +23,8 @@ group = 'com.github.DeltaRobotics-9351'
 android {
     compileSdkVersion 28
 
-
     defaultConfig {
-        minSdkVersion 19
+        minSdkVersion 23
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -65,6 +54,7 @@ dependencies {
     implementation (name: 'RobotCore-release', ext: 'aar')
     implementation (name: 'Hardware-release', ext: 'aar')
     implementation (name: 'FtcCommon-release', ext: 'aar')
+    //implementation 'org.nanohttpd:nanohttpd:2.3.1'
 }
 
 
