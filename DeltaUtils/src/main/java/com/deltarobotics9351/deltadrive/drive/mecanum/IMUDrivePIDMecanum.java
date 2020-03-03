@@ -247,7 +247,7 @@ public class IMUDrivePIDMecanum {
                 defineAllWheelPower(frontleftpower, frontrightpower, backleftpower, backrightpower);
             }
 
-            while ((errorDelta != parameters.ERROR_TOLERANCE) && !Thread.interrupted() && (System.currentTimeMillis() < maxMillis)) { //entramos en un bucle hasta que los setpoint sean los esperados
+            while (errorDelta != parameters.ERROR_TOLERANCE && !Thread.interrupted() && (System.currentTimeMillis() < maxMillis)) { //entramos en un bucle hasta que los setpoint sean los esperados
 
                 double nowMillis = System.currentTimeMillis();
 
@@ -291,14 +291,10 @@ public class IMUDrivePIDMecanum {
                 prevMillis = nowMillis;
                 prevHeading = getAngle();
 
-                sleep(20);
+                sleep(5);
             }
         } else
-            while ((errorDelta != parameters.ERROR_TOLERANCE) && !Thread.interrupted() && (System.currentTimeMillis() < maxMillis)) { //entramos en un bucle hasta que los setpoint sean los esperados
-
-                if(prevHeading - getAngle() == 0){
-                    //break;
-                }
+            while (errorDelta != parameters.ERROR_TOLERANCE && !Thread.interrupted() && (System.currentTimeMillis() < maxMillis)) { //entramos en un bucle hasta que los setpoint sean los esperados
 
                 double nowMillis = System.currentTimeMillis();
 
@@ -342,7 +338,7 @@ public class IMUDrivePIDMecanum {
                 prevMillis = nowMillis;
                 prevHeading = getAngle();
 
-                sleep(20);
+                sleep(5);
             }
 
         // stop the movement

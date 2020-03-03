@@ -27,8 +27,8 @@ public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //e
     @Override
     public void _runOpMode(){
 
-        setPID(new PIDCoefficients(0.0153, 0, 0));
-        imuParameters.DEAD_ZONE = 0.15;
+        setPID(new PIDCoefficients(0.0152, 0, 0));
+        imuParameters.DEAD_ZONE = 0.10;
 
 //inserte chiste del programa crasheando aqui
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -105,10 +105,10 @@ public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //e
                     forward(23, 1, 10); //avanzamos hacia la pared
 //hola
                     rotate(Rot2d.fromDegrees(-90), 0.7, 2); //giramos hacia el skybridge
-                    backwards(80, 0.85, 10); //nos movemos hacia la building zone
+                    backwards(78, 0.85, 10); //nos movemos hacia la building zone
 //aaaaaa
                     rotate(Rot2d.fromDegrees(90), 0.7, 2);
-                    backwards(23, 0.4, 10);
+                    backwards(23, 0.5, 10);
 //IVAN ESTUVO AUQUI
                     hdw.SSA2Release(); //abrimos la articulacion
                     hdw.SSA2Grab(); // cerramos la articulacion
@@ -118,32 +118,6 @@ public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //e
 
                     forward(20, 0.4, 10);
 
-                    rotate(Rot2d.fromDegrees(90), 0.7, 2);
-
-                    hdw.releaseFoundation();
-
-                    backwards(10, 0.3, 10);
-
-                    forward(110, 0.85, 10);
-
-                    rotate(Rot2d.fromDegrees(90), 0.7, 2);
-
-                    backwards(21, 0.85, 10);
-
-                    hdw.SSA2Release();
-                    hdw.SSADown(); //bajamos el brazo
-                    hdw.SSA2Grab(); //cerramos la articulacion
-                    hdw.SSAUp(); // subimos el brazo
-
-                    forward(25, 0.85, 10); //avanzamos hacia la pared
-//hola
-                    rotate(Rot2d.fromDegrees(-90), 0.7, 2); //giramos hacia el skybridge
-                    backwards(72, 1, 10); //nos movemos hacia la building zone
-
-                    hdw.SSA2Release(); //abrimos la articulacion
-                    hdw.SSA2Grab(); // cerramos la articulacion
-
-                    forward(12, 1, 5);
                     break;
                 case C: //Pattern C
 

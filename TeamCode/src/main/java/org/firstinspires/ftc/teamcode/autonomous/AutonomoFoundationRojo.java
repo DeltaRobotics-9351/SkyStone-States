@@ -10,10 +10,12 @@ import com.deltarobotics9351.deltadrive.extendable.linearopmodes.mecanum.IMUPIDE
 import com.deltarobotics9351.deltadrive.motors.andymark.NeveRest_Orbital_20;
 import com.deltarobotics9351.deltamath.geometry.Rot2d;
 import com.deltarobotics9351.pid.PIDCoefficients;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.MotivateTelemetry;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 
+@Autonomous(name="Autonomo Foundation Rojo", group="Final")
 public class AutonomoFoundationRojo extends IMUPIDEncoderMecanumLinearOpMode {
 
     Hardware hdw = new Hardware(hardwareMap);
