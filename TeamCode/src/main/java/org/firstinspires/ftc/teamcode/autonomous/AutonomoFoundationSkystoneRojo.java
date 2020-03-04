@@ -15,8 +15,8 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
-@Autonomous(name="Autonomo Completo Rojo", group="Final")
-public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //extendemos una clase que ya contiene todos los metodos de encoders y IMU para optimizar el codigo y el tiempo
+@Autonomous(name="Foundation Skystone Rojo", group="Rojo")
+public class AutonomoFoundationSkystoneRojo extends IMUPIDEncoderMecanumLinearOpMode { //extendemos una clase que ya contiene todos los metodos de encoders y IMU para optimizar el codigo y el tiempo
 
     Hardware hdw;
 

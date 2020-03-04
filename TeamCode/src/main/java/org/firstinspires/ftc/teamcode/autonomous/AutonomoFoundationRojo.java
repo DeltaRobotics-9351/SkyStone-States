@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.MotivateTelemetry;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 
-@Autonomous(name="Autonomo Foundation Rojo", group="Final")
+@Autonomous(name="Foundation Rojo", group="Rojo")
 public class AutonomoFoundationRojo extends IMUPIDEncoderMecanumLinearOpMode {
 
     Hardware hdw;

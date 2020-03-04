@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.MotivateTelemetry;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 
-@Autonomous(name="Autonomo Avanzar", group="Final")
+@Autonomous(name="Avanzar", group="?")
 public class AutonomoAvanzar extends IMUEncoderMecanumLinearOpMode { //extendemos una clase que ya contiene todos los metodos de encoders y IMU para optimizar el codigo y el tiempo
 
     Hardware hdw;

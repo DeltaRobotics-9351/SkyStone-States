@@ -11,8 +11,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 import org.firstinspires.ftc.teamcode.pipeline.SkystonePatternPipeline;
 
-@Autonomous(name = "Autonomo Completo Azul", group = "Final")
-public class AutonomoCompletoAzul extends AutonomoCompletoRojo {
+@Autonomous(name = "Foundation Skystone Azul", group = "Azul")
+public class AutonomoFoundationSkystoneAzul extends AutonomoFoundationSkystoneRojo {
 
     //esta clase extiende el autonomo completo rojo e invierte los giros, los deslices, y el OpenCV
 //tambien crashea y rompe el robot
