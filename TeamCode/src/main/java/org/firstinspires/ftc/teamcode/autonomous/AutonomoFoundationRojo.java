@@ -18,8 +18,7 @@ import org.firstinspires.ftc.teamcode.hardware.Hardware;
 @Autonomous(name="Autonomo Foundation Rojo", group="Final")
 public class AutonomoFoundationRojo extends IMUPIDEncoderMecanumLinearOpMode {
 
-    Hardware hdw = new Hardware(hardwareMap);
-
+    Hardware hdw;
     @Override
     public void _runOpMode(){
 
@@ -37,23 +36,31 @@ public class AutonomoFoundationRojo extends IMUPIDEncoderMecanumLinearOpMode {
 
         if(!isStarted()) return;
 
-        strafeLeft(14, 0.2, 4);
-        backwards(22, 0.7, 3);
+        strafeLeft(10, 0.2, 4);
+
+        forward(5, 0.2, 2);
+
+        backwards(24, 0.7, 3);
 
         hdw.grabFoundation();
 
-        forward(5, 0.5, 4);
+        forward(20, 0.5, 4);
 
-        rotate(Rot2d.fromDegrees(-90), 0.7, 5);
+        rotate(Rot2d.fromDegrees(-90), 0.7, 2);
 
         hdw.releaseFoundation();
 
-        forward(19, 0.8, 5);
+        backwards(10, 0.3, 10);
+
+        rotate(Rot2d.fromDegrees(-20), 0.7, 2);
+
+        forward(27, 0.8, 5);
 
     }
 
     @Override
     public void setup(){
+        hdw = new Hardware(hardwareMap);
         hdw.initHardware(false);
 
         frontLeft = hdw.wheelFrontLeft;

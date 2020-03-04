@@ -89,6 +89,41 @@ public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //e
                     break;
                 case A: //Pattern A
 //iVAN
+//ESTUVO
+                    strafeRight(7, 0.2, 10); //nos deslizamos hacia la skystone 2
+//AQUI
+                    forward(3, 1, 2); //nos alineamos con la pared
+//iVAN ESTUVO AQUI
+                    backwards(24, 1, 10); //avanzamos hacia ella
+//iVAN estuvo aqui
+                    hdw.SSADown(); //bajamos el brazo
+                    hdw.SSA2Grab(); //cerramos la articulacion
+                    hdw.SSAUp(); // subimos el brazo
+                    forward(23, 1, 10); //avanzamos hacia la pared
+                    rotate(Rot2d.fromDegrees(-90), 0.7, 2); //giramos hacia el skybridge
+                    backwards(88, 0.85, 10); //nos movemos hacia la building zone
+//aaaaaa
+                    rotate(Rot2d.fromDegrees(90), 0.7, 2);
+                    backwards(23, 0.5, 10);
+//IVAN ESTUVO AUQUI
+                    hdw.SSA2Release(); //abrimos la articulacion
+                    hdw.SSA2Grab(); // cerramos la articulacion
+
+                    hdw.grabFoundation();
+//que hacemos si el robot se vuelve malo?
+
+                    forward(20, 0.4, 10);
+
+                    rotate(Rot2d.fromDegrees(-90), 0.7, 2);
+
+                    hdw.releaseFoundation();
+
+                    backwards(10, 0.3, 10);
+
+                    rotate(Rot2d.fromDegrees(-20), 0.7, 2);
+                    //un dia para albuquerque
+                    forward(25, 0.85, 10);
+
                     break;
                 case B: //Pattern B
 //ESTUVO
@@ -118,8 +153,55 @@ public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //e
 
                     forward(20, 0.4, 10);
 
+                    rotate(Rot2d.fromDegrees(-90), 0.7, 2);
+
+                    hdw.releaseFoundation();
+
+                    backwards(10, 0.3, 10);
+// mi mascota se llama chong
+                    // nmms sobas no se baña
+//JUAN MANUEL ESTUVO AQUI PAPUS
+                    rotate(Rot2d.fromDegrees(-20), 0.7, 2);
+                    //un dia para albuquerque
+                    forward(25, 0.85, 10);
+
                     break;
                 case C: //Pattern C
+
+                    strafeLeft(16, 0.2, 10); //nos deslizamos hacia la skystone 2
+//AQUI
+                    forward(4, 1, 2); //nos alineamos con la pared
+//iVAN ESTUVO AQUI
+                    backwards(24, 1, 10); //avanzamos hacia ella
+//iVAN estuvo aqui
+                    hdw.SSADown(); //bajamos el brazo
+                    hdw.SSA2Grab(); //cerramos la articulacion
+                    hdw.SSAUp(); // subimos el brazo
+                    forward(23, 1, 10); //avanzamos hacia la pared
+                    rotate(Rot2d.fromDegrees(-90), 0.7, 2); //giramos hacia el skybridge
+                    backwards(76, 0.85, 10); //nos movemos hacia la building zone
+//aaaaaa
+                    rotate(Rot2d.fromDegrees(90), 0.7, 2);
+                    backwards(23, 0.5, 10);
+//IVAN ESTUVO AUQUI
+                    hdw.SSA2Release(); //abrimos la articulacion
+                    hdw.SSA2Grab(); // cerramos la articulacion
+
+                    hdw.grabFoundation();
+//que hacemos si el robot se vuelve malo?
+
+                    forward(20, 0.4, 10);
+
+                    rotate(Rot2d.fromDegrees(-90), 0.7, 2);
+
+                    hdw.releaseFoundation();
+
+                    backwards(10, 0.3, 10);
+
+                    rotate(Rot2d.fromDegrees(-20), 0.7, 2);
+                    //un dia para albuquerque
+                    forward(26, 0.85, 10);
+
 
                     break;
             }
