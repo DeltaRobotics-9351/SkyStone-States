@@ -8,6 +8,7 @@ package com.deltarobotics9351.deltadrive.drive.mecanum;
 
 import com.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
 import com.deltarobotics9351.deltadrive.parameters.EncoderDriveParameters;
+import com.deltarobotics9351.deltadrive.utils.DistanceUnit;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -25,6 +26,8 @@ public class EncoderDriveMecanum {
     private ElapsedTime runtime = new ElapsedTime();
 
     private EncoderDriveParameters parameters;
+
+    private DistanceUnit distanceUnit = DistanceUnit.INCHES;
 
     /**
      * Constructor for the encoder drive class
@@ -63,6 +66,13 @@ public class EncoderDriveMecanum {
 
         double TICKS_PER_INCH = (parameters.TICKS_PER_REV * parameters.DRIVE_GEAR_REDUCTION) /
                 (parameters.WHEEL_DIAMETER_INCHES * 3.1415);
+
+        if(distanceUnit == DistanceUnit.CENTIMETERS) {
+            frontleft *= 0.393701;
+            frontright *= 0.393701;
+            backleft *= 0.3937014;
+            backright *= 0.393701;
+        }
 
         int newFrontLeftTarget = 0;
         int newFrontRightTarget = 0;
@@ -169,34 +179,38 @@ public class EncoderDriveMecanum {
         hdw.wheelBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void forward(double inches, double speed, double timeoutS) {
-        inches = Math.abs(inches);
-        encoderDrive(speed, inches, inches, inches, inches, timeoutS, parameters.RIGHT_WHEELS_TURBO, parameters.LEFT_WHEELS_TURBO,  "forward");
+    public void setDistanceUnit(DistanceUnit distanceUnit){
+        this.distanceUnit = distanceUnit;
     }
 
-    public void backwards(double inches, double speed, double timeoutS) {
-        inches = Math.abs(inches);
-        encoderDrive(speed, -inches, -inches, -inches, -inches, timeoutS, parameters.RIGHT_WHEELS_TURBO, parameters.LEFT_WHEELS_TURBO, "backwards");
+    public void forward(double distance, double speed, double timeoutS) {
+        distance = Math.abs(distance);
+        encoderDrive(speed, distance, distance, distance, distance, timeoutS, parameters.RIGHT_WHEELS_TURBO, parameters.LEFT_WHEELS_TURBO,  "forward");
     }
 
-    public void strafeLeft(double inches, double speed, double timeoutS) {
-        inches = Math.abs(inches);
-        encoderDrive(speed, -inches, inches, inches, -inches, timeoutS, parameters.RIGHT_WHEELS_STRAFE_TURBO, parameters.LEFT_WHEELS_STRAFE_TURBO,  "strafeLeft");
+    public void backwards(double distance, double speed, double timeoutS) {
+        distance = Math.abs(distance);
+        encoderDrive(speed, -distance, -distance, -distance, -distance, timeoutS, parameters.RIGHT_WHEELS_TURBO, parameters.LEFT_WHEELS_TURBO, "backwards");
     }
 
-    public void strafeRight(double inches, double speed, double timeoutS) {
-        inches = Math.abs(inches);
-        encoderDrive(speed, inches, -inches, -inches, inches, timeoutS, parameters.RIGHT_WHEELS_STRAFE_TURBO, parameters.LEFT_WHEELS_STRAFE_TURBO,  "strafeRight");
+    public void strafeLeft(double distance, double speed, double timeoutS) {
+        distance = Math.abs(distance);
+        encoderDrive(speed, -distance, distance, distance, -distance, timeoutS, parameters.RIGHT_WHEELS_STRAFE_TURBO, parameters.LEFT_WHEELS_STRAFE_TURBO,  "strafeLeft");
     }
 
-    public void turnRight(double inches, double speed, double timeoutS) {
-        inches = Math.abs(inches);
-        encoderDrive(speed, inches, -inches, inches, -inches, timeoutS, parameters.RIGHT_WHEELS_TURBO, parameters.LEFT_WHEELS_TURBO,  "turnRight");
+    public void strafeRight(double distance, double speed, double timeoutS) {
+        distance = Math.abs(distance);
+        encoderDrive(speed, distance, -distance, -distance, distance, timeoutS, parameters.RIGHT_WHEELS_STRAFE_TURBO, parameters.LEFT_WHEELS_STRAFE_TURBO,  "strafeRight");
     }
 
-    public void turnLeft(double inches, double speed, double timeoutS) {
-        inches = Math.abs(inches);
-        encoderDrive(speed, -inches, inches, -inches, inches, timeoutS, parameters.RIGHT_WHEELS_TURBO, parameters.LEFT_WHEELS_TURBO,  "turnLeft");
+    public void turnRight(double distance, double speed, double timeoutS) {
+        distance = Math.abs(distance);
+        encoderDrive(speed, distance, -distance, distance, -distance, timeoutS, parameters.RIGHT_WHEELS_TURBO, parameters.LEFT_WHEELS_TURBO,  "turnRight");
+    }
+
+    public void turnLeft(double distance, double speed, double timeoutS) {
+        distance = Math.abs(distance);
+        encoderDrive(speed, -distance, distance, -distance, distance, timeoutS, parameters.RIGHT_WHEELS_TURBO, parameters.LEFT_WHEELS_TURBO,  "turnLeft");
     }
 
 }

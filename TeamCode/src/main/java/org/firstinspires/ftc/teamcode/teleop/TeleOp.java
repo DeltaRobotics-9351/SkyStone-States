@@ -8,6 +8,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 
 import com.deltarobotics9351.deltadrive.drive.mecanum.JoystickDriveMecanum;
 import com.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
+import com.deltarobotics9351.deltadrive.extendable.linearopmodes.mecanum.JoystickMecanumLinearOpMode;
 import com.deltarobotics9351.deltadrive.utils.Invert;
 import com.deltarobotics9351.deltainput.gamepad.GamepadDataPacket;
 import com.deltarobotics9351.deltainput.gamepad.button.Button;
@@ -23,8 +24,8 @@ import org.firstinspires.ftc.teamcode.MotivateTelemetry;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 
 //@Disabled
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Control Manual de Don Cangrejo", group="TeleOps") //se define que la clase se trata de un teleop con una annotation
-public class TeleOp extends LinearOpMode { //la clase extendera a otra llamada 'LinearOpMode'
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Control Manual de Don Cangrejo", group="Final") //se define que la clase se trata de un teleop con una annotation
+public class TeleOp extends JoystickMecanumLinearOpMode { //la clase extendera a un 'LinearOpMode'
 
     //objeto que contiene el hardware del robot
     Hardware hdw;
@@ -35,24 +36,9 @@ public class TeleOp extends LinearOpMode { //la clase extendera a otra llamada '
     JoystickDriveMecanum mecanumWheels; //en este objeto se contiene el codigo para las llantas mecanum
     DeltaHardwareMecanum deltaHardware;
 
-    public SuperGamepad superGamepad1;
-    public SuperGamepad superGamepad2;
-
     @Override
-    public void runOpMode() {
-        hdw = new Hardware(hardwareMap); //init hardware
-        hdw.initHardware(false);
-
-        superGamepad1 = new SuperGamepad(gamepad1);
-        superGamepad2 = new SuperGamepad(gamepad2);
-
+    public void _runOpMode() {
         hdw.useSleeps = false;
-
-        deltaHardware = new DeltaHardwareMecanum(hardwareMap, Invert.RIGHT_SIDE);
-
-        deltaHardware.initHardware(hdw.wheelFrontLeft, hdw.wheelFrontRight, hdw.wheelBackLeft, hdw.wheelBackRight, true);
-
-        mecanumWheels = new JoystickDriveMecanum(deltaHardware);
 
         String[] s = MotivateTelemetry.doMotivateGlobal();
 
@@ -85,13 +71,7 @@ public class TeleOp extends LinearOpMode { //la clase extendera a otra llamada '
             @Override
             public void loop(GamepadDataPacket gdp) {
                 //Calculos para las llantas mecanum
-                if (left_trigger > 0.2) {
-                    mecanumWheels.joystick(gdp.gamepad, 1 - Range.clip(left_trigger, 0, 0.7));
-                } else if (right_trigger > 0.2) {
-                    mecanumWheels.joystick(gdp.gamepad, 1 - Range.clip(right_trigger, 0, 0.7));
-                } else {
-                    mecanumWheels.joystick(gdp.gamepad, 1);
-                }
+                joystick(gdp.gamepad, true, 0.8);
             }
 
         });
@@ -108,8 +88,8 @@ public class TeleOp extends LinearOpMode { //la clase extendera a otra llamada '
                 if (buttons.is(A)) {
                     double minusPowerLeft = Range.clip(left_trigger, 0,0.5);
                     double minusPowerRight = Range.clip(right_trigger, 0,0.5);
-                    hdw.motorIntakeLeft.setPower(1 +  minusPowerLeft);
-                    hdw.motorIntakeRight.setPower(1 +  minusPowerRight);
+                    hdw.motorIntakeLeft.setPower(1 - minusPowerLeft);
+                    hdw.motorIntakeRight.setPower(1 - minusPowerRight);
                 } else if (buttons.is(B)) {
                     double minusPowerLeft = Range.clip(left_trigger, 0,0.5);
                     double minusPowerRight = Range.clip(right_trigger, 0,0.5);
@@ -163,8 +143,8 @@ public class TeleOp extends LinearOpMode { //la clase extendera a otra llamada '
                 telemetry.addData("[>]", "GO!!!");
             }
 
-            superGamepad1.update(); //actualizamos los dos gamepads, los cuales ya tienen declarados los eventos (arriba)
-            superGamepad2.update(); //que haran que el robot funcione.
+            superGamepad1.update(); //actualizamos los dos gamepads, los cuales ya tienen declarados los eventos (mas arriba esta el codigo)
+            superGamepad2.update();
 
             telemetry.addData("wheelFrontRightPower", mecanumWheels.wheelFrontRightPower);
             telemetry.addData("wheelFrontLeftPower", mecanumWheels.wheelFrontLeftPower);
@@ -179,10 +159,21 @@ public class TeleOp extends LinearOpMode { //la clase extendera a otra llamada '
             telemetry.update();  //manda los mensajes telemetry a la driver station
         }
 
-        telemetry.addData("[Sobas]", "Mucha suerte cracks, nos vemos en la proxima partida =)");
+        telemetry.addData("[Sobas]", "GG =)");
         telemetry.update();
 
-        sleep(800);
+    }
+
+    @Override
+    public void setup(){
+
+        hdw = new Hardware(hardwareMap); //init hardware
+        hdw.initHardware(false);
+
+        frontLeft = hdw.wheelFrontLeft;
+        frontRight = hdw.wheelFrontRight;
+        backLeft = hdw.wheelBackLeft;
+        backRight = hdw.wheelBackRight;
 
     }
 

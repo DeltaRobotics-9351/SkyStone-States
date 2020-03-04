@@ -10,6 +10,7 @@ import com.deltarobotics9351.deltadrive.drive.mecanum.JoystickDriveMecanum;
 import com.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
 import com.deltarobotics9351.deltadrive.utils.Invert;
 import com.deltarobotics9351.deltadrive.utils.RobotHeading;
+import com.deltarobotics9351.deltainput.gamepad.SuperGamepad;
 import com.deltarobotics9351.deltamath.geometry.Rot2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -28,6 +29,9 @@ public class JoystickMecanumLinearOpMode extends LinearOpMode {
     public DcMotor frontRight = null;
     public DcMotor backLeft = null;
     public DcMotor backRight = null;
+
+    public SuperGamepad superGamepad1;
+    public SuperGamepad superGamepad2;
 
     /**
      * boolean that defines if motors brake when their power is 0
@@ -53,6 +57,9 @@ public class JoystickMecanumLinearOpMode extends LinearOpMode {
 
     @Override
     public final void runOpMode() {
+        superGamepad1 = new SuperGamepad(gamepad1);
+        superGamepad2 = new SuperGamepad(gamepad2);
+
         setup();
 
         if(RESET_ROBOT_HEADING){

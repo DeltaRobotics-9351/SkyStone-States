@@ -30,27 +30,20 @@ public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //e
         setPID(new PIDCoefficients(0.0152, 0, 0));
         imuParameters.DEAD_ZONE = 0.10;
 
-//inserte chiste del programa crasheando aqui
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-//aqui se crashea
+
         //creamos la camara de OpenCV
         cvCamera = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
-//c
+
         //la inicializamos
         cvCamera.openCameraDevice();
-//b
         cvCamera.setPipeline(skystonePipeline);
-//a
         cvCamera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
-//mmmmmmmmmm
 
-//Ivan no estuvo aqui
         encoderParameters.TICKS_PER_REV = NeveRest_Orbital_20.TICKS_PER_REVOLUTION;
         encoderParameters.DRIVE_GEAR_REDUCTION = 1;
         encoderParameters.WHEEL_DIAMETER_INCHES = 4;
-//hhvdgdfg
 
-//ya me dio flo jera escribir
         while(!isStarted()){ //mientras no se ha presionado play, se mostrara un mensaje telemetry con el pattern detectado
 
             //String[] s = MotivateTelemetry.doMotivateAmigo(this);
@@ -58,98 +51,93 @@ public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //e
             //telemetry.addData(s[0], s[1]);
 
             telemetry.addData("Pattern", skystonePipeline.pattern.toString());
-//hola
+
             telemetry.update();
         }
 
-//Daniel es un otaku
-        Pattern pattern;
+        Pattern pattern = Pattern.ND;
 
-        while(skystonePipeline.pattern == Pattern.ND && opModeIsActive()){
+        while(pattern == Pattern.ND && opModeIsActive()){
             pattern = skystonePipeline.pattern;
         }
 
         pattern = skystonePipeline.pattern;
+
         cvCamera.closeCameraDevice();
 
-//aqui decia java, porque no me sale minecraft
-//me programas un juego
-//ignora esto
-//sigue programando
-
-        if(isStarted()) { //para evitar que el robot se mueva cuando se presiona stop
+        if(isStarted()) return;//para evitar que el robot se mueva cuando se presiona stop
             switch (pattern) {
                 case ND: //no se ha detectado ningun pattern
-//gfhgfhfn
+
                     telemetry.addData("[/!\\]", "No se ha podido detectar un patron.");
                     telemetry.update();
-//aaaaaa
+
                     while (opModeIsActive());
-//Hola
+
                     break;
                 case A: //Pattern A
-//iVAN
-//ESTUVO
-                    strafeRight(7, 0.2, 10); //nos deslizamos hacia la skystone 2
-//AQUI
-                    forward(3, 1, 2); //nos alineamos con la pared
-//iVAN ESTUVO AQUI
-                    backwards(24, 1, 10); //avanzamos hacia ella
-//iVAN estuvo aqui
+
+                    strafeRight(7, 0.2, 10); //nos deslizamos hacia la skystone
+
+                    forward(4, 1, 2); //nos alineamos con la pared para corregir si el robot se enchueco
+
+                    backwards(24, 1, 10); //avanzamos hacia la skystone
+
                     hdw.SSADown(); //bajamos el brazo
                     hdw.SSA2Grab(); //cerramos la articulacion
                     hdw.SSAUp(); // subimos el brazo
-                    forward(23, 1, 10); //avanzamos hacia la pared
+
+                    forward(2, 0.3, 10); //avanzamos hacia la pared
                     rotate(Rot2d.fromDegrees(-90), 0.7, 2); //giramos hacia el skybridge
+
                     backwards(88, 0.85, 10); //nos movemos hacia la building zone
-//aaaaaa
-                    rotate(Rot2d.fromDegrees(90), 0.7, 2);
-                    backwards(23, 0.5, 10);
-//IVAN ESTUVO AUQUI
+                    rotate(Rot2d.fromDegrees(90), 0.7, 2); //giramos hacia la foundation
+
+                    backwards(4, 0.3, 10); //nos acercamos a la foundation
+
                     hdw.SSA2Release(); //abrimos la articulacion
                     hdw.SSA2Grab(); // cerramos la articulacion
 
-                    hdw.grabFoundation();
-//que hacemos si el robot se vuelve malo?
+                    hdw.grabFoundation(); //bajamos los servos de la foundation
 
-                    forward(20, 0.4, 10);
+                    forward(20, 0.4, 10); //jalamos la foundation hacia enfrente
 
-                    rotate(Rot2d.fromDegrees(-90), 0.7, 2);
+                    rotate(Rot2d.fromDegrees(-90), 0.7, 2); //giramos para colocar la foundation
 
-                    hdw.releaseFoundation();
+                    hdw.releaseFoundation(); //subimos los servos de la foundation
 
-                    backwards(10, 0.3, 10);
+                    backwards(10, 0.3, 10); //acomodamos la foundation para asegurarnos de que entro.
 
-                    rotate(Rot2d.fromDegrees(-20), 0.7, 2);
-                    //un dia para albuquerque
-                    forward(25, 0.85, 10);
+                    rotate(Rot2d.fromDegrees(-20), 0.7, 2); //giramos hacia el lado de la base del skybridge
+
+                    forward(25, 0.85, 10); //nos estacionamos pegados a la base del skybridge
 
                     break;
                 case B: //Pattern B
-//ESTUVO
-                    strafeLeft(7, 0.2, 10); //nos deslizamos hacia la skystone 2
-//AQUI
-                    forward(3, 1, 2); //nos alineamos con la pared
-//iVAN ESTUVO AQUI
-                    backwards(24, 1, 10); //avanzamos hacia ella
-//iVAN estuvo aqui
+
+                    strafeLeft(7, 0.2, 10); //nos deslizamos hacia la skystone
+
+                    forward(4, 1, 2); //nos alineamos con la pared para corregir si el robot se enchueco
+
+                    backwards(24, 1, 10); //avanzamos hacia la skystone
+
                     hdw.SSADown(); //bajamos el brazo
                     hdw.SSA2Grab(); //cerramos la articulacion
                     hdw.SSAUp(); // subimos el brazo
-//Ivan estuvo aqui
-                    forward(23, 1, 10); //avanzamos hacia la pared
-//hola
+
+                    forward(2, 0.3, 10); //avanzamos hacia la pared
+
                     rotate(Rot2d.fromDegrees(-90), 0.7, 2); //giramos hacia el skybridge
                     backwards(78, 0.85, 10); //nos movemos hacia la building zone
-//aaaaaa
-                    rotate(Rot2d.fromDegrees(90), 0.7, 2);
-                    backwards(23, 0.5, 10);
-//IVAN ESTUVO AUQUI
+
+                    rotate(Rot2d.fromDegrees(90), 0.7, 2); //giramos hacia la foundation
+
+                    backwards(4, 0.3, 10); //avanzamos hacia la foundation
+
                     hdw.SSA2Release(); //abrimos la articulacion
                     hdw.SSA2Grab(); // cerramos la articulacion
 
                     hdw.grabFoundation();
-//que hacemos si el robot se vuelve malo?
 
                     forward(20, 0.4, 10);
 
@@ -158,37 +146,36 @@ public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //e
                     hdw.releaseFoundation();
 
                     backwards(10, 0.3, 10);
-// mi mascota se llama chong
-                    // nmms sobas no se baña
-//JUAN MANUEL ESTUVO AQUI PAPUS
+
                     rotate(Rot2d.fromDegrees(-20), 0.7, 2);
-                    //un dia para albuquerque
+
                     forward(25, 0.85, 10);
 
                     break;
                 case C: //Pattern C
 
                     strafeLeft(16, 0.2, 10); //nos deslizamos hacia la skystone 2
-//AQUI
+
                     forward(4, 1, 2); //nos alineamos con la pared
-//iVAN ESTUVO AQUI
+
                     backwards(24, 1, 10); //avanzamos hacia ella
-//iVAN estuvo aqui
+
                     hdw.SSADown(); //bajamos el brazo
                     hdw.SSA2Grab(); //cerramos la articulacion
                     hdw.SSAUp(); // subimos el brazo
-                    forward(23, 1, 10); //avanzamos hacia la pared
+
+                    forward(2, 0.3, 10); //avanzamos hacia la pared
                     rotate(Rot2d.fromDegrees(-90), 0.7, 2); //giramos hacia el skybridge
                     backwards(76, 0.85, 10); //nos movemos hacia la building zone
-//aaaaaa
+
                     rotate(Rot2d.fromDegrees(90), 0.7, 2);
-                    backwards(23, 0.5, 10);
-//IVAN ESTUVO AUQUI
-                    hdw.SSA2Release(); //abrimos la articulacion
-                    hdw.SSA2Grab(); // cerramos la articulacion
+
+                    backwards(4, 0.3, 10);
+
+                    hdw.SSA2Release(); //abrimos la garra
+                    hdw.SSA2Grab(); // cerramos la garra
 
                     hdw.grabFoundation();
-//que hacemos si el robot se vuelve malo?
 
                     forward(20, 0.4, 10);
 
@@ -199,13 +186,11 @@ public class AutonomoCompletoRojo extends IMUPIDEncoderMecanumLinearOpMode { //e
                     backwards(10, 0.3, 10);
 
                     rotate(Rot2d.fromDegrees(-20), 0.7, 2);
-                    //un dia para albuquerque
-                    forward(26, 0.85, 10);
 
+                    forward(26, 0.85, 10);
 
                     break;
             }
-        }
     }
 
     @Override

@@ -57,6 +57,7 @@ public class GamepadEvent extends Event {
     @Override
     public final void execute(Object arg1){
         if(!(arg1 instanceof GamepadDataPacket)) throw new IllegalArgumentException("Object is not a GamepadDataPacket");
+
         GamepadDataPacket gdp = (GamepadDataPacket)arg1;
 
         left_stick_x = gdp.left_stick_x;
