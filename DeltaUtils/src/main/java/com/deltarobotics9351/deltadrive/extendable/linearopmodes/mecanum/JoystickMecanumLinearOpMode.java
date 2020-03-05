@@ -22,7 +22,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 public class JoystickMecanumLinearOpMode extends LinearOpMode {
 
-    private JoystickDriveMecanum joystick;
+    public JoystickDriveMecanum joystick;
     private DeltaHardwareMecanum deltaHardware;
 
     public DcMotor frontLeft = null;

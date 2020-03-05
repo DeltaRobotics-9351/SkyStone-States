@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode.autonomous.rojo;
 
 import com.deltarobotics9351.deltadrive.extendable.linearopmodes.mecanum.IMUPIDEncoderMecanumLinearOpMode;
 import com.deltarobotics9351.deltadrive.motors.andymark.NeveRest_Orbital_20;
@@ -17,8 +17,8 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 
 @Autonomous(name="Foundation Skystone Rojo", group="Rojo")
 public class AutonomoFoundationSkystoneRojo extends IMUPIDEncoderMecanumLinearOpMode { //extendemos una clase que ya contiene todos los metodos de encoders y IMU para optimizar el codigo y el tiempo
-
-    Hardware hdw;
+//Daniel es un otaku
+    public Hardware hdw;
 
     public SkystonePatternPipeline skystonePipeline = new SkystonePatternPipeline();
 
@@ -55,9 +55,9 @@ public class AutonomoFoundationSkystoneRojo extends IMUPIDEncoderMecanumLinearOp
             telemetry.update();
         }
 
-        Pattern pattern = Pattern.ND;
+        Pattern pattern;
 
-        while(pattern == Pattern.ND && opModeIsActive()){
+        while(skystonePipeline.pattern == Pattern.ND && opModeIsActive()){
             pattern = skystonePipeline.pattern;
         }
 
@@ -65,7 +65,8 @@ public class AutonomoFoundationSkystoneRojo extends IMUPIDEncoderMecanumLinearOp
 
         cvCamera.closeCameraDevice();
 
-        if(isStarted()) return;//para evitar que el robot se mueva cuando se presiona stop
+        if(!isStarted()) return;//para evitar que el robot se mueva cuando se presiona stop
+
             switch (pattern) {
                 case ND: //no se ha detectado ningun pattern
 
@@ -77,11 +78,11 @@ public class AutonomoFoundationSkystoneRojo extends IMUPIDEncoderMecanumLinearOp
                     break;
                 case A: //Pattern A
 
-                    strafeRight(7, 0.2, 10); //nos deslizamos hacia la skystone
+                    strafeRight(8, 0.2, 10); //nos deslizamos hacia la skystone
 
                     forward(4, 1, 2); //nos alineamos con la pared para corregir si el robot se enchueco
 
-                    backwards(24, 1, 10); //avanzamos hacia la skystone
+                    backwards(24.5, 1, 10); //avanzamos hacia la skystone
 
                     hdw.SSADown(); //bajamos el brazo
                     hdw.SSA2Grab(); //cerramos la articulacion
@@ -115,11 +116,11 @@ public class AutonomoFoundationSkystoneRojo extends IMUPIDEncoderMecanumLinearOp
                     break;
                 case B: //Pattern B
 
-                    strafeLeft(7, 0.2, 10); //nos deslizamos hacia la skystone
+                    strafeLeft(8, 0.2, 10); //nos deslizamos hacia la skystone
 
                     forward(4, 1, 2); //nos alineamos con la pared para corregir si el robot se enchueco
 
-                    backwards(24, 1, 10); //avanzamos hacia la skystone
+                    backwards(24.5, 1, 10); //avanzamos hacia la skystone
 
                     hdw.SSADown(); //bajamos el brazo
                     hdw.SSA2Grab(); //cerramos la articulacion
@@ -158,7 +159,7 @@ public class AutonomoFoundationSkystoneRojo extends IMUPIDEncoderMecanumLinearOp
 
                     forward(4, 1, 2); //nos alineamos con la pared
 
-                    backwards(24, 1, 10); //avanzamos hacia ella
+                    backwards(24.5, 1, 10); //avanzamos hacia ella
 
                     hdw.SSADown(); //bajamos el brazo
                     hdw.SSA2Grab(); //cerramos la articulacion

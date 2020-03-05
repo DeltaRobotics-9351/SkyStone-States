@@ -1,3 +1,9 @@
+/*
+ * Created by FTC team Delta Robotics #9351
+ *  Source code licensed under the MIT License
+ *  More info at https://choosealicense.com/licenses/mit/
+ */
+
 package org.firstinspires.ftc.teamcode.autonomous.rojo;
 
 import com.deltarobotics9351.deltadrive.extendable.linearopmodes.mecanum.IMUPIDEncoderMecanumLinearOpMode;
@@ -15,8 +21,8 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
-@Autonomous(name="Foundation Skystone Rojo", group="Rojo")
-public class AutonomoFoundationSkystoneRojo extends IMUPIDEncoderMecanumLinearOpMode { //extendemos una clase que ya contiene todos los metodos de encoders y IMU para optimizar el codigo y el tiempo
+@Autonomous(name="Skystone Rojo", group="Rojo")
+public class AutonomoSkystoneRojo extends IMUPIDEncoderMecanumLinearOpMode { //extendemos una clase que ya contiene todos los metodos de encoders y IMU para optimizar el codigo y el tiempo
 //Daniel es un otaku
     public Hardware hdw;
 
@@ -46,9 +52,9 @@ public class AutonomoFoundationSkystoneRojo extends IMUPIDEncoderMecanumLinearOp
 
         while(!isStarted()){ //mientras no se ha presionado play, se mostrara un mensaje telemetry con el pattern detectado
 
-            //String[] s = MotivateTelemetry.doMotivateAmigo(this);
+            String[] s = MotivateTelemetry.doMotivateAmigo(this);
 
-            //telemetry.addData(s[0], s[1]);
+            telemetry.addData(s[0], s[1]);
 
             telemetry.addData("Pattern", skystonePipeline.pattern.toString());
 
@@ -78,79 +84,48 @@ public class AutonomoFoundationSkystoneRojo extends IMUPIDEncoderMecanumLinearOp
                     break;
                 case A: //Pattern A
 
-                    strafeRight(8, 0.2, 10); //nos deslizamos hacia la skystone
+                    strafeRight(8, 0.2, 5); //nos deslizamos hacia la skystone
 
                     forward(4, 1, 2); //nos alineamos con la pared para corregir si el robot se enchueco
 
-                    backwards(24.5, 1, 10); //avanzamos hacia la skystone
+                    backwards(24.5, 1, 5); //avanzamos hacia la skystone
 
                     hdw.SSADown(); //bajamos el brazo
                     hdw.SSA2Grab(); //cerramos la articulacion
                     hdw.SSAUp(); // subimos el brazo
 
-                    forward(2, 0.3, 10); //avanzamos hacia la pared
+                    forward(2, 0.3, 5); //avanzamos hacia la pared
                     rotate(Rot2d.fromDegrees(-90), 0.7, 2); //giramos hacia el skybridge
 
-                    backwards(88, 0.85, 10); //nos movemos hacia la building zone
-                    rotate(Rot2d.fromDegrees(90), 0.7, 2); //giramos hacia la foundation
+                    backwards(60, 0.85, 5); //nos movemos hacia la building zone
 
-                    backwards(4, 0.3, 10); //nos acercamos a la foundation
+                    hdw.SSA2Release();
+                    hdw.SSA2Grab();
 
-                    hdw.SSA2Release(); //abrimos la articulacion
-                    hdw.SSA2Grab(); // cerramos la articulacion
-
-                    hdw.grabFoundation(); //bajamos los servos de la foundation
-
-                    forward(20, 0.4, 10); //jalamos la foundation hacia enfrente
-
-                    rotate(Rot2d.fromDegrees(-90), 0.7, 2); //giramos para colocar la foundation
-
-                    hdw.releaseFoundation(); //subimos los servos de la foundation
-
-                    backwards(10, 0.3, 10); //acomodamos la foundation para asegurarnos de que entro.
-
-                    rotate(Rot2d.fromDegrees(-20), 0.7, 2); //giramos hacia el lado de la base del skybridge
-
-                    forward(25, 0.85, 10); //nos estacionamos pegados a la base del skybridge
+                    forward(20, 0.85, 5);
 
                     break;
                 case B: //Pattern B
 
-                    strafeLeft(8, 0.2, 10); //nos deslizamos hacia la skystone
+                    strafeLeft(8, 0.2, 5); //nos deslizamos hacia la skystone
 
                     forward(4, 1, 2); //nos alineamos con la pared para corregir si el robot se enchueco
 
-                    backwards(24.5, 1, 10); //avanzamos hacia la skystone
+                    backwards(24.5, 1, 5); //avanzamos hacia la skystone
 
                     hdw.SSADown(); //bajamos el brazo
                     hdw.SSA2Grab(); //cerramos la articulacion
                     hdw.SSAUp(); // subimos el brazo
 
-                    forward(2, 0.3, 10); //avanzamos hacia la pared
+                    forward(2, 0.3, 5); //avanzamos hacia la pared
 
                     rotate(Rot2d.fromDegrees(-90), 0.7, 2); //giramos hacia el skybridge
-                    backwards(78, 0.85, 10); //nos movemos hacia la building zone
+                    backwards(50, 0.85, 5); //nos movemos hacia la building zone
 
-                    rotate(Rot2d.fromDegrees(90), 0.7, 2); //giramos hacia la foundation
+                    hdw.SSA2Release();
+                    hdw.SSA2Grab();
 
-                    backwards(4, 0.3, 10); //avanzamos hacia la foundation
-
-                    hdw.SSA2Release(); //abrimos la articulacion
-                    hdw.SSA2Grab(); // cerramos la articulacion
-
-                    hdw.grabFoundation();
-
-                    forward(20, 0.4, 10);
-
-                    rotate(Rot2d.fromDegrees(-90), 0.7, 2);
-
-                    hdw.releaseFoundation();
-
-                    backwards(10, 0.3, 10);
-
-                    rotate(Rot2d.fromDegrees(-20), 0.7, 2);
-
-                    forward(25, 0.85, 10);
+                    forward(20, 0.85, 5);
 
                     break;
                 case C: //Pattern C
@@ -167,28 +142,12 @@ public class AutonomoFoundationSkystoneRojo extends IMUPIDEncoderMecanumLinearOp
 
                     forward(2, 0.3, 10); //avanzamos hacia la pared
                     rotate(Rot2d.fromDegrees(-90), 0.7, 2); //giramos hacia el skybridge
-                    backwards(76, 0.85, 10); //nos movemos hacia la building zone
+                    backwards(56, 0.85, 10); //nos movemos hacia la building zone
 
-                    rotate(Rot2d.fromDegrees(90), 0.7, 2);
+                    hdw.SSA2Release();
+                    hdw.SSA2Grab();
 
-                    backwards(4, 0.3, 10);
-
-                    hdw.SSA2Release(); //abrimos la garra
-                    hdw.SSA2Grab(); // cerramos la garra
-
-                    hdw.grabFoundation();
-
-                    forward(20, 0.4, 10);
-
-                    rotate(Rot2d.fromDegrees(-90), 0.7, 2);
-
-                    hdw.releaseFoundation();
-
-                    backwards(10, 0.3, 10);
-
-                    rotate(Rot2d.fromDegrees(-20), 0.7, 2);
-
-                    forward(26, 0.85, 10);
+                    forward(20, 0.85, 5);
 
                     break;
             }

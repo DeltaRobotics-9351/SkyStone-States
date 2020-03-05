@@ -33,9 +33,6 @@ public class TeleOp extends JoystickMecanumLinearOpMode { //la clase extendera a
     long runmillis;
     long disappearmillis;
 
-    JoystickDriveMecanum mecanumWheels; //en este objeto se contiene el codigo para las llantas mecanum
-    DeltaHardwareMecanum deltaHardware;
-
     @Override
     public void _runOpMode() {
         hdw.useSleeps = false;
@@ -109,6 +106,12 @@ public class TeleOp extends JoystickMecanumLinearOpMode { //la clase extendera a
                     hdw.grabFoundation();
                 }
 
+                if(buttons.is(X)){
+                    hdw.releaseCapstone2();
+                }else if(buttons.is(Y)){
+                    hdw.saveCapstone2();
+                }
+
             }
 
             @Override
@@ -146,11 +149,11 @@ public class TeleOp extends JoystickMecanumLinearOpMode { //la clase extendera a
             superGamepad1.update(); //actualizamos los dos gamepads, los cuales ya tienen declarados los eventos (mas arriba esta el codigo)
             superGamepad2.update();
 
-            telemetry.addData("wheelFrontRightPower", mecanumWheels.wheelFrontRightPower);
-            telemetry.addData("wheelFrontLeftPower", mecanumWheels.wheelFrontLeftPower);
-            telemetry.addData("wheelBackRightPower", mecanumWheels.wheelBackRightPower);
-            telemetry.addData("wheelBackLeftPower", mecanumWheels.wheelBackLeftPower);
-            telemetry.addData("wheels turbo", mecanumWheels.turbo);
+            telemetry.addData("wheelFrontRightPower", joystick.wheelFrontRightPower);
+            telemetry.addData("wheelFrontLeftPower", joystick.wheelFrontLeftPower);
+            telemetry.addData("wheelBackRightPower", joystick.wheelBackRightPower);
+            telemetry.addData("wheelBackLeftPower", joystick.wheelBackLeftPower);
+            telemetry.addData("wheels turbo", joystick.turbo);
             telemetry.addData("intake power right", hdw.motorIntakeRight.getPower());
             telemetry.addData("intake power left", hdw.motorIntakeLeft.getPower());
             telemetry.addData("servoStoneAutonomous position", hdw.servoStoneAutonomous.getPosition());

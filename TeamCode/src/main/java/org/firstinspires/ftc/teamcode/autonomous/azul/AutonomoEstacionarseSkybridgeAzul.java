@@ -1,35 +1,22 @@
-/*
- * Created by FTC team Delta Robotics #9351
- *  Source code licensed under the MIT License
- *  More info at https://choosealicense.com/licenses/mit/
- */
-
-/*
- * Created by FTC team Delta Robotics #9351
- *  Source code licensed under the MIT License
- *  More info at https://choosealicense.com/licenses/mit/
- */
-
-package org.firstinspires.ftc.teamcode.autonomous.rojo;
+package org.firstinspires.ftc.teamcode.autonomous.azul;
 
 import com.deltarobotics9351.deltadrive.extendable.linearopmodes.mecanum.IMUPIDEncoderMecanumLinearOpMode;
 import com.deltarobotics9351.deltadrive.motors.andymark.NeveRest_Orbital_20;
-import com.deltarobotics9351.deltamath.geometry.Rot2d;
 import com.deltarobotics9351.pid.PIDCoefficients;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.MotivateTelemetry;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 
-@Autonomous(name="Estacionarse SKYBRIDGE Rojo", group="Rojo")
-public class AutonomoEstacionarseSkybridgeRojo extends IMUPIDEncoderMecanumLinearOpMode {
+@Autonomous(name="Estacionarse SKYBRIDGE Azul", group="Azul")
+public class AutonomoEstacionarseSkybridgeAzul extends IMUPIDEncoderMecanumLinearOpMode {
 
     public Hardware hdw;
 
     @Override
     public void _runOpMode(){
 
-        setPID(new PIDCoefficients(0.0191, 0, 0));
+        setPID(new PIDCoefficients(0.0152, 0, 0));
         imuParameters.DEAD_ZONE = 0.15;
 //encoders
         encoderParameters.TICKS_PER_REV = NeveRest_Orbital_20.TICKS_PER_REVOLUTION;

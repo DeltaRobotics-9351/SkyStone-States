@@ -27,6 +27,7 @@ public class Hardware {
     public Servo servoStoneAutonomous = null;
     public Servo servoStoneAutonomous2 = null;
     public Servo servoCapstone = null;
+    public Servo servoCapstone2 = null;
     public Servo servoFoundationLeft = null;
     public Servo servoFoundationRight = null;
 
@@ -59,6 +60,7 @@ public class Hardware {
         servoCapstone = hwMap.servo.get("SC");
         servoFoundationLeft = hwMap.servo.get("SFL");
         servoFoundationRight = hwMap.servo.get("SFR");
+        servoCapstone2 = hwMap.servo.get("SC2");
 
         //La direccion por default de estos motores sera FORWARD
         motorIntakeRight.setDirection(DcMotor.Direction.FORWARD);
@@ -86,6 +88,7 @@ public class Hardware {
         servoStoneAutonomous2.setPosition(1);
         servoFoundationLeft.setPosition(1);
         servoFoundationRight.setPosition(0);
+        servoCapstone2.setPosition(0.5);
 
         //definimos los motores que correran con y sin encoders 
         wheelFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -131,6 +134,16 @@ public class Hardware {
     public void releaseFoundation(){
         servoFoundationLeft.setPosition(1);
         servoFoundationRight.setPosition(0);
+        sleep(500);
+    }
+
+    public void releaseCapstone2(){
+        servoCapstone2.setPosition(0);
+        sleep(500);
+    }
+
+    public void saveCapstone2(){
+        servoCapstone2.setPosition(0.5);
         sleep(500);
     }
 
