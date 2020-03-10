@@ -46,9 +46,9 @@ public class AutonomoFoundationSkystoneRojo extends IMUPIDEncoderMecanumLinearOp
 
         while(!isStarted()){ //mientras no se ha presionado play, se mostrara un mensaje telemetry con el pattern detectado
 
-            //String[] s = MotivateTelemetry.doMotivateAmigo(this);
+            String[] s = MotivateTelemetry.doMotivateAmigo(this);
 
-            //telemetry.addData(s[0], s[1]);
+            telemetry.addData(s[0], s[1]);
 
             telemetry.addData("Pattern", skystonePipeline.pattern.toString());
 

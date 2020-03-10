@@ -6,18 +6,11 @@
 
 package org.firstinspires.ftc.teamcode.teleop;
 
-import com.deltarobotics9351.deltadrive.drive.mecanum.JoystickDriveMecanum;
-import com.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
 import com.deltarobotics9351.deltadrive.extendable.linearopmodes.mecanum.JoystickMecanumLinearOpMode;
-import com.deltarobotics9351.deltadrive.utils.Invert;
-import com.deltarobotics9351.deltainput.gamepad.GamepadDataPacket;
-import com.deltarobotics9351.deltainput.gamepad.button.Button;
-import com.deltarobotics9351.deltainput.gamepad.SuperGamepad;
-import com.deltarobotics9351.deltainput.event.GamepadEvent;
-import com.deltarobotics9351.deltainput.gamepad.button.Buttons;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.Gamepad;
+import com.deltarobotics9351.deltaevent.event.gamepad.SuperGamepadEvent;
+import com.deltarobotics9351.deltaevent.gamepad.GamepadDataPacket;
+import com.deltarobotics9351.deltaevent.gamepad.button.Button;
+import com.deltarobotics9351.deltaevent.gamepad.button.Buttons;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.MotivateTelemetry;
@@ -52,7 +45,7 @@ public class TeleOp extends JoystickMecanumLinearOpMode { //la clase extendera a
 
         // - - - - EMPIEZA CODIGO DEL START A - - - -
 
-        superGamepad1.registerEvent(new GamepadEvent() {
+        superGamepad1.registerEvent(new SuperGamepadEvent() {
 
             @Override
             public void buttonsPressed(Buttons buttons) {
@@ -77,7 +70,7 @@ public class TeleOp extends JoystickMecanumLinearOpMode { //la clase extendera a
 
         // - - - - EMPIEZA CODIGO DEL START B - - - -
 
-        superGamepad2.registerEvent(new GamepadEvent() {
+        superGamepad2.registerEvent(new SuperGamepadEvent() {
 
             @Override
             public void buttonsBeingPressed(Buttons buttons) {

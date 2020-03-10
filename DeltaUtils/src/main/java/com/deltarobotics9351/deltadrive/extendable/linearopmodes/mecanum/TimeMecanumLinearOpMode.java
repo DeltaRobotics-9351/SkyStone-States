@@ -8,6 +8,7 @@ package com.deltarobotics9351.deltadrive.extendable.linearopmodes.mecanum;
 
 import com.deltarobotics9351.deltadrive.drive.mecanum.TimeDriveMecanum;
 import com.deltarobotics9351.deltadrive.drive.mecanum.hardware.DeltaHardwareMecanum;
+import com.deltarobotics9351.deltadrive.extendable.linearopmodes.ExtendableLinearOpMode;
 import com.deltarobotics9351.deltadrive.utils.Invert;
 import com.deltarobotics9351.deltadrive.utils.RobotHeading;
 import com.deltarobotics9351.deltamath.geometry.Rot2d;
@@ -17,39 +18,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  * Remember to override setup() and define the 4 DcMotor variables in there!
  */
-public class TimeMecanumLinearOpMode extends LinearOpMode {
+public class TimeMecanumLinearOpMode extends ExtendableLinearOpMode {
 
     private TimeDriveMecanum timeDrive;
-
-    private DeltaHardwareMecanum deltaHardware;
-
-    public DcMotor frontLeft = null;
-    public DcMotor frontRight = null;
-    public DcMotor backLeft = null;
-    public DcMotor backRight = null;
-
-    /**
-     * boolean that defines if motors brake when their power is 0
-     */
-    public boolean WHEELS_BRAKE = true;
-
-    /**
-     * boolean that indicates if we'll update the RobotHeading in this OpMode
-     * You need 2 Expansion Hubs for this!
-     */
-    public boolean UPDATE_ROBOT_HEADING = false;
-
-    /**
-     * boolean that indicates if we'll reset the RobotHeading
-     */
-    public boolean RESET_ROBOT_HEADING = false;
-
-    /**
-     * Robot's initial heading
-     *
-     */
-    public Rot2d ROBOT_INITIAL_HEADING = new Rot2d();
-
 
     @Override
     public final void runOpMode() {
@@ -87,10 +58,10 @@ public class TimeMecanumLinearOpMode extends LinearOpMode {
         RobotHeading.stop();
     }
 
-
     /**
      * Overridable void to be executed after all required variables are initialized
      */
+    @Override
     public void _runOpMode(){
 
     }
@@ -99,6 +70,7 @@ public class TimeMecanumLinearOpMode extends LinearOpMode {
      * Overridable void to define all wheel motors, and the uppercase variables
      * Define frontLeft, frontRight, backLeft and backRight DcMotor variables here!
      */
+    @Override
     public void setup(){
 
     }

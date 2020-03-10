@@ -27,8 +27,6 @@ public class EncoderDriveMecanum {
 
     private EncoderDriveParameters parameters;
 
-    private DistanceUnit distanceUnit = DistanceUnit.INCHES;
-
     /**
      * Constructor for the encoder drive class
      * @param hdw The initialized hardware containing all the chassis motors
@@ -65,9 +63,9 @@ public class EncoderDriveMecanum {
         parameters.secureParameters();
 
         double TICKS_PER_INCH = (parameters.TICKS_PER_REV * parameters.DRIVE_GEAR_REDUCTION) /
-                (parameters.WHEEL_DIAMETER_INCHES * 3.1415);
+                (parameters.WHEEL_DIAMETER_INCHES * Math.PI);
 
-        if(distanceUnit == DistanceUnit.CENTIMETERS) {
+        if(parameters.DISTANCE_UNIT == DistanceUnit.CENTIMETERS) {
             frontleft *= 0.393701;
             frontright *= 0.393701;
             backleft *= 0.3937014;
@@ -177,10 +175,6 @@ public class EncoderDriveMecanum {
         hdw.wheelFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         hdw.wheelBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         hdw.wheelBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-    public void setDistanceUnit(DistanceUnit distanceUnit){
-        this.distanceUnit = distanceUnit;
     }
 
     public void forward(double distance, double speed, double timeoutS) {

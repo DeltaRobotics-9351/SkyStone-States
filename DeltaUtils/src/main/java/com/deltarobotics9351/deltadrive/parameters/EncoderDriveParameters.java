@@ -6,6 +6,7 @@
 
 package com.deltarobotics9351.deltadrive.parameters;
 
+import com.deltarobotics9351.deltadrive.utils.DistanceUnit;
 import com.deltarobotics9351.deltamath.MathUtil;
 
 /**
@@ -39,11 +40,16 @@ public class EncoderDriveParameters {
      * The right side % of speed while strafing, from 0 to 1
      */
     public double RIGHT_WHEELS_STRAFE_TURBO = 1;
+
     /**
      * The left side % of speed while strafing, from 0 to 1
      */
     public double LEFT_WHEELS_STRAFE_TURBO = 1;
 
+    /**
+     * The unit which will be used in the movement methods.
+     */
+    public DistanceUnit DISTANCE_UNIT = DistanceUnit.INCHES;
 
     public EncoderDriveParameters(){ }
 

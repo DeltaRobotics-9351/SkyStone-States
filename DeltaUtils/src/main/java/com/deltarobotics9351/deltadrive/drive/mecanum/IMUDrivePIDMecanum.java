@@ -291,7 +291,7 @@ public class IMUDrivePIDMecanum {
                 prevMillis = nowMillis;
                 prevHeading = getAngle();
 
-                sleep(5);
+                sleep(3);
             }
         } else
             while (errorDelta != parameters.ERROR_TOLERANCE && !Thread.interrupted() && (System.currentTimeMillis() < maxMillis)) { //entramos en un bucle hasta que los setpoint sean los esperados
@@ -338,7 +338,7 @@ public class IMUDrivePIDMecanum {
                 prevMillis = nowMillis;
                 prevHeading = getAngle();
 
-                sleep(5);
+                sleep(3);
             }
 
         // stop the movement
